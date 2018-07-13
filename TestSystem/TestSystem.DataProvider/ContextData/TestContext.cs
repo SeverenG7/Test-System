@@ -10,14 +10,14 @@ namespace TestSystem.DataProvider.ContextData
         {
         }
 
-        public virtual DbSet<Answer> Answer { get; set; }
-        public virtual DbSet<Property> Property { get; set; }
-        public virtual DbSet<Question> Question { get; set; }
-        public virtual DbSet<Result> Result { get; set; }
-        public virtual DbSet<Test> Test { get; set; }
-        public virtual DbSet<Theme> Theme { get; set; }
-        public virtual DbSet<UserInfo> UserInfo { get; set; }
-        public virtual DbSet<UserSystem> UserSystem { get; set; }
+        public virtual DbSet<Answer> Answers { get; set; }
+        public virtual DbSet<Property> Properties { get; set; }
+        public virtual DbSet<Question> Questions { get; set; }
+        public virtual DbSet<Result> Results { get; set; }
+        public virtual DbSet<Test> Tests { get; set; }
+        public virtual DbSet<Theme> Themes { get; set; }
+        public virtual DbSet<UserInfo> UserInfos { get; set; }
+        public virtual DbSet<UserSystem> UserSystemes { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
