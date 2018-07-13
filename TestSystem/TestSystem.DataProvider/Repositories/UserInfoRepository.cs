@@ -4,9 +4,9 @@ using TestSystem.DataProvider.BaseClasses;
 
 namespace TestSystem.DataProvider.Repositories
 {
-    public class TestRepository : Repository<Test>
+   public class UserInfoRepository : Repository<UserInfo>
     {
-        public TestRepository(TestContext context) : base(context)
+        public UserInfoRepository(TestContext context) : base(context)
         { }
 
         public TestContext testContext
@@ -14,4 +14,5 @@ namespace TestSystem.DataProvider.Repositories
             get => context as TestContext;
         }
     }
+}
 }

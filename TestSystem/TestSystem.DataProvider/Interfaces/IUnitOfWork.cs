@@ -7,12 +7,8 @@ using TestSystem.Model.Models;
 
 namespace TestSystem.DataProvider.Interfaces
 {
-    public interface IUnitOfWorkTests : IDisposable
+    public interface IUnitOfWork : IDisposable
     {
-        IRepository<Test> Tests { get; }
-        IRepository<Question> Questions { get; }
-        IRepository<Answer> Answers { get; }
-
-        void Save();
+        int Complete();
     }
 }
