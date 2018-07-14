@@ -50,9 +50,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContextData\TestContext.cs" />
+    <Compile Include="Interfaces\IRepository.cs" />
+    <Compile Include="Interfaces\IUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\AnswerRepository.cs" />
+    <Compile Include="Repositories\PropertyRepository.cs" />
+    <Compile Include="Repositories\QuestionRepository.cs" />
+    <Compile Include="BaseClasses\Repository.cs" />
+    <Compile Include="Repositories\ResultRepository.cs" />
+    <Compile Include="Repositories\TestRepository.cs" />
+    <Compile Include="Repositories\ThemeRepository.cs" />
+    <Compile Include="BaseClasses\UnitOfWork.cs" />
+    <Compile Include="Repositories\UserInfoRepository.cs" />
+    <Compile Include="Repositories\UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -60,6 +73,9 @@
       <Project>{0cae968b-8ad1-41c4-a280-b60f1c92bde8}</Project>
       <Name>TestSystem.Model</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Mapping\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

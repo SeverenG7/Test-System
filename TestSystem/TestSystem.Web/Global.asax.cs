@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Ninject;
+using Ninject.Modules;
+using Ninject.Web.Mvc;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using TestSystem.Logic.Interfaces;
+using TestSystem.Logic.Infrastructure;
+using TestSystem.Web.Util;
 
 namespace TestSystem.Web
 {
@@ -16,6 +18,14 @@ namespace TestSystem.Web
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+           /* NinjectModule testModule = new TestModulecs();
+            NinjectModule serviceModule = new ServiceModule();
+            var kernel = new StandardKernel(testModule, serviceModule);
+            DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));*/
+
+
+            
         }
     }
 }
