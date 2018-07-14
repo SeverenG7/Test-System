@@ -91,11 +91,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="DataTransferObjects\AnswerDTO.cs" />
     <Compile Include="DataTransferObjects\QuestionDTO.cs" />
     <Compile Include="DataTransferObjects\TestDTO.cs" />
-    <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Infrastructure\ServiceModule.cs" />
     <Compile Include="Interfaces\ITestService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

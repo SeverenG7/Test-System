@@ -30,7 +30,13 @@ namespace TestSystem.Logic.Services
 
         public TestDTO GetTest(int? id)
         {
-            throw new NotImplementedException();
+            if (id == null)
+                throw new Exception();
+            var test = Database.Tests.Get(id.Value);
+            if (test == null)
+                throw new Exception();
+
+            return new TestDTO { TestName = test.TestName , TestDescription = test.TestDescription , IdTest = test.IdTest};
         }
 
         public IEnumerable<TestDTO> GetTests()
@@ -39,7 +45,5 @@ namespace TestSystem.Logic.Services
                 (mapConfig => mapConfig.CreateMap<Test, TestDTO>()).CreateMapper();
             return mapper.Map<IEnumerable<Test>, List<TestDTO>>(Database.Tests.GetAll());
         }
-
-
     }
 }

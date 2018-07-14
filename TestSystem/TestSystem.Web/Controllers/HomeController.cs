@@ -27,6 +27,7 @@ namespace TestSystem.Web.Controllers
             var mapper = new MapperConfiguration(mapperConfig =>
             mapperConfig.CreateMap<TestDTO, TestViewModel>()).CreateMapper();
             var tests = mapper.Map<IEnumerable<TestDTO>, List<TestViewModel>>(testDTOs);
+            
             return View(tests);
         }
 

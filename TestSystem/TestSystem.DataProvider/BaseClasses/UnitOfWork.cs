@@ -7,10 +7,19 @@ using TestSystem.Model.Models;
 
 namespace TestSystem.DataProvider.BaseClasses
 {
+
+    /// <summary>
+    /// Realization of IUnitOfWork interface
+    /// </summary>
     public class UnitOfWork : IUnitOfWork
     {
+        
         private readonly TestContext context;
 
+        /// <summary>
+        /// In this constructer we initialize all repositories.
+        /// </summary>
+        /// <param name="_context"></param>
         public UnitOfWork(TestContext _context)
         {
             context = _context;
@@ -27,15 +36,13 @@ namespace TestSystem.DataProvider.BaseClasses
      
 
         public IRepository<Answer> Answers { get; private set; }
-        public PropertyRepository Properties { get; private set; }
+        public IRepository<Property> Properties { get; private set; }
         public IRepository<Question> Questions { get; private set; }
-        public ResultRepository Results { get; private set; }
+        public IRepository<Result> Results { get; private set; }
         public IRepository<Test> Tests { get; private set; }
-        public ThemeRepository Themes { get; private set; }
-        public UserInfoRepository UserInfoes { get; private set; }
-        public UserRepository Users { get; private set; }
-
-
+        public IRepository<Theme> Themes { get; private set; }
+        public IRepository<UserInfo> UserInfoes { get; private set; }
+        public IRepository<UserSystem> Users { get; private set; }
 
         public int Complete() => context.SaveChanges();
 
