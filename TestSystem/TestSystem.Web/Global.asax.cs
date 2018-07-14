@@ -19,10 +19,10 @@ namespace TestSystem.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            NinjectModule testModule = new TestModulecs();
+           /* NinjectModule testModule = new TestModulecs();
             NinjectModule serviceModule = new ServiceModule();
             var kernel = new StandardKernel(testModule, serviceModule);
-            DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
+            DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));*/
 
 
             
