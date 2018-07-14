@@ -3,14 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using TestSystem.Logic.DataTransferObjects;
+using TestSystem.Logic.Interfaces;
+using TestSystem.Web.Models;
+using AutoMapper;
+
+
 
 namespace TestSystem.Web.Controllers
 {
     public class HomeController : Controller
     {
+
+        ITestService testService;
+
+        public HomeController(ITestService service)
+        {
+            testService = service;
+        }
         public ActionResult Index()
         {
-            return View();
+            IEnumerable<TestDTO> testDTOs = testService.GetTests();
+            var mapper = new MapperConfiguration(mapperConfig =>
+            mapperConfig.CreateMap<TestDTO, TestViewModel>()).CreateMapper();
+            var tests = mapper.Map<IEnumerable<TestDTO>, List<TestViewModel>>(testDTOs);
+            return View(tests);
         }
 
         public ActionResult About()

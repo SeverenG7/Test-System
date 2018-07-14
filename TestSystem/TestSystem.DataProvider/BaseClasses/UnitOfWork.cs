@@ -1,6 +1,7 @@
 ﻿using TestSystem.DataProvider.Interfaces;
 using TestSystem.DataProvider.Repositories;
 using TestSystem.DataProvider.ContextData;
+using TestSystem.Model.Models;
 
 
 
@@ -23,12 +24,13 @@ namespace TestSystem.DataProvider.BaseClasses
             Users = new UserRepository(context);
         }
 
+     
 
-        public AnswerRepository Answers { get; private set; }
+        public IRepository<Answer> Answers { get; private set; }
         public PropertyRepository Properties { get; private set; }
-        public QuestionRepository Questions { get; private set; }
+        public IRepository<Question> Questions { get; private set; }
         public ResultRepository Results { get; private set; }
-        public TestRepository Tests { get; private set; }
+        public IRepository<Test> Tests { get; private set; }
         public ThemeRepository Themes { get; private set; }
         public UserInfoRepository UserInfoes { get; private set; }
         public UserRepository Users { get; private set; }
