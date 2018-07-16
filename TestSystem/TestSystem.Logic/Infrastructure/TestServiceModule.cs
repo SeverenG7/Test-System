@@ -2,9 +2,9 @@
 using TestSystem.Logic.Interfaces;
 using TestSystem.Logic.Services;
 
-namespace TestSystem.Web.Util
+namespace TestSystem.Logic.Infrastructure
 {
-    public class TestModulecs : NinjectModule
+    public class TestServiceModule : NinjectModule
     {
         public override void Load()
         {

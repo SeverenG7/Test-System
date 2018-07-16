@@ -11,7 +11,7 @@ namespace TestSystem.Model.Models
         public Test()
         {
             Result = new HashSet<Result>();
-            Question = new HashSet<Question>();
+            Questions = new HashSet<Question>();
         }
 
         [Key]
@@ -34,6 +34,6 @@ namespace TestSystem.Model.Models
         public virtual ICollection<Result> Result { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Question> Question { get; set; }
+        public virtual ICollection<Question> Questions { get; set; }
     }
 }

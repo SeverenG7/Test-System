@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Web.Mvc;
 using Ninject;
-using Ninject.Web.Common;
-using TestSystem.Logic.Services;
-using TestSystem.Logic.Interfaces;
 using TestSystem.Logic.Infrastructure;
 
 namespace TestSystem.Web.Util
@@ -31,10 +28,9 @@ namespace TestSystem.Web.Util
 
         private void AddBindings()
         {
-            ServiceModule serviceModule = new ServiceModule();
-            kernel.Load(serviceModule);
-            kernel.Bind<ITestService>().To<TestService>();
-
+            TestServiceModule testServiceModule = new TestServiceModule();
+            UnitOfWorkModule unitOfWorkModule = new UnitOfWorkModule();
+            kernel.Load(unitOfWorkModule, testServiceModule);
         }
 
     }

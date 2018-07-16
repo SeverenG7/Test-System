@@ -31,8 +31,8 @@ namespace TestSystem.DataProvider.ContextData
                 .IsUnicode(false);
 
             modelBuilder.Entity<Answer>()
-                .HasMany(e => e.Question)
-                .WithMany(e => e.Answer)
+                .HasMany(e => e.Questions)
+                .WithMany(e => e.Answers)
                 .Map(m => m.ToTable("QuestionAnswer").MapLeftKey("IdAnswer").MapRightKey("IdQuestion"));
 
             modelBuilder.Entity<Question>()
@@ -40,8 +40,8 @@ namespace TestSystem.DataProvider.ContextData
                 .IsUnicode(false);
 
             modelBuilder.Entity<Question>()
-                .HasMany(e => e.Test)
-                .WithMany(e => e.Question)
+                .HasMany(e => e.Tests)
+                .WithMany(e => e.Questions)
                 .Map(m => m.ToTable("TestQuestion").MapLeftKey("IdQuestion").MapRightKey("IdTest"));
 
             modelBuilder.Entity<Result>()
@@ -62,7 +62,7 @@ namespace TestSystem.DataProvider.ContextData
                 .IsUnicode(false);
 
             modelBuilder.Entity<Theme>()
-                .HasMany(e => e.Property)
+                .HasMany(e => e.Properties)
                 .WithRequired(e => e.Theme)
                 .WillCascadeOnDelete(false);
 
