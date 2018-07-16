@@ -43,9 +43,7 @@ namespace TestSystem.DataProvider.BaseClasses
         public IRepository<Theme> Themes { get; private set; }
         public IRepository<UserInfo> UserInfoes { get; private set; }
         public IRepository<UserSystem> Users { get; private set; }
-
         public int Complete() => context.SaveChanges();
-
         public void Dispose() => context.Dispose();
     }
 }

@@ -23,6 +23,9 @@ namespace TestSystem.Web.Controllers
         }
         public ActionResult Index()
         {
+            //TestDTO testDTO = testService.GetTest(1);
+           
+
             IEnumerable<TestDTO> testDTOs = testService.GetTests();
             var mapper = new MapperConfiguration(mapperConfig =>
             mapperConfig.CreateMap<TestDTO, TestViewModel>()).CreateMapper();

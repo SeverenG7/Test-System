@@ -18,7 +18,6 @@ namespace TestSystem.DataProvider.BaseClasses
     /// <returns>TEntity here is a like generic type of any data objcet. </returns>
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-
         /// <summary>
         /// Also here use generic DbContext, for bigger agility
         /// </summary>
@@ -28,9 +27,6 @@ namespace TestSystem.DataProvider.BaseClasses
         {
             context = _context;
         }
-
-
-
         /// <summary>
         /// More information for all this group of methods you can find in IRepository.
         /// </summary>
@@ -42,14 +38,10 @@ namespace TestSystem.DataProvider.BaseClasses
         {
             return context.Set<TEntity>().Where(predicate);
         }
-
         public void Add(TEntity entity) => context.Set<TEntity>().Add(entity);
         public void AddRange(IEnumerable<TEntity> entities) => context.Set<TEntity>().AddRange(entities);
 
         public void Remove(TEntity entity) => context.Set<TEntity>().Remove(entity);
         public void RemoveRange(IEnumerable<TEntity> entities) => context.Set<TEntity>().RemoveRange(entities);
-
-
-
     }
 }
