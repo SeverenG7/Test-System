@@ -5,6 +5,7 @@ using TestSystem.Logic.Interfaces;
 using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Model.Models;
 using TestSystem.Logic.MapGeneric;
+using AutoMapper;
 
 namespace TestSystem.Logic.Services
 {
@@ -21,7 +22,7 @@ namespace TestSystem.Logic.Services
         }
         public void CreateQuestion(QuestionDTO questionDTO)
         {
-            Question question = MapperTo.Map<Test>(questionDTO);
+            Question question = MapperToDB.Map<Question>(questionDTO);
             Database.Questions.Add(question);
             Database.Complete();
         }
@@ -35,15 +36,16 @@ namespace TestSystem.Logic.Services
         {
             if (id == null)
                 throw new Exception();
-            var question = Database.Questions.Get(id.Value);
+            Question question = Database.Questions.Get(id.Value);
             if (question == null)
                 throw new Exception();
-            return MapperFrom.Map<QuestionDTO>(question);
+            var mapper = new MapperConfiguration(mcf => mcf.CreateMap<Question, QuestionDTO>()).CreateMapper();
+            return mapper.Map<Question,QuestionDTO>(question);
         }
 
         public IEnumerable<QuestionDTO> GetQuestions()
         {
-            return MapperFrom.Map<IEnumerable<Question>, List<QuestionDTO>>(Database.Questions.GetAll());
+            return MapperFromDB.Map<IEnumerable<Question>, List<QuestionDTO>>(Database.Questions.GetAll());
         }
 
         public void RemoveQuestion(int id)
@@ -61,15 +63,9 @@ namespace TestSystem.Logic.Services
             Question question = (Question)Database.Questions.Find(x => x.IdQuestion == questionDTO.IdQuestion );
             if (question != null)
             {
-                question = MapperTo.Map<Test>(question);
+                question = MapperToDB.Map<Question>(question);
                 Database.Complete();
             }
-        }
-
-        public IEnumerable<AnswerDTO> GetAnswers(QuestionDTO questionDTO)
-        {
-           return MapperFrom.Map<IEnumerable<Answer>, List<AnswerDTO>>
-                (GetQuestion(questionDTO.IdQuestion).Answers);
         }
     }
 }

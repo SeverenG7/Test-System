@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 
-namespace TestSystem.Logic.DataTransferObjects
+namespace TestSystem.Web.Models
 {
-    public class AnswerDTO
+    public class AnswerViewModel
     {
+
         public int IdAnswer { get; set; }
         public string AnswerText { get; set; }
         public bool Correct { get; set; }
-        public virtual ICollection<QuestionDTO> Questions { get; set; }
+        public virtual ICollection<QuestionViewModel> Questions { get; set; }
     }
 }

@@ -14,22 +14,22 @@ namespace TestSystem.Web.Controllers
 {
     public class HomeController : Controller
     {
-
-        ITestService testService;
-
-        public HomeController(ITestService service)
+        ITestService _testService;
+        IQuestionService _questionService;
+        public HomeController(ITestService testService)
         {
-            testService = service;
+            _testService = testService;
         }
         public ActionResult Index()
         {
             //TestDTO testDTO = testService.GetTest(1);
-           
+          
 
-            IEnumerable<TestDTO> testDTOs = testService.GetTests();
+            IEnumerable<TestDTO> testDTOs = _testService.GetTests();
+            IEnumerable<QuestionDTO> questionDTOs = testDTOs.FirstOrDefault().Questions;
             var mapper = new MapperConfiguration(mapperConfig =>
-            mapperConfig.CreateMap<TestDTO, TestViewModel>()).CreateMapper();
-            var tests = mapper.Map<IEnumerable<TestDTO>, List<TestViewModel>>(testDTOs);
+            mapperConfig.CreateMap<QuestionDTO, QuestionViewModel>()).CreateMapper();
+            var tests = mapper.Map<IEnumerable<QuestionDTO>, List<QuestionViewModel>>(questionDTOs);
             
             return View(tests);
         }
