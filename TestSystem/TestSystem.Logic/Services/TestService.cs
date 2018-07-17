@@ -5,10 +5,11 @@ using TestSystem.Logic.Interfaces;
 using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Model.Models;
 using TestSystem.Logic.MapGeneric;
+using AutoMapper;
 
 namespace TestSystem.Logic.Services
 {
-    public class TestService : MapClass<Test,TestDTO>, ITestService
+    public class TestService : MapClass<Test,TestDTO> ,ITestService
     {
         IUnitOfWork Database { get; set; }
 
@@ -26,16 +27,17 @@ namespace TestSystem.Logic.Services
         {
             if (id == null)
                 throw new Exception();
-            var test = Database.Tests.Get(id.Value);
+            Test test = Database.Tests.Get(id.Value);
             if (test == null)
                 throw new Exception();
-            TestDTO testDTO = MapperFrom.Map<TestDTO>(test);
+
+            TestDTO testDTO = MapperFromDB.Map<TestDTO>(test);
             return testDTO;
         }
 
         public IEnumerable<TestDTO> GetTests()
         {
-            return MapperFrom.Map<IEnumerable<Test>, List<TestDTO>>(Database.Tests.GetAll());
+            return MapperFromDB.Map<IEnumerable<Test>, List<TestDTO>>(Database.Tests.GetAll());
         }
 
         public void RemoveTest(int id)
@@ -50,7 +52,7 @@ namespace TestSystem.Logic.Services
 
         public void CreateTest(TestDTO testDTO)
         {
-            Test test = MapperTo.Map<Test>(testDTO);
+            Test test = MapperToDB.Map<Test>(testDTO);
             Database.Tests.Add(test);
             Database.Complete();
         }
@@ -61,7 +63,7 @@ namespace TestSystem.Logic.Services
 
             if (test != null)
             {
-                test = MapperTo.Map<Test>(testDTO);
+                test = MapperToDB.Map<Test>(testDTO);
                 Database.Complete();
             }
         }

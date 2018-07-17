@@ -17,7 +17,7 @@ namespace TestSystem.Logic.Services
 
         public void Create(int idQuestion, AnswerDTO answerDTO)
         {   
-            Answer answer = MapperTo.Map<Answer>(answerDTO);
+            Answer answer = MapperToDB.Map<Answer>(answerDTO);
             Database.Answers.Add(answer);
             Database.Complete();
         }
@@ -43,7 +43,7 @@ namespace TestSystem.Logic.Services
 
             if (answer != null)
             {
-                answer = MapperTo.Map<Test>(answer);
+                answer = MapperToDB.Map<Answer>(answer);
                 Database.Complete();
             }
         }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using TestSystem.Model.Models;
 
 namespace TestSystem.Logic.DataTransferObjects
 {
@@ -8,8 +7,8 @@ namespace TestSystem.Logic.DataTransferObjects
         public int IdProperty { get; set; }
         public int Difficult { get; set; }
         public int IdTheme { get; set; }
-        public Theme GetTheme { get; set; }
-        public virtual ICollection<Question> Questions { get; set; }
-        public virtual ICollection<Test> Tests { get; set; }
+        public ThemeDTO GetTheme { get; set; }
+        public virtual ICollection<QuestionDTO> Questions { get; set; }
+        public virtual ICollection<TestDTO> Tests { get; set; }
     }
 }

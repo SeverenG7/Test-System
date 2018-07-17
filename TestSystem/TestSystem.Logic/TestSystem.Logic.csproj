@@ -96,6 +96,8 @@
     <Compile Include="DataTransferObjects\QuestionDTO.cs" />
     <Compile Include="DataTransferObjects\TestDTO.cs" />
     <Compile Include="DataTransferObjects\ThemeDTO.cs" />
+    <Compile Include="Infrastructure\AnswerServiceModule.cs" />
+    <Compile Include="Infrastructure\QuestionServiceModule.cs" />
     <Compile Include="Infrastructure\TestServiceModule.cs" />
     <Compile Include="Infrastructure\UnitOfWorkModule.cs" />
     <Compile Include="Interfaces\IAnswerService.cs" />

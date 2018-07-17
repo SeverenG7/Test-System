@@ -30,7 +30,9 @@ namespace TestSystem.Web.Util
         {
             TestServiceModule testServiceModule = new TestServiceModule();
             UnitOfWorkModule unitOfWorkModule = new UnitOfWorkModule();
-            kernel.Load(unitOfWorkModule, testServiceModule);
+            QuestionServiceModule questionServiceModule = new QuestionServiceModule();
+            AnswerServiceModule answerServiceModule = new AnswerServiceModule();
+            kernel.Load(unitOfWorkModule, testServiceModule,questionServiceModule,answerServiceModule);
         }
 
     }

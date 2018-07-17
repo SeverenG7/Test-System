@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace TestSystem.Logic.DataTransferObjects
+namespace TestSystem.Web.Models
 {
-    public class QuestionDTO
+    public class QuestionViewModel
     {
         public int IdQuestion { get; set; }
         public string QuestionText { get; set; }
@@ -10,6 +10,6 @@ namespace TestSystem.Logic.DataTransferObjects
         public int AnswerNumber { get; set; }
         public int Score { get; set; }
         public int? IdProperty { get; set; }
-        public virtual ICollection<AnswerDTO> Answers { get; set; }
+        public virtual ICollection<AnswerViewModel> Answers { get; set; }
     }
 }

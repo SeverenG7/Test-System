@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TestSystem.Web.Models.TestViewModel>
+﻿@model IEnumerable<TestSystem.Web.Models.QuestionViewModel>
 @{
     ViewBag.Title = "Home Page";
 }
@@ -13,13 +13,13 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.TestName)
+            @Html.DisplayNameFor(model => model.QuestionText)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.IdTest)
+            @Html.DisplayNameFor(model => model.IdQuestion)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.TestDescription)
+            @Html.DisplayNameFor(model => model.AnswerNumber)
         </th>
         <th></th>
     </tr>
@@ -28,26 +28,16 @@
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.TestName)
+                @Html.DisplayFor(modelItem => item.QuestionText)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdTest)
+                @Html.DisplayFor(modelItem => item.IdQuestion)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TestDescription)
+                @Html.DisplayFor(modelItem => item.AnswerNumber)
             </td>
-            <td>
-            
-            </td>
+            <td></td>
         </tr>
     }
 
 </table>
-
-
-
-
-
-
-
-
