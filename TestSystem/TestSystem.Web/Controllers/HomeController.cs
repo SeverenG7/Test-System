@@ -8,14 +8,12 @@ using TestSystem.Logic.Interfaces;
 using TestSystem.Web.Models;
 using AutoMapper;
 
-
-
 namespace TestSystem.Web.Controllers
 {
     public class HomeController : Controller
     {
-
         ITestService testService;
+        IQu
 
         public HomeController(ITestService service)
         {
