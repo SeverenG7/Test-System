@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Logic.Interfaces;
@@ -13,19 +14,48 @@ namespace TestSystem.Web.Controllers
     public class CommonController : Controller
     {
         private readonly ITestService _testService;
-        private readonly Iq
+        private readonly IQuestionService _questionService;
 
-        public CommonController(ITestService testService)
+        public CommonController(ITestService testService, IQuestionService questionService)
         {
             _testService = testService;
+            _questionService = questionService;
         }
         // GET: Common
-        public ActionResult CommonTables()
+        public async Task<ActionResult> CommonTables()
         {
-            IEnumerable<TestDTO> 
-
-            return View();
+            List<TestViewModel> testsTable = await GetTestTable();
+            List<QuestionViewModel> questionsTable = await GerQuestionTable();
+            ViewBag.Tests = testsTable;
+            ViewBag.Questions = questionsTable;
+            return View(testsTable);
         }
+
+        public Task<List<TestViewModel>> GetTestTable()
+        {
+            return Task.Run(() =>
+            {
+                IEnumerable<TestDTO> testDTOs = _testService.GetTests();
+                var mapper = new MapperConfiguration
+                    (mcf => mcf.CreateMap<TestDTO, TestViewModel>()).CreateMapper();
+                var tests = mapper.Map<IEnumerable<TestDTO>, List<TestViewModel>>(testDTOs);
+                return tests;
+            });
+        }
+
+        public Task<List<QuestionViewModel>> GerQuestionTable()
+        {
+            return Task.Run(() =>
+            {
+                IEnumerable<QuestionDTO> questionDTOs = _questionService.GetQuestions();
+                var mapper = new MapperConfiguration
+                (mcf => mcf.CreateMap<QuestionDTO, QuestionViewModel>()).CreateMapper();
+                var questions = mapper.Map<IEnumerable<QuestionDTO>, List<QuestionViewModel>>(questionDTOs);
+                return questions;
+            });
+
+        }
+        
 
         // GET: Common/Details/5
         public ActionResult Details(int id)

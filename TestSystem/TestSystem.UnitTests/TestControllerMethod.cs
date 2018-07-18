@@ -18,16 +18,7 @@ namespace TestSystem.UnitTests
         [TestMethod]
         public void TestFromDbAccept()
         {
-            var mock = new Mock<ITestService>();
-            mock.Setup(a => a.GetTests()).Returns(new List<TestDTO>());
-            HomeController homeController = new HomeController(mock.Object);
-
-            var result = homeController.Index() as ViewResult;
-
-            Assert.IsNotNull(result.Model);
+            
         }
-
-          
-       
     }
 }
