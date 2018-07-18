@@ -12,35 +12,6 @@ namespace TestSystem.Web.Controllers
 {
     public class HomeController : Controller
     {
-        ITestService testService;
-        IQu
 
-        public HomeController(ITestService service)
-        {
-            testService = service;
-        }
-        public ActionResult Index()
-        {
-            IEnumerable<TestDTO> testDTOs = testService.GetTests();
-            var mapper = new MapperConfiguration(mapperConfig =>
-            mapperConfig.CreateMap<TestDTO, TestViewModel>()).CreateMapper();
-            var tests = mapper.Map<IEnumerable<TestDTO>, List<TestViewModel>>(testDTOs);
-            
-            return View(tests);
-        }
-
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
     }
 }

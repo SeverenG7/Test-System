@@ -1,4 +1,6 @@
-﻿namespace TestSystem.Logic.DataTransferObjects
+﻿using System.Collections.Generic;
+
+namespace TestSystem.Logic.DataTransferObjects
 {
     public class TestDTO
     {
@@ -7,5 +9,6 @@
         public int QuestionsNumber { get; set; }
         public string TestDescription { get; set; }
         public int? IdProperty { get; set; }
+        public virtual ICollection<QuestionDTO> Questions { get; set; }
     }
 }

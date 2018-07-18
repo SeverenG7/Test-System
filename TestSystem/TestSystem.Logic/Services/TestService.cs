@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TestSystem.DataProvider.Repositories;
-using TestSystem.DataProvider.BaseClasses;
 using TestSystem.DataProvider.Interfaces;
 using TestSystem.Logic.Interfaces;
 using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Model.Models;
+using TestSystem.Logic.MapGeneric;
 using AutoMapper;
-
 
 namespace TestSystem.Logic.Services
 {
-    public class TestService : ITestService
+    public class TestService : MapClass<Test,TestDTO> ,ITestService
     {
         IUnitOfWork Database { get; set; }
 
@@ -25,25 +20,52 @@ namespace TestSystem.Logic.Services
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            Database.Dispose();
         }
 
         public TestDTO GetTest(int? id)
         {
             if (id == null)
                 throw new Exception();
-            var test = Database.Tests.Get(id.Value);
+            Test test = Database.Tests.Get(id.Value);
             if (test == null)
                 throw new Exception();
 
-            return new TestDTO { TestName = test.TestName , TestDescription = test.TestDescription , IdTest = test.IdTest};
+            TestDTO testDTO = MapperFromDB.Map<TestDTO>(test);
+            return testDTO;
         }
 
         public IEnumerable<TestDTO> GetTests()
         {
-            var mapper = new MapperConfiguration
-                (mapConfig => mapConfig.CreateMap<Test, TestDTO>()).CreateMapper();
-            return mapper.Map<IEnumerable<Test>, List<TestDTO>>(Database.Tests.GetAll());
+            return MapperFromDB.Map<IEnumerable<Test>, List<TestDTO>>(Database.Tests.GetAll());
+        }
+
+        public void RemoveTest(int id)
+        {
+            Test test = (Test)Database.Tests.Find(x => x.IdTest == id);
+            if(test != null)
+            {
+                Database.Tests.Remove(test);
+                Database.Complete();
+            }
+        }
+
+        public void CreateTest(TestDTO testDTO)
+        {
+            Test test = MapperToDB.Map<Test>(testDTO);
+            Database.Tests.Add(test);
+            Database.Complete();
+        }
+
+        public void UpdateTest(TestDTO testDTO)
+        {
+            Test test = (Test)Database.Tests.Find(x => x.IdTest == testDTO.IdTest);
+
+            if (test != null)
+            {
+                test = MapperToDB.Map<Test>(testDTO);
+                Database.Complete();
+            }
         }
     }
 }

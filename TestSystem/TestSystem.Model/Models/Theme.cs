@@ -12,7 +12,7 @@ namespace TestSystem.Model.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Theme()
         {
-            Property = new HashSet<Property>();
+            Properties = new HashSet<Property>();
         }
 
         [Key]
@@ -26,6 +26,6 @@ namespace TestSystem.Model.Models
         public string Description { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Property> Property { get; set; }
+        public virtual ICollection<Property> Properties { get; set; }
     }
 }
