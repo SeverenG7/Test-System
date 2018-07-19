@@ -60,12 +60,11 @@ namespace TestSystem.Logic.Services
 
         public void UpdateQuestion(QuestionDTO questionDTO)
         {
-            Question question = (Question)Database.Questions.Find(x => x.IdQuestion == questionDTO.IdQuestion );
-            if (question != null)
-            {
-                question = MapperToDB.Map<Question>(question);
-                Database.Complete();
-            }
+            //truly magic i guess
+            Question question = Database.Questions.Get(questionDTO.IdQuestion);
+            Database.Questions.Updating(question);
+            Question questionUpdate = MapperToDB.Map<Question>(questionDTO);
+            Database.Questions.Update(questionUpdate);
         }
     }
 }

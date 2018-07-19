@@ -133,7 +133,6 @@ namespace TestSystem.Web.Controllers
             {
                 try
                 {
-
                     _questionService.UpdateQuestion(questionDTO);
 
                     return RedirectToAction("Index");
