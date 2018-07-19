@@ -7,6 +7,8 @@ using System.Web.Mvc;
 using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Logic.Interfaces;
 using TestSystem.Web.Models;
+using PagedList.Mvc;
+using PagedList;
 using AutoMapper;
 
 namespace TestSystem.Web.Controllers
@@ -22,13 +24,16 @@ namespace TestSystem.Web.Controllers
             _questionService = questionService;
         }
         // GET: Common
-        public async Task<ActionResult> CommonTables()
+        public async Task<ActionResult> CommonTables(int? page )
         {
+            int pageSize = 1;
+            int pageNumber = (page ?? 1);
             List<TestViewModel> testsTable = await GetTestTable();
+            
             List<QuestionViewModel> questionsTable = await GerQuestionTable();
-            ViewBag.Tests = testsTable;
+            ViewBag.Tests = testsTable.ToPagedList(pageNumber,pageSize);
             ViewBag.Questions = questionsTable;
-            return View(testsTable);
+            return View();
         }
 
         public Task<List<TestViewModel>> GetTestTable()
