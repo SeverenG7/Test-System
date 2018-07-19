@@ -403,6 +403,8 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Shared\_MyLayout.cshtml" />
     <Content Include="Views\Common\CommonTables.cshtml" />
+    <Content Include="Views\Common\GetTableQuestions.cshtml" />
+    <Content Include="Views\Common\GetTableTests.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,46 @@
+﻿@model PagedList.IPagedList<TestSystem.Web.Models.TestViewModel>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+<div class="row">
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fa fa-table"></i> Last tests
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                        <tr>
+                            <td>Test name</td>
+                            <td>Questions number</td>
+                            <td>Description</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TestName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.QuestionsNumber)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TestDescription)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="btn-group">
+                    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) from @Model.PageCount
+                    @Html.PagedListPager(Model, pageTests => Url.Action("CommonTables", new { pageTests }))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
