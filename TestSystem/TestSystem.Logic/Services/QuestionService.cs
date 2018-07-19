@@ -50,7 +50,7 @@ namespace TestSystem.Logic.Services
 
         public void RemoveQuestion(int id)
         {
-            Question question = (Question)Database.Questions.Find(x => x.IdQuestion == id);
+            Question question = Database.Questions.Get(id);
             if (question != null)
             {
                 Database.Questions.Remove(question);

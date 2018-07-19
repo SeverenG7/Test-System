@@ -95,7 +95,6 @@ namespace TestSystem.Web.Controllers
             }
             QuestionViewModel question;
             QuestionDTO questionDTO = _questionService.GetQuestion(id);
-        
             if (questionDTO == null)
             {
                 return HttpNotFound();
@@ -147,25 +146,53 @@ namespace TestSystem.Web.Controllers
         }
 
         // GET: Question/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int? id, bool? saveChangesError = false)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ViewBag.ErrorMessage = "Delete failed. Try again, and if the problem persists see your system administrator.";
+            }
+            QuestionViewModel question;
+
+            QuestionDTO questionDTO = _questionService.GetQuestion(id);
+            if (questionDTO == null)
+            {
+                return HttpNotFound();
+            }
+            else
+            {
+                var map = new MapperConfiguration
+                   (mcf => mcf.CreateMap<QuestionDTO, QuestionViewModel>()).CreateMapper();
+                question = map.Map<QuestionViewModel>(questionDTO);
+
+            }
+            return View(question);
         }
 
         // POST: Question/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id)
         {
             try
             {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
+                QuestionViewModel question;
+                QuestionDTO questionDTO = _questionService.GetQuestion(id);
+                var map = new MapperConfiguration
+                   (mcf => mcf.CreateMap<QuestionDTO, QuestionViewModel>()).CreateMapper();
+                question = map.Map<QuestionViewModel>(questionDTO);
+                _questionService.RemoveQuestion(questionDTO.IdQuestion);
             }
-            catch
+            catch (DataException/* dex */)
             {
-                return View();
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
             }
+            return RedirectToAction("Index");
         }
     }
 }
