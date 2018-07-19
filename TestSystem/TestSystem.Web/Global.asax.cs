@@ -17,15 +17,7 @@ namespace TestSystem.Web
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
-
-           /* NinjectModule testModule = new TestModulecs();
-            NinjectModule serviceModule = new ServiceModule();
-            var kernel = new StandardKernel(testModule, serviceModule);
-            DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));*/
-
-
-            
+            BundleConfig.RegisterBundles(BundleTable.Bundles);            
         }
     }
 }

@@ -26,15 +26,15 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
-                    <a class="nav-link" href="index.html">
+                    <a class="nav-link" href="@Url.Action("CommonTables", "Common")">
                         <i class="fa fa-fw fa-dashboard"></i>
                         <span class="nav-link-text">Dashboard</span>
                     </a>
                 </li>
-                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Charts">
-                    <a class="nav-link" href="charts.html">
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Adding new questions">
+                    <a class="nav-link"  href="@Url.Action("Index", "Question")">
                         <i class="fa fa-fw fa-area-chart"></i>
-                        <span class="nav-link-text">Charts</span>
+                        <span class="nav-link-text">+ new Questions</span>
                     </a>
                 </li>
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tables">

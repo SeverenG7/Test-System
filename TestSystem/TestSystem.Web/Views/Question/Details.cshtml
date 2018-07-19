@@ -1,0 +1,61 @@
+﻿@model TestSystem.Web.Models.QuestionViewModel
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Question</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.QuestionText)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.QuestionText)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AnswerNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AnswerNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Score)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Score)
+        </dd>
+        <dd>
+            <table class="table">
+                <tr>
+                    <th>Answer</th>
+                    <th>Correct</th>
+                </tr>
+                @foreach (var item in Model.Answers)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AnswerText)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Correct)
+                        </td>
+                    </tr>
+                }
+            </table>
+        </dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new {  id = Model.IdQuestion }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

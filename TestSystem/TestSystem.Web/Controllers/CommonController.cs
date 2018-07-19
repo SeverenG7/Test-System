@@ -23,43 +23,40 @@ namespace TestSystem.Web.Controllers
             _testService = testService;
             _questionService = questionService;
         }
-        // GET: Common
-        public async Task<ActionResult> CommonTables(int? page )
+    
+        [HttpGet]
+        public ActionResult CommonTables()
         {
-            int pageSize = 1;
-            int pageNumber = (page ?? 1);
-            List<TestViewModel> testsTable = await GetTestTable();
-            
-            List<QuestionViewModel> questionsTable = await GerQuestionTable();
-            ViewBag.Tests = testsTable.ToPagedList(pageNumber,pageSize);
-            ViewBag.Questions = questionsTable;
+           
             return View();
         }
 
-        public Task<List<TestViewModel>> GetTestTable()
+        public ActionResult GetTableTests(int? pageTests)
         {
-            return Task.Run(() =>
-            {
-                IEnumerable<TestDTO> testDTOs = _testService.GetTests();
-                var mapper = new MapperConfiguration
-                    (mcf => mcf.CreateMap<TestDTO, TestViewModel>()).CreateMapper();
-                var tests = mapper.Map<IEnumerable<TestDTO>, List<TestViewModel>>(testDTOs);
-                return tests;
-            });
+            int pageSize = 1;
+            int pageNumber = (pageTests ?? 1);
+
+            IEnumerable<TestDTO> testDTOs = _testService.GetTests();
+            var map = new MapperConfiguration
+                (mcf => mcf.CreateMap<TestDTO, TestViewModel>()).CreateMapper();
+            List<TestViewModel> testsTable = map.Map<IEnumerable<TestDTO>, List<TestViewModel>>(testDTOs);
+            return PartialView(testsTable.ToPagedList(pageNumber, pageSize));
         }
 
-        public Task<List<QuestionViewModel>> GerQuestionTable()
+        public ActionResult GetTableQuestions(int? pageQuestions)
         {
-            return Task.Run(() =>
-            {
-                IEnumerable<QuestionDTO> questionDTOs = _questionService.GetQuestions();
-                var mapper = new MapperConfiguration
+            int pageSize = 1;
+            int pageNumber = (pageQuestions ?? 1);
+
+            IEnumerable<QuestionDTO> questionDTOs = _questionService.GetQuestions();
+            var map = new MapperConfiguration
                 (mcf => mcf.CreateMap<QuestionDTO, QuestionViewModel>()).CreateMapper();
-                var questions = mapper.Map<IEnumerable<QuestionDTO>, List<QuestionViewModel>>(questionDTOs);
-                return questions;
-            });
-
+            List<QuestionViewModel> questionsTable = map.Map<IEnumerable<QuestionDTO>, List<QuestionViewModel>>(questionDTOs);
+            return PartialView(questionsTable.ToPagedList(pageNumber, pageSize));
         }
+      
+
+        
         
 
         // GET: Common/Details/5
