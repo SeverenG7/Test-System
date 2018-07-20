@@ -54,10 +54,10 @@ namespace TestSystem.Web.Controllers
             List<QuestionViewModel> questionsTable = map.Map<IEnumerable<QuestionDTO>, List<QuestionViewModel>>(questionDTOs);
             return PartialView(questionsTable.ToPagedList(pageNumber, pageSize));
         }
-      
 
-        
-        
+
+
+
 
         // GET: Common/Details/5
         public ActionResult Details(int id)

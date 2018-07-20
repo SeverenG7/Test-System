@@ -1,11 +1,12 @@
 ﻿<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<link href="~/Views/Common/AjaxPageListing.js" rel="stylesheet" />
 @{
     ViewBag.Title = "CommonTables";
-    Layout = "~/Views/Shared/_MyLayout.cshtml";
 }
 
 <h2>Last changes:</h2>
 <div class="container">
     @Html.Action("GetTableTests");
     @Html.Action("GetTableQuestions");
+
 </div>

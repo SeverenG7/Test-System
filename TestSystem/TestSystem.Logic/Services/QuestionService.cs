@@ -61,9 +61,18 @@ namespace TestSystem.Logic.Services
         public void UpdateQuestion(QuestionDTO questionDTO)
         {
             //truly magic i guess
+            foreach (AnswerDTO ans in questionDTO.Answers)
+            {
+                Answer answer = Database.Answers.Get(ans.IdAnswer);
+                Database.Answers.Updating(answer);
+            }
             Question question = Database.Questions.Get(questionDTO.IdQuestion);
             Database.Questions.Updating(question);
             Question questionUpdate = MapperToDB.Map<Question>(questionDTO);
+            foreach (Answer ans in questionUpdate.Answers)
+            {
+                Database.Answers.Update(ans);
+            }
             Database.Questions.Update(questionUpdate);
         }
     }

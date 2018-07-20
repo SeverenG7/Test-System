@@ -40,7 +40,7 @@
                         }
                     </tbody>
                 </table>
-                <div class="btn-group">
+                <div class="btn-group" id="contentPager">
                     Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) из @Model.PageCount
                     @Html.PagedListPager(Model, pageQuestions => Url.Action("CommonTables", new { pageQuestions }))
                 </div>

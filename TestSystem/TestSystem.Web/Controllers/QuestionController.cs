@@ -1,5 +1,4 @@
-﻿// Copyright (c) 2011 rubicon IT GmbH
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -13,25 +12,34 @@ using PagedList;
 using AutoMapper;
 using System.Net;
 using System.Data;
+using TestSystem.Logic.MapGeneric;
 
 namespace TestSystem.Web.Controllers
 {
-    public class QuestionController : Controller
+    public class QuestionController : Controller , IMapGeneric<QuestionDTO,QuestionViewModel>
     {
+        
         private readonly IQuestionService _questionService;
+        private readonly IAnswerService _answerService;
         List<QuestionViewModel> questionsTable;
 
-        public QuestionController( IQuestionService questionService)
+        public IMapper MapperToDb { get; set; }
+        public IMapper MapperFromDb { get; set; }
+
+        public QuestionController( IQuestionService questionService , IAnswerService answerService)
         {
             _questionService = questionService;
+            _answerService = answerService;
+            MapperFromDb = new MapperConfiguration
+                (mcf => mcf.CreateMap<QuestionDTO, QuestionViewModel>()).CreateMapper();
+            MapperToDb = new MapperConfiguration
+                        (mcf => mcf.CreateMap<QuestionViewModel, QuestionDTO>()).CreateMapper();
         }
         // GET: Question
         public ActionResult Index()
         {
             IEnumerable<QuestionDTO> questionDTOs = _questionService.GetQuestions();
-            var map = new MapperConfiguration
-                (mcf => mcf.CreateMap<QuestionDTO, QuestionViewModel>()).CreateMapper();
-             questionsTable = map.Map<IEnumerable<QuestionDTO>, List<QuestionViewModel>>(questionDTOs);
+             questionsTable = MapperFromDb.Map<IEnumerable<QuestionDTO>, List<QuestionViewModel>>(questionDTOs);
             return View(questionsTable);
         }
 
@@ -50,9 +58,7 @@ namespace TestSystem.Web.Controllers
             }
             else
             {
-                var map = new MapperConfiguration
-                    (mcf => mcf.CreateMap<QuestionDTO, QuestionViewModel>()).CreateMapper();
-                question = map.Map<QuestionViewModel>(questionDTO);
+                question = MapperFromDb.Map<QuestionViewModel>(questionDTO);
             }
 
             return View(question);
@@ -72,9 +78,7 @@ namespace TestSystem.Web.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var map = new MapperConfiguration
-                        (mcf => mcf.CreateMap<QuestionViewModel,QuestionDTO>()).CreateMapper();
-                    QuestionDTO questionDTO = map.Map<QuestionDTO>(question);
+                    QuestionDTO questionDTO = MapperToDb.Map<QuestionDTO>(question);
                     _questionService.CreateQuestion(questionDTO);
                     return RedirectToAction("Index");
                 }
@@ -101,9 +105,7 @@ namespace TestSystem.Web.Controllers
             }
             else
             {
-                var map = new MapperConfiguration
-                    (mcf => mcf.CreateMap<QuestionDTO, QuestionViewModel>()).CreateMapper();
-                question = map.Map<QuestionViewModel>(questionDTO);
+                question = MapperFromDb.Map<QuestionViewModel>(questionDTO);
             }
 
             return View(question);
@@ -116,8 +118,6 @@ namespace TestSystem.Web.Controllers
         {
             QuestionViewModel questionUpdate;
             QuestionDTO questionDTO = _questionService.GetQuestion(id);
-            var map = new MapperConfiguration
-                    (mcf => mcf.CreateMap<QuestionDTO, QuestionViewModel>()).CreateMapper();
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -125,7 +125,7 @@ namespace TestSystem.Web.Controllers
 
             else
             {
-                questionUpdate = map.Map<QuestionViewModel>(questionDTO);
+                questionUpdate = MapperFromDb.Map<QuestionViewModel>(questionDTO);
             }
             if (TryUpdateModel(questionDTO, "",
                new string[] { "QuestionText" , "AnswerNumber" , "Score" }))
@@ -165,10 +165,7 @@ namespace TestSystem.Web.Controllers
             }
             else
             {
-                var map = new MapperConfiguration
-                   (mcf => mcf.CreateMap<QuestionDTO, QuestionViewModel>()).CreateMapper();
-                question = map.Map<QuestionViewModel>(questionDTO);
-
+                question = MapperFromDb.Map<QuestionViewModel>(questionDTO);
             }
             return View(question);
         }
@@ -180,12 +177,7 @@ namespace TestSystem.Web.Controllers
         {
             try
             {
-                QuestionViewModel question;
-                QuestionDTO questionDTO = _questionService.GetQuestion(id);
-                var map = new MapperConfiguration
-                   (mcf => mcf.CreateMap<QuestionDTO, QuestionViewModel>()).CreateMapper();
-                question = map.Map<QuestionViewModel>(questionDTO);
-                _questionService.RemoveQuestion(questionDTO.IdQuestion);
+                _questionService.RemoveQuestion(id);
             }
             catch (DataException/* dex */)
             {
