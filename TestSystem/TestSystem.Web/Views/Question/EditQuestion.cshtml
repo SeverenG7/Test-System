@@ -38,6 +38,19 @@
                 @Html.ValidationMessageFor(model => model.Score, "", new { @class = "text-danger" })
             </div>
         </div>
+        <table>
+            @foreach (var answer in ViewBag.Answers)
+            {
+                <tr>
+                    <td>
+                        <input type="checkbox" name="TrueOrFalse" value="@answer.Correct" />
+                    </td>
+                    <td>
+                        <input type="text" name="AnswerText" value="@answer.AnswerText" />
+                    </td>
+                </tr>
+            }
+        </table>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Save" class="btn btn-default" />

@@ -13,30 +13,40 @@ using PagedList;
 using AutoMapper;
 using System.Net;
 using System.Data;
+using TestSystem.Logic.MapGeneric;
+using System.IO;
 
 namespace TestSystem.Web.Controllers
 {
-    public class QuestionController : Controller
+    public class QuestionController : Controller , IMapGeneric<QuestionDTO,QuestionViewModel>
     {
+        
         private readonly IQuestionService _questionService;
+        private readonly IAnswerService _answerService;
         List<QuestionViewModel> questionsTable;
 
-        public QuestionController( IQuestionService questionService)
+        public IMapper MapperToDb { get; set; }
+        public IMapper MapperFromDb { get; set; }
+
+        public QuestionController( IQuestionService questionService , IAnswerService answerService)
         {
             _questionService = questionService;
+            _answerService = answerService;
+            MapperFromDb = new MapperConfiguration
+                (mcf => mcf.CreateMap<QuestionDTO, QuestionViewModel>()).CreateMapper();
+            MapperToDb = new MapperConfiguration
+                        (mcf => mcf.CreateMap<QuestionViewModel, QuestionDTO>()).CreateMapper();
         }
         // GET: Question
-        public ActionResult Index()
+        public ActionResult AllQuestions()
         {
             IEnumerable<QuestionDTO> questionDTOs = _questionService.GetQuestions();
-            var map = new MapperConfiguration
-                (mcf => mcf.CreateMap<QuestionDTO, QuestionViewModel>()).CreateMapper();
-             questionsTable = map.Map<IEnumerable<QuestionDTO>, List<QuestionViewModel>>(questionDTOs);
+             questionsTable = MapperFromDb.Map<IEnumerable<QuestionDTO>, List<QuestionViewModel>>(questionDTOs);
             return View(questionsTable);
         }
 
         // GET: Question/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult QuestionFullInfo(int? id)
         {
             if (id == null)
             {
@@ -50,15 +60,14 @@ namespace TestSystem.Web.Controllers
             }
             else
             {
-                var map = new MapperConfiguration
-                    (mcf => mcf.CreateMap<QuestionDTO, QuestionViewModel>()).CreateMapper();
-                question = map.Map<QuestionViewModel>(questionDTO);
+                question = MapperFromDb.Map<QuestionViewModel>(questionDTO);
             }
 
             return View(question);
         }
 
-        public ActionResult Create()
+        [HttpGet]
+        public ActionResult CreateQuestion()
         {
             return View();
         }
@@ -66,17 +75,27 @@ namespace TestSystem.Web.Controllers
         // POST: Question/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Exclude  = "IdQuestion, IdProperty")]QuestionViewModel question)
+        public ActionResult CreateQuestion([Bind(Exclude  = "IdQuestion, IdProperty")]QuestionViewModel question,
+            HttpPostedFileBase Image = null)
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    var map = new MapperConfiguration
-                        (mcf => mcf.CreateMap<QuestionViewModel,QuestionDTO>()).CreateMapper();
-                    QuestionDTO questionDTO = map.Map<QuestionDTO>(question);
-                    _questionService.CreateQuestion(questionDTO);
-                    return RedirectToAction("Index");
+                if (ModelState.IsValid )
+                { 
+                    if (Image == null)
+                    {
+                        QuestionDTO questionDTO = MapperToDb.Map<QuestionDTO>(question);
+                        _questionService.CreateQuestion(questionDTO);
+                        return RedirectToAction("AllQuestions");
+                    }
+                    else
+                    {
+                        question.QuestionImage = new byte[Image.ContentLength];
+                        Image.InputStream.Read(question.QuestionImage, 0, Image.ContentLength);
+                        QuestionDTO questionDTO = MapperToDb.Map<QuestionDTO>(question);
+                        _questionService.CreateQuestion(questionDTO);
+                         return RedirectToAction("AllQuestions");
+                    }
                 }
             }
             catch (DataException /* dex */)
@@ -87,7 +106,7 @@ namespace TestSystem.Web.Controllers
             return View(question);
         }
 
-        public ActionResult Edit(int? id)
+        public ActionResult EditQuestion(int? id)
         {
             if (id == null)
             {
@@ -95,30 +114,26 @@ namespace TestSystem.Web.Controllers
             }
             QuestionViewModel question;
             QuestionDTO questionDTO = _questionService.GetQuestion(id);
-        
             if (questionDTO == null)
             {
                 return HttpNotFound();
             }
             else
             {
-                var map = new MapperConfiguration
-                    (mcf => mcf.CreateMap<QuestionDTO, QuestionViewModel>()).CreateMapper();
-                question = map.Map<QuestionViewModel>(questionDTO);
+                question = MapperFromDb.Map<QuestionViewModel>(questionDTO);
+                ViewBag.Answers = question.Answers;
             }
 
             return View(question);
            
         }
 
-        [HttpPost, ActionName("Edit")]
+        [HttpPost, ActionName("EditQuestion")]
         [ValidateAntiForgeryToken]
-        public ActionResult EditPost(int? id)
+        public ActionResult EditPostQuestion(int? id)
         {
             QuestionViewModel questionUpdate;
             QuestionDTO questionDTO = _questionService.GetQuestion(id);
-            var map = new MapperConfiguration
-                    (mcf => mcf.CreateMap<QuestionDTO, QuestionViewModel>()).CreateMapper();
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -126,17 +141,16 @@ namespace TestSystem.Web.Controllers
 
             else
             {
-                questionUpdate = map.Map<QuestionViewModel>(questionDTO);
+                questionUpdate = MapperFromDb.Map<QuestionViewModel>(questionDTO);
             }
             if (TryUpdateModel(questionDTO, "",
                new string[] { "QuestionText" , "AnswerNumber" , "Score" }))
             {
                 try
                 {
-
                     _questionService.UpdateQuestion(questionDTO);
 
-                    return RedirectToAction("Index");
+                    return RedirectToAction("AllQuestions");
                 }
                 catch (DataException /* dex */)
                 {
@@ -148,25 +162,59 @@ namespace TestSystem.Web.Controllers
         }
 
         // GET: Question/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult DeleteQuestion(int? id, bool? saveChangesError = false)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ViewBag.ErrorMessage = "Delete failed. Try again, and if the problem persists see your system administrator.";
+            }
+            QuestionViewModel question;
+
+            QuestionDTO questionDTO = _questionService.GetQuestion(id);
+            if (questionDTO == null)
+            {
+                return HttpNotFound();
+            }
+            else
+            {
+                question = MapperFromDb.Map<QuestionViewModel>(questionDTO);
+            }
+            return View(question);
         }
 
         // POST: Question/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteQuestion(int id)
         {
             try
             {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
+                _questionService.RemoveQuestion(id);
             }
-            catch
+            catch (DataException/* dex */)
             {
-                return View();
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
             }
+            return RedirectToAction("AllQuestions");
         }
+
+        public ActionResult CreateAnswer(int? answerNumber)
+        {
+            List<AnswerViewModel> creatingAnswers = new List<AnswerViewModel>();
+            for (int i = 0; i < answerNumber; i++)
+            {
+                creatingAnswers.Add(new AnswerViewModel());
+            }
+            ViewBag.Answers = creatingAnswers;
+            return PartialView();
+        }
+
+
+
     }
 }

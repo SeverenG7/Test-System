@@ -99,16 +99,19 @@
     <Compile Include="Infrastructure\AnswerServiceModule.cs" />
     <Compile Include="Infrastructure\QuestionServiceModule.cs" />
     <Compile Include="Infrastructure\TestServiceModule.cs" />
+    <Compile Include="Infrastructure\ThemeServiceModule.cs" />
     <Compile Include="Infrastructure\UnitOfWorkModule.cs" />
     <Compile Include="Interfaces\IAnswerService.cs" />
     <Compile Include="Interfaces\IQuestionService.cs" />
     <Compile Include="Interfaces\ITestService.cs" />
     <Compile Include="Interfaces\IThemeService.cs" />
+    <Compile Include="MapGeneric\IMapGeneric.cs" />
     <Compile Include="MapGeneric\MapClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AnswerService.cs" />
     <Compile Include="Services\QuestionService.cs" />
     <Compile Include="Services\TestService.cs" />
+    <Compile Include="Services\ThemeService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TestSystem.DataProvider\TestSystem.DataProvider.csproj">

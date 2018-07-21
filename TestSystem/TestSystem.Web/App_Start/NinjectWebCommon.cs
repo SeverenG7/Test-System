@@ -44,7 +44,6 @@ namespace TestSystem.Web.App_Start
             var kernel = new StandardKernel();
             kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
             kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
-            
             RegisterServices(kernel);
             return kernel;
         }
@@ -55,10 +54,8 @@ namespace TestSystem.Web.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            
-            
             System.Web.Mvc.DependencyResolver.SetResolver(new
-        NinjectDependencyResolver(kernel));
+            NinjectDependencyResolver(kernel));
         }        
     }
 }

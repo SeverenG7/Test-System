@@ -50,7 +50,7 @@ namespace TestSystem.Logic.Services
 
         public void RemoveQuestion(int id)
         {
-            Question question = (Question)Database.Questions.Find(x => x.IdQuestion == id);
+            Question question = Database.Questions.Get(id);
             if (question != null)
             {
                 Database.Questions.Remove(question);
@@ -60,12 +60,20 @@ namespace TestSystem.Logic.Services
 
         public void UpdateQuestion(QuestionDTO questionDTO)
         {
-            Question question = (Question)Database.Questions.Find(x => x.IdQuestion == questionDTO.IdQuestion );
-            if (question != null)
+            //truly magic i guess
+            foreach (AnswerDTO ans in questionDTO.Answers)
             {
-                question = MapperToDB.Map<Question>(question);
-                Database.Complete();
+                Answer answer = Database.Answers.Get(ans.IdAnswer);
+                Database.Answers.Updating(answer);
             }
+            Question question = Database.Questions.Get(questionDTO.IdQuestion);
+            Database.Questions.Updating(question);
+            Question questionUpdate = MapperToDB.Map<Question>(questionDTO);
+            foreach (Answer ans in questionUpdate.Answers)
+            {
+                Database.Answers.Update(ans);
+            }
+            Database.Questions.Update(questionUpdate);
         }
     }
 }

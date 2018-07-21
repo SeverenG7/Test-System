@@ -32,7 +32,9 @@ namespace TestSystem.Web.Util
             UnitOfWorkModule unitOfWorkModule = new UnitOfWorkModule();
             QuestionServiceModule questionServiceModule = new QuestionServiceModule();
             AnswerServiceModule answerServiceModule = new AnswerServiceModule();
-            kernel.Load(unitOfWorkModule, testServiceModule,questionServiceModule,answerServiceModule);
+            ThemeServiceModule themeServiceModule = new ThemeServiceModule();
+            kernel.Load(unitOfWorkModule, testServiceModule,questionServiceModule,
+                answerServiceModule, themeServiceModule);
         }
 
     }

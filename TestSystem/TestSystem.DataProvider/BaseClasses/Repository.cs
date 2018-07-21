@@ -43,5 +43,17 @@ namespace TestSystem.DataProvider.BaseClasses
 
         public void Remove(TEntity entity) => context.Set<TEntity>().Remove(entity);
         public void RemoveRange(IEnumerable<TEntity> entities) => context.Set<TEntity>().RemoveRange(entities);
+
+        public void Updating(TEntity entity)
+        {
+            context.Entry(entity).State = EntityState.Detached;
+            context.SaveChanges();
+        }
+
+        public void Update(TEntity entity)
+        {
+            context.Entry(entity).State = EntityState.Modified;
+            context.SaveChanges();
+        }
     }
 }
