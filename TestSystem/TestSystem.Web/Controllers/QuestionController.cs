@@ -38,7 +38,7 @@ namespace TestSystem.Web.Controllers
                         (mcf => mcf.CreateMap<QuestionViewModel, QuestionDTO>()).CreateMapper();
         }
         // GET: Question
-        public ActionResult Index()
+        public ActionResult AllQuestions()
         {
             IEnumerable<QuestionDTO> questionDTOs = _questionService.GetQuestions();
              questionsTable = MapperFromDb.Map<IEnumerable<QuestionDTO>, List<QuestionViewModel>>(questionDTOs);
@@ -46,7 +46,7 @@ namespace TestSystem.Web.Controllers
         }
 
         // GET: Question/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult QuestionFullInfo(int? id)
         {
             if (id == null)
             {
@@ -66,7 +66,8 @@ namespace TestSystem.Web.Controllers
             return View(question);
         }
 
-        public ActionResult Create()
+        [HttpGet]
+        public ActionResult CreateQuestion()
         {
             return View();
         }
@@ -74,27 +75,26 @@ namespace TestSystem.Web.Controllers
         // POST: Question/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Exclude  = "IdQuestion, IdProperty")]QuestionViewModel question,
+        public ActionResult CreateQuestion([Bind(Exclude  = "IdQuestion, IdProperty")]QuestionViewModel question,
             HttpPostedFileBase Image = null)
         {
             try
             {
                 if (ModelState.IsValid )
-                {
+                { 
                     if (Image == null)
                     {
                         QuestionDTO questionDTO = MapperToDb.Map<QuestionDTO>(question);
                         _questionService.CreateQuestion(questionDTO);
-                        return RedirectToAction("Index");
+                        return RedirectToAction("AllQuestions");
                     }
                     else
                     {
-
                         question.QuestionImage = new byte[Image.ContentLength];
                         Image.InputStream.Read(question.QuestionImage, 0, Image.ContentLength);
                         QuestionDTO questionDTO = MapperToDb.Map<QuestionDTO>(question);
                         _questionService.CreateQuestion(questionDTO);
-                         return RedirectToAction("Index");
+                         return RedirectToAction("AllQuestions");
                     }
                 }
             }
@@ -106,7 +106,7 @@ namespace TestSystem.Web.Controllers
             return View(question);
         }
 
-        public ActionResult Edit(int? id)
+        public ActionResult EditQuestion(int? id)
         {
             if (id == null)
             {
@@ -121,15 +121,16 @@ namespace TestSystem.Web.Controllers
             else
             {
                 question = MapperFromDb.Map<QuestionViewModel>(questionDTO);
+                ViewBag.Answers = question.Answers;
             }
 
             return View(question);
            
         }
 
-        [HttpPost, ActionName("Edit")]
+        [HttpPost, ActionName("EditQuestion")]
         [ValidateAntiForgeryToken]
-        public ActionResult EditPost(int? id)
+        public ActionResult EditPostQuestion(int? id)
         {
             QuestionViewModel questionUpdate;
             QuestionDTO questionDTO = _questionService.GetQuestion(id);
@@ -149,7 +150,7 @@ namespace TestSystem.Web.Controllers
                 {
                     _questionService.UpdateQuestion(questionDTO);
 
-                    return RedirectToAction("Index");
+                    return RedirectToAction("AllQuestions");
                 }
                 catch (DataException /* dex */)
                 {
@@ -161,7 +162,7 @@ namespace TestSystem.Web.Controllers
         }
 
         // GET: Question/Delete/5
-        public ActionResult Delete(int? id, bool? saveChangesError = false)
+        public ActionResult DeleteQuestion(int? id, bool? saveChangesError = false)
         {
             if (id == null)
             {
@@ -188,7 +189,7 @@ namespace TestSystem.Web.Controllers
         // POST: Question/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id)
+        public ActionResult DeleteQuestion(int id)
         {
             try
             {
@@ -199,7 +200,21 @@ namespace TestSystem.Web.Controllers
                 //Log the error (uncomment dex variable name and add a line here to write a log.
                 return RedirectToAction("Delete", new { id = id, saveChangesError = true });
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("AllQuestions");
         }
+
+        public ActionResult CreateAnswer(int? answerNumber)
+        {
+            List<AnswerViewModel> creatingAnswers = new List<AnswerViewModel>();
+            for (int i = 0; i < answerNumber; i++)
+            {
+                creatingAnswers.Add(new AnswerViewModel());
+            }
+            ViewBag.Answers = creatingAnswers;
+            return PartialView();
+        }
+
+
+
     }
 }

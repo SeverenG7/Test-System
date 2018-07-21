@@ -99,6 +99,7 @@
     <Compile Include="Infrastructure\AnswerServiceModule.cs" />
     <Compile Include="Infrastructure\QuestionServiceModule.cs" />
     <Compile Include="Infrastructure\TestServiceModule.cs" />
+    <Compile Include="Infrastructure\ThemeServiceModule.cs" />
     <Compile Include="Infrastructure\UnitOfWorkModule.cs" />
     <Compile Include="Interfaces\IAnswerService.cs" />
     <Compile Include="Interfaces\IQuestionService.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="Services\AnswerService.cs" />
     <Compile Include="Services\QuestionService.cs" />
     <Compile Include="Services\TestService.cs" />
+    <Compile Include="Services\ThemeService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TestSystem.DataProvider\TestSystem.DataProvider.csproj">

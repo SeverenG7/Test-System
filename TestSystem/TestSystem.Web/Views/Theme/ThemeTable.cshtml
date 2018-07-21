@@ -1,0 +1,39 @@
+﻿@model IEnumerable<TestSystem.Logic.DataTransferObjects.ThemeDTO>
+
+@{
+    ViewBag.Title = "ThemeTable";
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
+}
+
+<h2>Themes table</h2>
+
+<p>
+    @Html.ActionLink("Create New", "CreateTheme")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ThemeName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th></th>
+    </tr>
+@foreach (var item in Model)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ThemeName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "EditTheme", new {   id=item.IdTheme }) |
+            @Html.ActionLink("Delete", "DeleteTheme", new {  id=item.IdTheme })
+        </td>
+    </tr>
+}
+
+</table>

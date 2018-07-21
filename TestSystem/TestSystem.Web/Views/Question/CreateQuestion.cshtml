@@ -2,10 +2,9 @@
 @model TestSystem.Web.Models.QuestionViewModel
 
 @{
-                /**/
-
-                ViewBag.Title = "Create";
-                Layout = "~/Views/Shared/_MyLayout.cshtml";
+  
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
 }
 
 <h2>Create</h2>
@@ -44,6 +43,20 @@
         </div>
     </div>
 
+    <table>
+        @foreach (AnswerViewModel answer in Model.Answers)
+        {
+            <tr>
+                <td>
+                    <input type="checkbox" name="TrueOrFalse" value="@answer.Correct" />
+                </td>
+                <td>
+                    <input type="text" name="AnswerText" value="@answer.AnswerText" />
+                </td>
+            </tr>
+        }
+    </table>
+
     <div class="form-group">
         <div style="position:relative;">
             <label>Картинка</label>
@@ -68,5 +81,5 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "AllQuestions")
 </div>

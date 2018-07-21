@@ -205,6 +205,8 @@
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
+    <Compile Include="Controllers\TestController.cs" />
+    <Compile Include="Controllers\ThemeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -215,6 +217,10 @@
     <Compile Include="Util\NinjectDependencyResolver.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\actionImages\iconInfo.png" />
+    <Content Include="Content\actionImages\iconPlus.png" />
+    <Content Include="Content\actionImages\iconEdit.png" />
+    <Content Include="Content\actionImages\iconRemove.png" />
     <Content Include="Content\blank.html" />
     <Content Include="Content\cards.html" />
     <Content Include="Content\charts.html" />
@@ -408,14 +414,21 @@
     <Content Include="Views\Common\GetTableQuestions.cshtml" />
     <Content Include="Views\Common\GetTableTests.cshtml" />
     <Content Include="Views\Common\CommonTables.cshtml" />
-    <Content Include="Views\Question\Index.cshtml" />
-    <Content Include="Views\Question\Details.cshtml" />
-    <Content Include="Views\Question\Create.cshtml" />
-    <Content Include="Views\Question\Edit.cshtml" />
-    <Content Include="Views\Question\Delete.cshtml" />
+    <Content Include="Views\Question\AllQuestions.cshtml" />
+    <Content Include="Views\Question\QuestionFullInfo.cshtml" />
+    <Content Include="Views\Question\CreateQuestion.cshtml" />
+    <Content Include="Views\Question\EditQuestion.cshtml" />
+    <Content Include="Views\Question\DeleteQuestion.cshtml" />
+    <Content Include="Views\Question\CreateAnswer.cshtml" />
+    <Content Include="Views\Theme\ThemeTable.cshtml" />
+    <Content Include="Views\Theme\CreateTheme.cshtml" />
+    <Content Include="Views\Theme\EditTheme.cshtml" />
+    <Content Include="Views\Theme\DeleteTheme.cshtml" />
+    <Content Include="Views\Test\AllTests.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Answer\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
