@@ -34,6 +34,15 @@
         <dd>
             @Html.DisplayFor(model => model.Score)
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.QuestionImage)
+        </dt>
+
+        <dd>
+            @Html.Raw("<img style='width:80px; height:60px;' src=\"data:image/jpeg;base64,"
+                                + Convert.ToBase64String(Model.QuestionImage) + "\" />")
+        </dd>
+
         <dd>
             <table class="table">
                 <tr>

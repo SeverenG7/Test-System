@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Copyright (c) 2011 rubicon IT GmbH
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -13,6 +14,7 @@ using AutoMapper;
 using System.Net;
 using System.Data;
 using TestSystem.Logic.MapGeneric;
+using System.IO;
 
 namespace TestSystem.Web.Controllers
 {
@@ -72,15 +74,28 @@ namespace TestSystem.Web.Controllers
         // POST: Question/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Exclude  = "IdQuestion, IdProperty")]QuestionViewModel question)
+        public ActionResult Create([Bind(Exclude  = "IdQuestion, IdProperty")]QuestionViewModel question,
+            HttpPostedFileBase Image = null)
         {
             try
             {
-                if (ModelState.IsValid)
+                if (ModelState.IsValid )
                 {
-                    QuestionDTO questionDTO = MapperToDb.Map<QuestionDTO>(question);
-                    _questionService.CreateQuestion(questionDTO);
-                    return RedirectToAction("Index");
+                    if (Image == null)
+                    {
+                        QuestionDTO questionDTO = MapperToDb.Map<QuestionDTO>(question);
+                        _questionService.CreateQuestion(questionDTO);
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+
+                        question.QuestionImage = new byte[Image.ContentLength];
+                        Image.InputStream.Read(question.QuestionImage, 0, Image.ContentLength);
+                        QuestionDTO questionDTO = MapperToDb.Map<QuestionDTO>(question);
+                        _questionService.CreateQuestion(questionDTO);
+                         return RedirectToAction("Index");
+                    }
                 }
             }
             catch (DataException /* dex */)
