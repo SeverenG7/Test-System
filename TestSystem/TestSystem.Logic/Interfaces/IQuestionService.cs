@@ -7,7 +7,7 @@ namespace TestSystem.Logic.Interfaces
     {
         IEnumerable<QuestionDTO> GetQuestions();
         QuestionDTO GetQuestion(int? id);
-        void CreateQuestion(QuestionDTO questionDTO);
+        void CreateQuestion(QuestionDTO questionDTO ,string theme , string difficult);
         void RemoveQuestion(int id);
         void UpdateQuestion(QuestionDTO questionDTO);
         void AddQuestionToTest(int idTest, int idQuestion);

@@ -1,4 +1,4 @@
-﻿@model TestSystem.Web.Models.QuestionViewModel
+﻿@model TestSystem.Logic.DataTransferObjects.QuestionDTO
 
 @{
     ViewBag.Title = "Details";
@@ -17,6 +17,14 @@
 
         <dd>
             @Html.DisplayFor(model => model.QuestionText)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IdProperty)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IdProperty)
         </dd>
 
         <dt>

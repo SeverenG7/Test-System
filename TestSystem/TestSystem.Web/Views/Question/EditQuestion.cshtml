@@ -1,4 +1,4 @@
-﻿@model TestSystem.Web.Models.QuestionViewModel
+﻿@model TestSystem.Logic.DataTransferObjects.QuestionDTO
 
 @{
     ViewBag.Title = "EditPost";
@@ -12,7 +12,7 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>QuestionViewModel</h4>
+        <h4>QuestionDTO</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
@@ -60,5 +60,5 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "AllQuestions")
 </div>

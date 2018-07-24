@@ -1,5 +1,4 @@
-﻿// Copyright (c) 2011 rubicon IT GmbH
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -7,41 +6,28 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Logic.Interfaces;
-using TestSystem.Web.Models;
-using PagedList.Mvc;
-using PagedList;
 using AutoMapper;
 using System.Net;
 using System.Data;
 using TestSystem.Logic.MapGeneric;
-using System.IO;
 
 namespace TestSystem.Web.Controllers
 {
-    public class QuestionController : Controller , IMapGeneric<QuestionDTO,QuestionViewModel>
+    public class QuestionController : Controller
     {
-        
+
         private readonly IQuestionService _questionService;
-        private readonly IAnswerService _answerService;
-        List<QuestionViewModel> questionsTable;
+        private readonly IThemeService _themeService;
 
-        public IMapper MapperToDb { get; set; }
-        public IMapper MapperFromDb { get; set; }
-
-        public QuestionController( IQuestionService questionService , IAnswerService answerService)
+        public QuestionController(IQuestionService questionService, IThemeService themeService)
         {
             _questionService = questionService;
-            _answerService = answerService;
-            MapperFromDb = new MapperConfiguration
-                (mcf => mcf.CreateMap<QuestionDTO, QuestionViewModel>()).CreateMapper();
-            MapperToDb = new MapperConfiguration
-                        (mcf => mcf.CreateMap<QuestionViewModel, QuestionDTO>()).CreateMapper();
+            _themeService = themeService;
         }
         // GET: Question
         public ActionResult AllQuestions()
         {
-            IEnumerable<QuestionDTO> questionDTOs = _questionService.GetQuestions();
-             questionsTable = MapperFromDb.Map<IEnumerable<QuestionDTO>, List<QuestionViewModel>>(questionDTOs);
+            IEnumerable<QuestionDTO> questionsTable = _questionService.GetQuestions();
             return View(questionsTable);
         }
 
@@ -52,48 +38,60 @@ namespace TestSystem.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            QuestionViewModel question;
-            QuestionDTO questionDTO = _questionService.GetQuestion(id);
-            if (questionDTO == null)
+            QuestionDTO question = _questionService.GetQuestion(id);
+            if (question == null)
             {
                 return HttpNotFound();
             }
-            else
-            {
-                question = MapperFromDb.Map<QuestionViewModel>(questionDTO);
-            }
-
             return View(question);
         }
 
         [HttpGet]
         public ActionResult CreateQuestion()
         {
-            return View();
+            ThemesDropDownList();
+
+            //string[] difficults = new string[3] { "Junior", "Middle", "Senoir" };
+            QuestionDTO question = new QuestionDTO();
+
+            question.Answers = new List<AnswerDTO>();
+            for (int i = 0; i < 5; i++)
+            {
+                question.Answers.Add(new AnswerDTO());
+            }
+            return View(question);
         }
 
         // POST: Question/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateQuestion([Bind(Exclude  = "IdQuestion, IdProperty")]QuestionViewModel question,
-            HttpPostedFileBase Image = null)
+        public ActionResult CreateQuestion(SelectListItem ThemeName,
+            [Bind(Include = "Answers , QuestionText , AnswerNumber , Score ")]QuestionDTO question,
+            HttpPostedFileBase Image = null )
         {
             try
             {
+                ThemesDropDownList();
                 if (ModelState.IsValid )
-                { 
+                {
+                  /*  foreach (AnswerDTO answer in question.Answers)
+                    {
+                        if (answer.AnswerText == null)
+                        {
+                            question.Answers.Remove(answer);
+                        }
+                    }*/
+
                     if (Image == null)
                     {
-                        QuestionDTO questionDTO = MapperToDb.Map<QuestionDTO>(question);
-                        _questionService.CreateQuestion(questionDTO);
+                        _questionService.CreateQuestion(question , ThemeName.Value  , "Junior");
                         return RedirectToAction("AllQuestions");
                     }
                     else
                     {
                         question.QuestionImage = new byte[Image.ContentLength];
                         Image.InputStream.Read(question.QuestionImage, 0, Image.ContentLength);
-                        QuestionDTO questionDTO = MapperToDb.Map<QuestionDTO>(question);
-                        _questionService.CreateQuestion(questionDTO);
+                        _questionService.CreateQuestion(question, ThemeName.Value, "Junior");
                          return RedirectToAction("AllQuestions");
                     }
                 }
@@ -112,43 +110,35 @@ namespace TestSystem.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            QuestionViewModel question;
-            QuestionDTO questionDTO = _questionService.GetQuestion(id);
-            if (questionDTO == null)
+            QuestionDTO question = _questionService.GetQuestion(id);
+            if (question == null)
             {
                 return HttpNotFound();
             }
             else
             {
-                question = MapperFromDb.Map<QuestionViewModel>(questionDTO);
                 ViewBag.Answers = question.Answers;
             }
 
             return View(question);
-           
         }
 
         [HttpPost, ActionName("EditQuestion")]
         [ValidateAntiForgeryToken]
         public ActionResult EditPostQuestion(int? id)
         {
-            QuestionViewModel questionUpdate;
-            QuestionDTO questionDTO = _questionService.GetQuestion(id);
+
+            QuestionDTO questionUpdate = _questionService.GetQuestion(id);
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-
-            else
-            {
-                questionUpdate = MapperFromDb.Map<QuestionViewModel>(questionDTO);
-            }
-            if (TryUpdateModel(questionDTO, "",
+            if (TryUpdateModel(questionUpdate, "",
                new string[] { "QuestionText" , "AnswerNumber" , "Score" }))
             {
                 try
                 {
-                    _questionService.UpdateQuestion(questionDTO);
+                    _questionService.UpdateQuestion(questionUpdate);
 
                     return RedirectToAction("AllQuestions");
                 }
@@ -172,16 +162,10 @@ namespace TestSystem.Web.Controllers
             {
                 ViewBag.ErrorMessage = "Delete failed. Try again, and if the problem persists see your system administrator.";
             }
-            QuestionViewModel question;
-
-            QuestionDTO questionDTO = _questionService.GetQuestion(id);
-            if (questionDTO == null)
+            QuestionDTO question = _questionService.GetQuestion(id);
+            if (question == null)
             {
                 return HttpNotFound();
-            }
-            else
-            {
-                question = MapperFromDb.Map<QuestionViewModel>(questionDTO);
             }
             return View(question);
         }
@@ -203,17 +187,20 @@ namespace TestSystem.Web.Controllers
             return RedirectToAction("AllQuestions");
         }
 
-        public ActionResult CreateAnswer(int? answerNumber)
+        #region Auxiliary methods
+
+        private void ThemesDropDownList(object selectedTheme = null)
         {
-            List<AnswerViewModel> creatingAnswers = new List<AnswerViewModel>();
-            for (int i = 0; i < answerNumber; i++)
+            var themes = _themeService.GetAll().ToList();
+            List<SelectListItem> items = new List<SelectListItem>();
+            foreach (ThemeDTO theme in themes)
             {
-                creatingAnswers.Add(new AnswerViewModel());
+                items.Add(new SelectListItem { Text = theme.ThemeName , Value = theme.ThemeName});
             }
-            ViewBag.Answers = creatingAnswers;
-            return PartialView();
+            ViewData["ThemeName"] = items; 
         }
 
+        #endregion
 
 
     }

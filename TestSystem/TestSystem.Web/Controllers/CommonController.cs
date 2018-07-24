@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Logic.Interfaces;
-using TestSystem.Web.Models;
 using PagedList.Mvc;
 using PagedList;
 using AutoMapper;
@@ -33,25 +32,19 @@ namespace TestSystem.Web.Controllers
 
         public ActionResult GetTableTests(int? pageTests)
         {
-            int pageSize = 1;
+            int pageSize = 2;
             int pageNumber = (pageTests ?? 1);
 
-            IEnumerable<TestDTO> testDTOs = _testService.GetTests();
-            var map = new MapperConfiguration
-                (mcf => mcf.CreateMap<TestDTO, TestViewModel>()).CreateMapper();
-            List<TestViewModel> testsTable = map.Map<IEnumerable<TestDTO>, List<TestViewModel>>(testDTOs);
+            IEnumerable<TestDTO> testsTable = _testService.GetTests();
             return PartialView(testsTable.ToPagedList(pageNumber, pageSize));
         }
 
         public ActionResult GetTableQuestions(int? pageQuestions)
         {
-            int pageSize = 1;
+            int pageSize = 5;
             int pageNumber = (pageQuestions ?? 1);
 
-            IEnumerable<QuestionDTO> questionDTOs = _questionService.GetQuestions();
-            var map = new MapperConfiguration
-                (mcf => mcf.CreateMap<QuestionDTO, QuestionViewModel>()).CreateMapper();
-            List<QuestionViewModel> questionsTable = map.Map<IEnumerable<QuestionDTO>, List<QuestionViewModel>>(questionDTOs);
+            IEnumerable<QuestionDTO> questionsTable = _questionService.GetQuestions();
             return PartialView(questionsTable.ToPagedList(pageNumber, pageSize));
         }
     }

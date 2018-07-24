@@ -105,7 +105,6 @@
     <Compile Include="Interfaces\IQuestionService.cs" />
     <Compile Include="Interfaces\ITestService.cs" />
     <Compile Include="Interfaces\IThemeService.cs" />
-    <Compile Include="MapGeneric\IMapGeneric.cs" />
     <Compile Include="MapGeneric\MapClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AnswerService.cs" />

@@ -20,8 +20,9 @@ namespace TestSystem.Logic.Services
         {
             Database.Tests.Get(idTest).Questions.Add(Database.Questions.Get(idQuestion));
         }
-        public void CreateQuestion(QuestionDTO questionDTO)
+        public void CreateQuestion(QuestionDTO questionDTO , string theme , string difficult)
         {
+            questionDTO.IdProperty = 2;
             Question question = MapperToDB.Map<Question>(questionDTO);
             Database.Questions.Add(question);
             Database.Complete();

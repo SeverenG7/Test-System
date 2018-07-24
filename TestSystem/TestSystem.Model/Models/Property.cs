@@ -17,7 +17,7 @@ namespace TestSystem.Model.Models
         [Key]
         public int IdProperty { get; set; }
 
-        public int Difficult { get; set; }
+        public string Difficult { get; set; }
 
         public int IdTheme { get; set; }
 

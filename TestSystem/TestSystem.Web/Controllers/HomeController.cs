@@ -5,7 +5,6 @@ using System.Web;
 using System.Web.Mvc;
 using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Logic.Interfaces;
-using TestSystem.Web.Models;
 using AutoMapper;
 
 namespace TestSystem.Web.Controllers

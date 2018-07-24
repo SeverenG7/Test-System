@@ -1,23 +1,31 @@
-﻿@using TestSystem.Web.Models;
-@model TestSystem.Web.Models.QuestionViewModel
+﻿@model TestSystem.Logic.DataTransferObjects.QuestionDTO
+@using TestSystem.Logic.DataTransferObjects;
 
 @{
   
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Create new question here";
     Layout = "~/Views/Shared/_MyLayout.cshtml";
 }
 
-<h2>Create</h2>
+<h2>Create new question here</h2>
 
-@using (Html.BeginForm("Create", "Question",
+@using (Html.BeginForm("CreateQuestion", "Question",
         FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
 <div class="form-horizontal">
-    <h4>QuestionViewModel</h4>
+    <h4>Your new question:</h4>
     <hr />
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="row">
+        <div class="form-group">
+            <div class="col-md-4">
+                @Html.DropDownList("ThemeName"  )
+            </div>
+        </div>
+    </div>
 
     <div class="form-group">
         @Html.LabelFor(model => model.QuestionText, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -44,7 +52,7 @@
     </div>
 
     <table>
-        @foreach (AnswerViewModel answer in Model.Answers)
+        @foreach (AnswerDTO answer in Model.Answers)
         {
             <tr>
                 <td>
