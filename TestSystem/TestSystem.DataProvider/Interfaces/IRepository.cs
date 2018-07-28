@@ -9,7 +9,7 @@ namespace TestSystem.DataProvider.Interfaces
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <returns>TEntity here is a like generic type of any data objcet. </returns>
-    public interface IRepository<TEntity> where TEntity : class
+    public interface IRepository<TEntity> : IDisposable where TEntity : class 
     {
         /// <summary>
         /// Group of methods to finding objects.
@@ -32,5 +32,6 @@ namespace TestSystem.DataProvider.Interfaces
 
         void Updating(TEntity entity);
         void Update(TEntity entity);
+
     }
 }

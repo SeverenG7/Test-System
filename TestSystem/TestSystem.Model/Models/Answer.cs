@@ -9,7 +9,6 @@ namespace TestSystem.Model.Models
     [Table("Answer")]
     public  class Answer
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Answer()
         {
             Questions = new HashSet<Question>();
@@ -24,7 +23,6 @@ namespace TestSystem.Model.Models
 
         public bool Correct { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Question> Questions { get; set; }
     }
 }

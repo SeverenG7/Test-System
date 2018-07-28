@@ -1,5 +1,5 @@
 ﻿using TestSystem.Model.Models;
-using TestSystem.DataProvider.ContextData;
+using TestSystem.DataProvider.Context;
 using TestSystem.DataProvider.BaseClasses;
 
 namespace TestSystem.DataProvider.Repositories
@@ -11,12 +11,12 @@ namespace TestSystem.DataProvider.Repositories
     /// </summary>
     public class TestRepository : Repository<Test>
     {
-        public TestRepository(TestContext context) : base(context)
+        public TestRepository(ApplicationContext context) : base(context)
         { }
 
-        public TestContext testContext
+        public ApplicationContext testContext
         {
-            get => context as TestContext;
+            get => context as ApplicationContext;
         }
     }
 }
