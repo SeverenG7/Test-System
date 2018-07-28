@@ -18,5 +18,12 @@ namespace TestSystem.Logic.Infrastructure
             Value = value;
             Id = id;
         }
+
+        public OperationDetails(bool succedeed, string message, string property)
+        {
+            Succedeed = succedeed;
+            Message = message;
+            Property = property;
+        }
     }
 }

@@ -13,7 +13,10 @@ namespace TestSystem.Logic.Interfaces
         Task<OperationDetails> Create(UserDTO userDto);
         Task<ClaimsIdentity> Authenticate(UserDTO userDto);
         Task SetInitialData(UserDTO adminDto, List<string> roles);
-        Task SendEmailAsync(string id, string reference);
+        Task SendEmailAsync(string id, string theme, string reference);
         Task<IdentityResult> ConfirmEmailAsync(string userId, string token);
+        Task<OperationDetails> ForgotPassword(string email);
+        Task<OperationDetails> ResetPassworAsync(string email, string token, string password);
+
     }
 }

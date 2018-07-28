@@ -15,6 +15,7 @@ namespace UserStore.Controllers
 {
     public class AccountController : Controller
     {
+        #region Init services
         private IUserService UserService { get; set; }
 
         private IAuthenticationManager AuthenticationManager
@@ -30,12 +31,19 @@ namespace UserStore.Controllers
             UserService = userService;
         }
 
+        #endregion
+
+
+        #region Login/Logout & Forgot Password
+        [HttpGet]
+        [AllowAnonymous]
         public ActionResult Login()
         {
             return View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model)
         {
@@ -76,12 +84,89 @@ namespace UserStore.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
         public ActionResult Logout()
         {
             AuthenticationManager.SignOut();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
+        [AllowAnonymous]
+        public ActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                OperationDetails operationDetails = await UserService.ForgotPassword(model.Email);
+                if (operationDetails.Succedeed)
+                {
+                    var callbackUrl = Url.Action("ResetPassword", "Account",
+                     new { userId = operationDetails.Id, operationDetails.Value }, protocol: Request.Url.Scheme);
+                    string reference =
+                        "Для сброса пароля, перейдите по ссылке <a href=\"" + callbackUrl + "\">сбросить</a>";
+                    string theme = "Сброс пароля";
+                    await UserService.SendEmailAsync(operationDetails.Id, theme, reference);
+                    return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                }
+                else
+                {
+                    Response.Write("Such e-mail not exist in system");
+                }
+            }
+            return View(model);
+        }
+
+        [AllowAnonymous]
+        public ActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult ResetPassword(string Value)
+        {
+            return Value == null ? View("Error") : View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            OperationDetails details = await UserService.ResetPassworAsync(model.Email, model.Code, model.Password);
+            if (details.Succedeed)
+            {
+                return RedirectToAction("ResetPasswordConfirmation", "Account");
+            }
+            return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult ResetPasswordConfirmation()
+        {
+            return View();
+        }
+
+
+        #endregion
+
+        #region Register & E-mail confirm
+        [HttpGet]
+        [AllowAnonymous]
         public ActionResult Register()
         {
             return View();
@@ -91,7 +176,7 @@ namespace UserStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
-           // await SetInitialDataAsync();
+            // await SetInitialDataAsync();
             if (ModelState.IsValid)
             {
                 UserDTO userDto = new UserDTO
@@ -110,8 +195,11 @@ namespace UserStore.Controllers
                         userDto.Id = operationDetails.Id;
                         var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = userDto.Id, operationDetails.Value },
                                    protocol: Request.Url.Scheme);
-                        // отправка письма
-                        await UserService.SendEmailAsync(userDto.Id, callbackUrl);
+                        string reference = 
+                               "Для завершения регистрации перейдите по ссылке:: <a href=\""
+                                                               + callbackUrl + "\">завершить регистрацию</a>";
+                        string theme = "Подтверждение электронной почты";
+                        await UserService.SendEmailAsync(userDto.Id, theme , reference );
                         return View("DisplayEmail");
                     }
                     else
@@ -133,6 +221,7 @@ namespace UserStore.Controllers
             return View(model);
         }
 
+        [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(string userId, string Value)
         {
@@ -143,6 +232,18 @@ namespace UserStore.Controllers
             var result = await UserService.ConfirmEmailAsync(userId, Value);
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult DisplayEmail()
+        {
+            return View();
+        }
+
+        #endregion
+
+
+
         private async Task SetInitialDataAsync()
         {
             await UserService.SetInitialData(new UserDTO
@@ -153,10 +254,5 @@ namespace UserStore.Controllers
             }, new List<string> { "user", "admin" });
         }
 
-
-        public ActionResult DisplayEmail()
-        {
-            return View();
-        }
     }
 }
