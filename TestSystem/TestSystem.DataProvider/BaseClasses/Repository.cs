@@ -4,6 +4,7 @@ using System.Linq;
 using System.Data.Entity;
 using TestSystem.DataProvider.Interfaces;
 using System.Linq.Expressions;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 
 
@@ -16,14 +17,14 @@ namespace TestSystem.DataProvider.BaseClasses
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <returns>TEntity here is a like generic type of any data objcet. </returns>
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    public class Repository<TEntity> : IRepository<TEntity> , IDisposable where TEntity : class 
     {
         /// <summary>
         /// Also here use generic DbContext, for bigger agility
         /// </summary>
-        protected readonly DbContext context;
+        protected readonly IdentityDbContext context;
 
-        public Repository(DbContext _context)
+        public Repository(IdentityDbContext _context)
         {
             context = _context;
         }
@@ -54,6 +55,11 @@ namespace TestSystem.DataProvider.BaseClasses
         {
             context.Entry(entity).State = EntityState.Modified;
             context.SaveChanges();
+        }
+
+        public void Dispose()
+        {
+            context.Dispose();
         }
     }
 }

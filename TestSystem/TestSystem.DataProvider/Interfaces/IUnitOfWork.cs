@@ -1,5 +1,8 @@
 ﻿using System;
 using TestSystem.Model.Models;
+using TestSystem.DataProvider.IdentityManager;
+using System.Threading.Tasks;
+using TestSystem.DataProvider.Context;
 
 namespace TestSystem.DataProvider.Interfaces
 {
@@ -15,15 +18,20 @@ namespace TestSystem.DataProvider.Interfaces
         IRepository<Test> Tests { get; }
         IRepository<Question> Questions { get; }
         IRepository<Answer> Answers { get; }
-        IRepository<Property> Properties {get;}
+        IRepository<Property> Properties { get; }
         IRepository<Result> Results { get; }
-        IRepository<UserSystem> Users { get; }
         IRepository<UserInfo> UserInfoes { get; }
         IRepository<Theme> Themes { get; }
+
+        ApplicationUserManager ApplicationUserManagers { get; }
+        ApplicationRoleManager ApplicationRoleManagers { get; }
+        
         /// <summary>
         /// Method Complete for save changes in database
         /// </summary>
         /// <returns></returns>
         int Complete();
+
+        Task SaveAsync();
     }
 }

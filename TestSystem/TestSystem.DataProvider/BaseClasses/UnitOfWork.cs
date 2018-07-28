@@ -1,9 +1,11 @@
 ﻿using TestSystem.DataProvider.Interfaces;
 using TestSystem.DataProvider.Repositories;
-using TestSystem.DataProvider.ContextData;
+using TestSystem.DataProvider.Context;
 using TestSystem.Model.Models;
-
-
+using System.Threading.Tasks;
+using TestSystem.DataProvider.IdentityManager;
+using System;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace TestSystem.DataProvider.BaseClasses
 {
@@ -13,24 +15,28 @@ namespace TestSystem.DataProvider.BaseClasses
     /// </summary>
     public class UnitOfWork : IUnitOfWork
     {
-        
-        private readonly TestContext context;
+
+        private readonly ApplicationContext _context; 
+        private bool _disposed = false;
 
         /// <summary>
         /// In this constructer we initialize all repositories.
         /// </summary>
         /// <param name="_context"></param>
-        public UnitOfWork(TestContext _context)
+        public UnitOfWork(ApplicationContext context)
         {
-            context = _context;
-            Answers = new AnswerRepository(context);
-            Properties = new PropertyRepository(context);
-            Questions = new QuestionRepository(context);
-            Results = new ResultRepository(context);
-            Tests = new TestRepository(context);
-            Themes = new ThemeRepository(context);
-            UserInfoes = new UserInfoRepository(context);
-            Users = new UserRepository(context);
+            _context = context;
+            Answers = new AnswerRepository(_context);
+            Properties = new PropertyRepository(_context);
+            Questions = new QuestionRepository(_context);
+            Results = new ResultRepository(_context);
+            Tests = new TestRepository(_context);
+            Themes = new ThemeRepository(_context);
+            UserInfoes = new UserInfoRepository(_context);
+            ApplicationRoleManagers = new ApplicationRoleManager
+                (new RoleStore < ApplicationRole >(_context) );
+            ApplicationUserManagers = new ApplicationUserManager
+                (new UserStore<ApplicationUser>(_context));
         }
 
      
@@ -42,8 +48,44 @@ namespace TestSystem.DataProvider.BaseClasses
         public IRepository<Test> Tests { get; private set; }
         public IRepository<Theme> Themes { get; private set; }
         public IRepository<UserInfo> UserInfoes { get; private set; }
-        public IRepository<UserSystem> Users { get; private set; }
-        public int Complete() => context.SaveChanges();
-        public void Dispose() => context.Dispose();
+
+        public ApplicationUserManager ApplicationUserManagers { get; private set; }
+        public ApplicationRoleManager ApplicationRoleManagers { get; private set; }
+
+        public int Complete() => _context.SaveChanges();
+
+
+        public virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    Answers.Dispose();
+                    Properties.Dispose();
+                    Questions.Dispose();
+                    Results.Dispose();
+                    Tests.Dispose();
+                    Themes.Dispose();
+                    UserInfoes.Dispose();
+                    ApplicationRoleManagers.Dispose();
+                    ApplicationRoleManagers.Dispose();
+                }
+                this._disposed = true;
+
+            }
+
+        }
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public async Task SaveAsync()
+        {
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -1,0 +1,19 @@
+﻿using Microsoft.AspNet.Identity;
+using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using TestSystem.Logic.DataTransferObjects;
+using TestSystem.Logic.Infrastructure;
+
+namespace TestSystem.Logic.Interfaces
+{
+    public interface IUserService
+    {
+        Task<OperationDetails> Create(UserDTO userDto);
+        Task<ClaimsIdentity> Authenticate(UserDTO userDto);
+        Task SetInitialData(UserDTO adminDto, List<string> roles);
+        Task SendEmailAsync(string id, string reference);
+        Task<IdentityResult> ConfirmEmailAsync(string userId, string token);
+    }
+}
