@@ -53,7 +53,7 @@ namespace UserStore.Controllers
                 try
                 {
                     UserDTO userDto = new UserDTO { Email = model.Email, Password = model.Password };
-                    ClaimsIdentity claim = await UserService.Authenticate(userDto);
+                    ClaimsIdentity claim = await UserService.AuthenticateAsync(userDto);
                     if (claim == null)
                     {
                         ModelState.AddModelError("", "Неверный логин или пароль , или не подтвержден e-mail");
@@ -105,7 +105,7 @@ namespace UserStore.Controllers
         {
             if (ModelState.IsValid)
             {
-                OperationDetails operationDetails = await UserService.ForgotPassword(model.Email);
+                OperationDetails operationDetails = await UserService.ForgotPasswordAsync(model.Email);
                 if (operationDetails.Succedeed)
                 {
                     var callbackUrl = Url.Action("ResetPassword", "Account",
@@ -189,7 +189,7 @@ namespace UserStore.Controllers
                 };
                 try
                 {
-                    OperationDetails operationDetails = await UserService.Create(userDto);
+                    OperationDetails operationDetails = await UserService.CreateAsync(userDto);
                     if (operationDetails.Succedeed)
                     {
                         userDto.Id = operationDetails.Id;
@@ -246,7 +246,7 @@ namespace UserStore.Controllers
 
         private async Task SetInitialDataAsync()
         {
-            await UserService.SetInitialData(new UserDTO
+            await UserService.SetInitialDataAsync(new UserDTO
             {
                 Email = "somemail@mail.ru",
                 Password = "ad46D_ewr3",
