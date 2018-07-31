@@ -134,19 +134,22 @@ namespace UserStore.Controllers
         [AllowAnonymous]
         public ActionResult ResetPassword(string Value)
         {
+            TempData["token"] = Value;
             return Value == null ? View("Error") : View();
         }
 
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
+        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model )
         {
+            string token = TempData["token"] as string;
+
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-            OperationDetails details = await UserService.ResetPassworAsync(model.Email, model.Code, model.Password);
+            OperationDetails details = await UserService.ResetPassworAsync(model.Email, token, model.Password);
             if (details.Succedeed)
             {
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
@@ -241,8 +244,6 @@ namespace UserStore.Controllers
         }
 
         #endregion
-
-
 
         private async Task SetInitialDataAsync()
         {

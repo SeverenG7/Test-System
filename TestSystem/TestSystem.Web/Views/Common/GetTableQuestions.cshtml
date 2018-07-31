@@ -20,32 +20,37 @@
                     </thead>
                     <tbody>
                         @foreach (var item in Model)
-                        {   
+                        {
                             <tr>
                                 <td>
                                     <a class="nav-link" href="@Url.Action("Details", "Question",new {id = item.IdQuestion })">
-                                        @Html.DisplayFor(modelItem => item.QuestionText) </a>
+                                        @Html.DisplayFor(modelItem => item.QuestionText)
+                                    </a>
                                 </td>
                                 <td>
                                     <a class="nav-link" href="@Url.Action("Details", "Question", new {id = item.IdQuestion })">
                                         @Html.DisplayFor(modelItem => item.AnswerNumber)
-                                        </a>
+                                    </a>
                                 </td>
                                 <td>
                                     <a class="nav-link" href="@Url.Action("Details", "Question", new {id = item.IdQuestion })">
                                         @Html.DisplayFor(modelItem => item.Score)
-                                        </a>
+                                    </a>
                                 </td>
                             </tr>
                         }
                     </tbody>
                 </table>
                 <div class="btn-group" id="contentPager">
-                    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) из @Model.PageCount
-                    @Html.PagedListPager(Model, pageQuestions => Url.Action("CommonTables", new { pageQuestions }))
+                    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) from @Model.PageCount
+                @Html.PagedListPager(Model, pageQuestions => Url.Action("CommonTables", new { pageQuestions }))
+
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@Scripts.Render("~/scripts/jquery-3.3.1.js")
+@Scripts.Render("~/scripts/jquery.unobtrusive-ajax.js")
 

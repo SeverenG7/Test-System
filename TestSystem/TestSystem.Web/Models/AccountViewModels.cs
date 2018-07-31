@@ -48,12 +48,12 @@ namespace TestSystem.Web.Models
 
     public class LoginViewModel
     {
-        [Required]
+        [Required(ErrorMessage ="Please, put your email adress.")]
         [Display(Name = "Email")]
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "You must put password to log in into the system.")]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
@@ -64,12 +64,12 @@ namespace TestSystem.Web.Models
 
     public class RegisterViewModel
     {
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = "Please, put your email adress. It will help you, if you forgot yor password.")]
+        [EmailAddress(ErrorMessage = "Please, put email in full, correct style.")]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Put password, to protect your account")]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
@@ -83,12 +83,12 @@ namespace TestSystem.Web.Models
 
     public class ResetPasswordViewModel
     {
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = "Please, put your email adress. It will help you, if you forgot yor password.")]
+        [EmailAddress(ErrorMessage = "Please, put email in full, correct style.")]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Put new password.")]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
@@ -104,8 +104,8 @@ namespace TestSystem.Web.Models
 
     public class ForgotPasswordViewModel
     {
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = "Please, put your email adress, which you used for registration.")]
+        [EmailAddress(ErrorMessage = "Please, put email in full, correct style.")]
         [Display(Name = "Email")]
         public string Email { get; set; }
     }
