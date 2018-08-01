@@ -2,7 +2,6 @@
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.Owin.Security;
-using Microsoft.AspNet.Identity.Owin;
 using System.Threading.Tasks;
 using TestSystem.Web.Models;
 using TestSystem.Logic.DataTransferObjects;
@@ -32,7 +31,6 @@ namespace UserStore.Controllers
         }
 
         #endregion
-
 
         #region Login/Logout & Forgot Password
         [HttpGet]

@@ -87,9 +87,17 @@
     <Compile Include="IdentityManagers\ApplicationUserManager.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Interfaces\IUnitOfWork.cs" />
+    <Compile Include="Migrations\201807272048450_InitialCreate.cs" />
+    <Compile Include="Migrations\201807272048450_InitialCreate.Designer.cs">
+      <DependentUpon>201807272048450_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808011011434_MigrateDB.cs" />
+    <Compile Include="Migrations\201808011011434_MigrateDB.Designer.cs">
+      <DependentUpon>201808011011434_MigrateDB.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AnswerRepository.cs" />
-    <Compile Include="Repositories\PropertyRepository.cs" />
     <Compile Include="Repositories\QuestionRepository.cs" />
     <Compile Include="BaseClasses\Repository.cs" />
     <Compile Include="Repositories\ResultRepository.cs" />
@@ -108,6 +116,13 @@
       <Name>TestSystem.Model</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201807272048450_InitialCreate.resx">
+      <DependentUpon>201807272048450_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808011011434_MigrateDB.resx">
+      <DependentUpon>201808011011434_MigrateDB.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

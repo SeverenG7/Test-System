@@ -27,7 +27,6 @@ namespace TestSystem.DataProvider.BaseClasses
         {
             _context = context;
             Answers = new AnswerRepository(_context);
-            Properties = new PropertyRepository(_context);
             Questions = new QuestionRepository(_context);
             Results = new ResultRepository(_context);
             Tests = new TestRepository(_context);
@@ -42,7 +41,6 @@ namespace TestSystem.DataProvider.BaseClasses
      
 
         public IRepository<Answer> Answers { get; private set; }
-        public IRepository<Property> Properties { get; private set; }
         public IRepository<Question> Questions { get; private set; }
         public IRepository<Result> Results { get; private set; }
         public IRepository<Test> Tests { get; private set; }
@@ -62,7 +60,6 @@ namespace TestSystem.DataProvider.BaseClasses
                 if (disposing)
                 {
                     Answers.Dispose();
-                    Properties.Dispose();
                     Questions.Dispose();
                     Results.Dispose();
                     Tests.Dispose();

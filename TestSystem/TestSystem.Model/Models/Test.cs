@@ -1,5 +1,6 @@
 namespace TestSystem.Model.Models
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
@@ -25,12 +26,16 @@ namespace TestSystem.Model.Models
         [Column(TypeName = "text")]
         public string TestDescription { get; set; }
 
-        public int? IdProperty { get; set; }
-
-        public virtual Property Property { get; set; }
-
         public virtual ICollection<Result> Result { get; set; }
      
         public virtual ICollection<Question> Questions { get; set; }
+
+        public int? IdTheme { get; set; }
+        public Theme Theme { get; set; }
+
+        public DateTime CreateDate { get; set; }
+
+        [Required]
+        public string Difficult { get; set; }
     }
 }
