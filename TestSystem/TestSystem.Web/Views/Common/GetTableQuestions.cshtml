@@ -14,30 +14,36 @@
                     <thead class="thead-dark">
                         <tr>
                             <td>Question</td>
-                            <td>Answers</td>
+                            <td>Theme</td>
+                            <td>Difficult</td>
                             <td>Score</td>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            <tr>
-                                <td>
-                                    <a class="nav-link" href="@Url.Action("Details", "Question",new {id = item.IdQuestion })">
-                                        @Html.DisplayFor(modelItem => item.QuestionText)
-                                    </a>
-                                </td>
-                                <td>
-                                    <a class="nav-link" href="@Url.Action("Details", "Question", new {id = item.IdQuestion })">
-                                        @Html.DisplayFor(modelItem => item.AnswerNumber)
-                                    </a>
-                                </td>
-                                <td>
-                                    <a class="nav-link" href="@Url.Action("Details", "Question", new {id = item.IdQuestion })">
-                                        @Html.DisplayFor(modelItem => item.Score)
-                                    </a>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td>
+                                <a class="nav-link" href="@Url.Action("Details", "Question",new {id = item.IdQuestion })">
+                                    @Html.DisplayFor(modelItem => item.QuestionText)
+                                </a>
+                            </td>
+                            <td>
+                                <a class="nav-link" href="@Url.Action("Details", "Question", new {id = item.IdQuestion })">
+                                    @Html.DisplayFor(modelItem => item.Theme)
+                                </a>
+                            </td>
+                            <td>
+                                <a class="nav-link" href="@Url.Action("Details", "Question", new {id = item.IdQuestion })">
+                                    @Html.DisplayFor(modelItem => item.Difficult)
+                                </a>
+                            </td>
+                            <td>
+                                <a class="nav-link" href="@Url.Action("Details", "Question", new {id = item.IdQuestion })">
+                                    @Html.DisplayFor(modelItem => item.Score)
+                                </a>
+                            </td>
+                        </tr>
                         }
                     </tbody>
                 </table>

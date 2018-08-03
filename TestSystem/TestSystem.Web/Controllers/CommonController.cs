@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Logic.Interfaces;
 using TestSystem.Web.Models;
-using PagedList.Mvc;
 using PagedList;
-using AutoMapper;
 
 namespace TestSystem.Web.Controllers
 {
@@ -31,13 +27,18 @@ namespace TestSystem.Web.Controllers
             _themeService = themeService;
         }
 
+        public CommonController()
+        {
+
+        }
+
         #endregion     
 
         [HttpGet]
         public ActionResult GetInfoTest
             (int? IdTheme , string difficult , int? IdTest, int? IdQuestion ,string search)
         {
-            FiltrationTestViewModel viewTests = new FiltrationTestViewModel();
+            FiltrationViewModel viewTests = new FiltrationViewModel();
 
             IEnumerable<TestDTO> tests = _testService.GetTests();
 
@@ -94,7 +95,7 @@ namespace TestSystem.Web.Controllers
 
         public ActionResult GetTableTests(int? pageTests)
         {
-            int pageSize = 1;
+            int pageSize = 3;
             int pageNumber = (pageTests ?? 1);
 
             IEnumerable<TestDTO> testDTOs = _testService.GetTests();
@@ -107,7 +108,27 @@ namespace TestSystem.Web.Controllers
             int pageNumber = (pageQuestions ?? 1);
 
             IEnumerable<QuestionDTO> questionDTOs = _questionService.GetQuestions();
-            return PartialView(questionDTOs.ToPagedList(pageNumber, pageSize));
+            List<QuestionViewModel> questionViews = new List<QuestionViewModel>();
+
+            foreach (QuestionDTO question in questionDTOs)
+            {
+                questionViews.Add(new QuestionViewModel
+                {
+                    IdQuestion = question.IdQuestion,
+                    QuestionText = question.QuestionText,
+                    Difficult = question.Difficult,
+                    Theme = "Some theme",
+                    Score = 0
+                });
+
+            }
+
+            return PartialView(questionViews.ToPagedList(pageNumber, pageSize));
+        }
+
+        public ActionResult Some()
+        {
+            return View();
         }
 
     }

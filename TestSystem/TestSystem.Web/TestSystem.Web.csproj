@@ -208,12 +208,15 @@
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\QuestionController.cs" />
+    <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CommonsViewModels.cs" />
     <Compile Include="Models\QuestionViewModels.cs" />
+    <Compile Include="Models\TestViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\NinjectDependencyResolver.cs" />
   </ItemGroup>
@@ -420,9 +423,11 @@
     <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
-    <Content Include="Views\Common\AllTests.cshtml" />
-    <Content Include="Views\Common\SelectedTest.cshtml" />
     <Content Include="Views\Common\GetInfoTest.cshtml" />
+    <Content Include="Views\Question\CreateNewQuestion.cshtml" />
+    <Content Include="Views\Question\DetailsQuestion.cshtml" />
+    <Content Include="Views\Test\CreateNewTest.cshtml" />
+    <Content Include="Views\Test\GetQuestions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
