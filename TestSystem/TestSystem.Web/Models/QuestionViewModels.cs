@@ -7,7 +7,6 @@ namespace TestSystem.Web.Models
     public class QuestionCreateViewModel
     {
        [Required(ErrorMessage ="Question can not exist without some message for user!")]
-       [Range(5,200 , ErrorMessage ="Question text must have minimum 5 words and maximum - 200")]
        [Display(Name ="Question text")]
        [DataType(DataType.MultilineText)]
         public string QuestionText { get; set; }

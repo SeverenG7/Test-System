@@ -242,7 +242,7 @@ namespace UserStore.Controllers
         }
 
         #endregion
-
+        
         private async Task SetInitialDataAsync()
         {
             await UserService.SetInitialDataAsync(new UserDTO

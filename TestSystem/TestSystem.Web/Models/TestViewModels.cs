@@ -22,7 +22,7 @@ namespace TestSystem.Web.Models
         [DataType(DataType.MultilineText)]
         public string TestDescription { get; set; }
 
-        public List<QuestionDTO> Questions { get; set; }
+        public List<QuestionForTestViewModel> Questions { get; set; }
 
         public TestCreateViewModel()
         {

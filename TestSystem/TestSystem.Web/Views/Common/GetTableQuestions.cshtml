@@ -22,35 +22,39 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
-                        <tr>
-                            <td>
-                                <a class="nav-link" href="@Url.Action("Details", "Question",new {id = item.IdQuestion })">
-                                    @Html.DisplayFor(modelItem => item.QuestionText)
-                                </a>
-                            </td>
-                            <td>
-                                <a class="nav-link" href="@Url.Action("Details", "Question", new {id = item.IdQuestion })">
-                                    @Html.DisplayFor(modelItem => item.Theme)
-                                </a>
-                            </td>
-                            <td>
-                                <a class="nav-link" href="@Url.Action("Details", "Question", new {id = item.IdQuestion })">
-                                    @Html.DisplayFor(modelItem => item.Difficult)
-                                </a>
-                            </td>
-                            <td>
-                                <a class="nav-link" href="@Url.Action("Details", "Question", new {id = item.IdQuestion })">
-                                    @Html.DisplayFor(modelItem => item.Score)
-                                </a>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td>
+                                    <a class="nav-link" href="@Url.Action("Details", "Question",new {id = item.IdQuestion })">
+                                        @Html.DisplayFor(modelItem => item.QuestionText)
+                                    </a>
+                                </td>
+                                <td>
+                                    <a class="nav-link" href="@Url.Action("Details", "Question", new {id = item.IdQuestion })">
+                                        @Html.DisplayFor(modelItem => item.Theme)
+                                    </a>
+                                </td>
+                                <td>
+                                    <a class="nav-link" href="@Url.Action("Details", "Question", new {id = item.IdQuestion })">
+                                        @Html.DisplayFor(modelItem => item.Difficult)
+                                    </a>
+                                </td>
+                                <td>
+                                    <a class="nav-link" href="@Url.Action("Details", "Question", new {id = item.IdQuestion })">
+                                        @Html.DisplayFor(modelItem => item.Score)
+                                    </a>
+                                </td>
+                            </tr>
                         }
                     </tbody>
                 </table>
                 <div class="btn-group" id="contentPager">
                     Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) from @Model.PageCount
-                @Html.PagedListPager(Model, pageQuestions => Url.Action("CommonTables", new { pageQuestions }))
-
+                    @Html.PagedListPager(Model, pageQuestions => Url.Action("CommonTables", new { pageQuestions }))
+                </div>
+                <div class="col-form-label-sm">
+                    <a class="nav-link" href="@Url.Action("CommonTables", "GetInfoQuestion")">
+                        <span class="nav-link-text">More questions</span>
+                    </a>
                 </div>
             </div>
         </div>

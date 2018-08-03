@@ -428,6 +428,7 @@
     <Content Include="Views\Question\DetailsQuestion.cshtml" />
     <Content Include="Views\Test\CreateNewTest.cshtml" />
     <Content Include="Views\Test\GetQuestions.cshtml" />
+    <Content Include="Views\Common\Some.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

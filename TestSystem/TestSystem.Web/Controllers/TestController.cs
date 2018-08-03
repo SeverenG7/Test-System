@@ -4,6 +4,7 @@ using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Logic.Interfaces;
 using TestSystem.Web.Models;
 using PagedList;
+using System;
 
 namespace TestSystem.Web.Controllers
 {
@@ -42,15 +43,24 @@ namespace TestSystem.Web.Controllers
         public ActionResult CreateNewTest()
         {
             TestCreateViewModel model = new TestCreateViewModel();
-            model.Questions = new List<QuestionDTO>();
             model.Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName");
-            if (Session["IdQuestions"] != null)
+
+            IEnumerable<QuestionDTO> questionDTOs = _questionService.GetQuestions();
+            model.Questions = new List<QuestionForTestViewModel>();
+
+            foreach (QuestionDTO question in questionDTOs)
             {
-                foreach (int id in Session["IdQuestion"] as List<int>)
+                model.Questions.Add(new QuestionForTestViewModel
                 {
-                    model.Questions.Add(_questionService.GetQuestion(id));
-                }
+                    IdQuestion = question.IdQuestion,
+                    QuestionText = question.QuestionText,
+                    Difficult = question.Difficult,
+                    Theme = "Some Theme",
+                    Chosen = false
+                });
+
             }
+
             return View(model);
         }
 
@@ -58,20 +68,34 @@ namespace TestSystem.Web.Controllers
         [HttpPost]
         public ActionResult CreateNewTest(TestCreateViewModel model)
         {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    // TODO: Add insert logic here
+            model.Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName");
+        
+                    List<QuestionDTO> questions = new List<QuestionDTO>();
+
+                    foreach (QuestionForTestViewModel question in model.Questions)
+                    {
+                        if (question.Chosen)
+                        {
+                            questions.Add(_questionService.GetQuestion(question.IdQuestion));
+                        }
+                    }
+
+                    TestDTO test = new TestDTO
+                    {
+                        TestName = model.TestName,
+                        TestDescription = model.TestDescription,
+                        IdTheme = Int32.Parse(model.selectedTheme),
+                        Difficult = model.selectedDifficult,
+                        CreateDate = DateTime.Now,
+                        Questions = questions
+                    };
+
+                     _testService.CreateTest(test);
 
                     return RedirectToAction("Index");
-                }
-                catch
-                {
-                    return View();
-                }
-            }
-            return View(model);
+                
+      
+          
         }
 
         // GET: Test/Edit/5
@@ -118,44 +142,44 @@ namespace TestSystem.Web.Controllers
             }
         }
 
-        [HttpGet]
-        public ActionResult GetQuestions(int? pageQuestions)
-        {
+        //[HttpGet]
+        //public ActionResult GetQuestions(int? pageQuestions)
+        //{
 
-                int pageSize = 5;
-                int pageNumber = (pageQuestions ?? 1);
+        //        int pageSize = 5;
+        //        int pageNumber = (pageQuestions ?? 1);
 
-                IEnumerable<QuestionDTO> questionDTOs = _questionService.GetQuestions();
-                List<QuestionForTestViewModel> questionViews = new List<QuestionForTestViewModel>();
+        //        IEnumerable<QuestionDTO> questionDTOs = _questionService.GetQuestions();
+        //        List<QuestionForTestViewModel> questionViews = new List<QuestionForTestViewModel>();
 
-                foreach (QuestionDTO question in questionDTOs)
-                {
-                    questionViews.Add(new QuestionForTestViewModel
-                    {
-                        IdQuestion = question.IdQuestion,
-                        QuestionText = question.QuestionText,
-                        Difficult = question.Difficult,
-                        Theme = "Some Theme",
-                        Chosen = false
-                    });
+        //        foreach (QuestionDTO question in questionDTOs)
+        //        {
+        //            questionViews.Add(new QuestionForTestViewModel
+        //            {
+        //                IdQuestion = question.IdQuestion,
+        //                QuestionText = question.QuestionText,
+        //                Difficult = question.Difficult,
+        //                Theme = "Some Theme",
+        //                Chosen = false
+        //            });
 
-                }
-                return PartialView(questionViews);
-        }
+        //        }
+        //        return PartialView(questionViews);
+        //}
 
-        [HttpPost]
-        public void GetQuestions(List<QuestionForTestViewModel> model)
-        {
-            List<int> listID = new List<int>();
-            foreach (QuestionForTestViewModel question in model)
-            {
-                if (question.Chosen)
-                {
-                    listID.Add(question.IdQuestion);
-                }
-            }
-            Session["IdQuestions"] = listID;
-            RedirectToAction("CreateNewTest");
-        }
+        //[HttpPost]
+        //public void GetQuestions(List<QuestionForTestViewModel> model)
+        //{
+        //    List<int> listID = new List<int>();
+        //    foreach (QuestionForTestViewModel question in model)
+        //    {
+        //        if (question.Chosen)
+        //        {
+        //            listID.Add(question.IdQuestion);
+        //        }
+        //    }
+        //    Session["IdQuestions"] = listID;
+        //    RedirectToAction("CreateNewTest");
+        //}
     }
 }

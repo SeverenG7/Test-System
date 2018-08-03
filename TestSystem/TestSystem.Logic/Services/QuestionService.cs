@@ -24,6 +24,7 @@ namespace TestSystem.Logic.Services
         {
             Question question = MapperToDB.Map<Question>(questionDTO);
             Database.Questions.Add(question);
+            Database.Answers.AddRange(question.Answers);
             Database.Complete();
         }
 

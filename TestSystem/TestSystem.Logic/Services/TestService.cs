@@ -55,6 +55,7 @@ namespace TestSystem.Logic.Services
         {
             Test test = MapperToDB.Map<Test>(testDTO);
             Database.Tests.Add(test);
+            Database.Questions.AddRange(test.Questions);
             Database.Complete();
         }
 

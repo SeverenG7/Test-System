@@ -6,6 +6,7 @@ using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Logic.Interfaces;
 using TestSystem.Web.Models;
 using PagedList;
+using System.Web;
 
 namespace TestSystem.Web.Controllers
 {
@@ -54,12 +55,11 @@ namespace TestSystem.Web.Controllers
 
         // POST: Question/Create
         [HttpPost]
-        public ActionResult CreateNewQuestion(QuestionCreateViewModel model)
+        public ActionResult CreateNewQuestion(QuestionCreateViewModel model,
+            HttpPostedFileBase image = null)
         {
-            if (ModelState.IsValid)
-            {
-                try
-                {
+            
+               
                     QuestionDTO question = new QuestionDTO
                     {
                         QuestionText = model.QuestionText,
@@ -79,17 +79,20 @@ namespace TestSystem.Web.Controllers
 
                     question.AnswerNumber = question.Answers.Count;
                     question.CreateDate = DateTime.Now;
+
+                    if (image != null)
+                    {
+                        question.QuestionImage = new byte[image.ContentLength];
+                        image.InputStream.Read(question.QuestionImage, 0, image.ContentLength);
+                    }
+      
+                    //TempData["message"] = string.Format("Question success created",
+                    //    question.QuestionText.Substring(0,19) + "...");
+
                     _questionService.CreateQuestion(question);
 
                     return RedirectToAction("Details");
-                }
-                catch
-                {
-                    return View();
-                }
-            }
-
-            return View(model);
+                
         }
             
         
