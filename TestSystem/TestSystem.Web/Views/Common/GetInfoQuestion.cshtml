@@ -1,0 +1,160 @@
+﻿@model TestSystem.Web.Models.FiltrationViewModel
+
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Tests info</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Tests</h2>
+        <form method="get">
+            <div class="form-inline">
+                @using (Html.BeginForm())
+                {
+                    <div class="col-md-3">
+                        <div class="input-group">
+
+                            @Html.TextBox("search",
+                           "", new { placeholder = "Search for..." , @class="form-control" })
+
+                            <span class="input-group-append">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                }
+
+                <div class="col-md-2">
+                    <div class="form-inline">
+                        @Html.DropDownList("IdTheme", Model.Themes as SelectList,
+                                    htmlAttributes: new { @class = "form-control" ,
+                                    placeholder = "Theme..."})
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-inline">
+
+                        @Html.DropDownList("difficult", Model.Difficult as SelectList,
+                                htmlAttributes: new { @class = "form-control" ,
+                                placeholder = "Difficult..."})
+
+                    </div>
+                </div>
+                <input type="submit" value="Sort" class="btn btn-default" />
+
+            </div>
+        </form>
+
+        <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+            <thead class="show">
+                <tr>
+                    <th>Question </th>
+                    <th>Theme</th>
+                    <th>Difficult</th>
+                    <th>Creation at</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            @foreach (var item in Model.Questions)
+            {
+                string selectedRow = "";
+                if (item.IdQuestion == ViewBag.IdQuestion)
+                {
+                    selectedRow = "bg-light";
+                }
+            <tr class="@selectedRow">
+                <td>
+                    @Html.DisplayFor(modelItem => item.QuestionText)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Theme.ThemeName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Difficult)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateDate)
+                </td>
+                <td>
+                    @Html.ActionLink("Select", "GetInfoQuestion", new { IdQuestion = item.IdQuestion })
+                    @*@Ajax.ActionLink("Select", "AllTests", new { id = item.IdTest }, new AjaxOptions() { UpdateTargetId = "1" }) |*@
+                    @Html.ActionLink("Edit this...", "EditQuestion", "Question" ,new { IdQuestion = item.IdQuestion }) |
+                    @Html.ActionLink("Details", "Details", new { IdQuestion = item.IdQuestion }) |
+                    @Html.ActionLink("Delete", "Delete", new { IdQuestion = item.IdQuestion })
+                </td>
+            </tr>
+            }
+        </table>
+
+        @if (Model.Answers != null)
+        {
+            <h3>
+                Answers in Selected Question
+            </h3>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Answer</th>
+                    <th>Correct</th>
+                </tr>
+                @foreach (var item in Model.Answers)
+                {
+                    <tr>
+                        <td>
+                            @item.AnswerText
+                        </td>
+                        <td>
+                            @item.Correct
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+
+            @if (Model.Tests != null)
+            {
+                <h3>Questions by Selected Test</h3>
+                <table class="table table-bordered table-hover">
+                    <tr>
+                        <th>Test</th>
+                        <th>Theme</th>
+                        <th>Desrciption</th>
+                    </tr>
+
+                    @foreach (var item in Model.Tests)
+                    {
+                        string selectedRow = "";
+                        if (item.IdTest == ViewBag.IdTest)
+                        {
+                            selectedRow = "success";
+                        }
+                        <tr class="@selectedRow">
+                            <td>
+                                @Html.ActionLink("Select", "GetInfo", new { idTest = item.IdTest })
+                            </td>
+                            <td>
+                                @item.TestName
+                            </td>
+                            <td>
+                                @item.Theme
+                            </td>
+                            <td>
+                                @item.TestDescription
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            }
+        </div>
+</body>
+</html>
+@Scripts.Render("~/scripts/jquery-3.3.1.js")
+@Scripts.Render("~/scripts/jquery.unobtrusive-ajax.js")

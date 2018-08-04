@@ -15,15 +15,13 @@ namespace TestSystem.Web.Controllers
 
         private readonly ITestService _testService;
         private readonly IQuestionService _questionService;
-        private readonly IAnswerService _answerService;
         private readonly IThemeService _themeService;
 
         public CommonController
-            (ITestService testService, IQuestionService questionService, IAnswerService answerService, IThemeService themeService)
+            (ITestService testService, IQuestionService questionService, IThemeService themeService)
         {
             _testService = testService;
-            _questionService = questionService;
-            _answerService = answerService;
+            _questionService = questionService;         
             _themeService = themeService;
         }
 
@@ -40,7 +38,8 @@ namespace TestSystem.Web.Controllers
         {
             FiltrationViewModel viewTests = new FiltrationViewModel();
 
-            IEnumerable<TestDTO> tests = _testService.GetTests();
+            IEnumerable<TestDTO> tests = _testService.GetTests().
+                OrderBy(x => x.CreateDate);
 
             if (IdTheme.HasValue && IdTheme != 0)
             {
@@ -86,10 +85,62 @@ namespace TestSystem.Web.Controllers
         }
 
 
+        public ActionResult GetInfoQuestion
+            (int? IdTheme , string difficult , int? IdQuestion , int? IdTest , string search)
+        {
+            FiltrationViewModel viewQuestions = new FiltrationViewModel();
+
+            IEnumerable<QuestionDTO> questions = _questionService.GetQuestions().
+                OrderBy(x => x.CreateDate);
+
+            if (IdTheme.HasValue && IdTheme != 0)
+            {
+                questions = questions.Where(x => x.IdTheme == IdTheme);
+            }
+
+            if (!String.IsNullOrEmpty(difficult) && !difficult.Equals("All"))
+            {
+                questions = questions.Where(x => x.Difficult == difficult);
+            }
+
+            if (!String.IsNullOrEmpty(search))
+            {
+                questions = questions.Where(x => x.QuestionText.Contains(search));
+            }
+
+            List<ThemeDTO> themes = _themeService.GetAll().ToList();
+            themes.Insert(0, new ThemeDTO() { IdTheme = 0, ThemeName = "All" });
+            viewQuestions.Questions = questions.ToList();
+
+
+            if (IdQuestion.HasValue)
+            {
+                if (viewQuestions.Questions == null)
+                    ViewBag.IdQuestion = IdQuestion.Value;
+                viewQuestions.Answers = _questionService.GetQuestions().
+                    Where(x => x.IdQuestion == IdQuestion).
+                    SingleOrDefault().
+                    Answers;
+            }
+            if (IdTest.HasValue)
+            {
+                ViewBag.IdTest = IdTest.Value;
+                viewQuestions.Questions = viewQuestions.Tests.
+                    Where(x => x.IdTest == IdTest).
+                    SingleOrDefault().
+                    Questions.ToList();
+            }
+
+            viewQuestions.Themes = new SelectList(themes, "IdTheme", "ThemeName");
+
+            return View(viewQuestions);
+
+        }
+
+
         [HttpGet]
         public ActionResult CommonTables()
         {
-
             return View();
         }
 

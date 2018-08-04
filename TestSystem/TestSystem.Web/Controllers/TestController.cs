@@ -3,7 +3,6 @@ using System.Web.Mvc;
 using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Logic.Interfaces;
 using TestSystem.Web.Models;
-using PagedList;
 using System;
 
 namespace TestSystem.Web.Controllers
@@ -87,14 +86,13 @@ namespace TestSystem.Web.Controllers
                         IdTheme = Int32.Parse(model.selectedTheme),
                         Difficult = model.selectedDifficult,
                         CreateDate = DateTime.Now,
-                        Questions = questions
+                        Questions = questions,
+                        QuestionsNumber = questions.Count
                     };
 
                      _testService.CreateTest(test);
 
-                    return RedirectToAction("Index");
-                
-      
+                    return RedirectToAction("GetInfoTest" , "Common");    
           
         }
 

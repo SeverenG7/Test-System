@@ -69,10 +69,6 @@ namespace TestSystem.Web.Models
         public bool Chosen { get; set; }
 
     }
-
-
-
-
 }
 
 

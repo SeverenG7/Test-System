@@ -210,6 +210,7 @@
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\TestController.cs" />
+    <Compile Include="Controllers\ThemeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -217,6 +218,7 @@
     <Compile Include="Models\CommonsViewModels.cs" />
     <Compile Include="Models\QuestionViewModels.cs" />
     <Compile Include="Models\TestViewModels.cs" />
+    <Compile Include="Models\ThemeViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\NinjectDependencyResolver.cs" />
   </ItemGroup>
@@ -429,6 +431,9 @@
     <Content Include="Views\Test\CreateNewTest.cshtml" />
     <Content Include="Views\Test\GetQuestions.cshtml" />
     <Content Include="Views\Common\Some.cshtml" />
+    <Content Include="Views\Common\GetInfoQuestion.cshtml" />
+    <Content Include="Views\Theme\CreateNewTheme.cshtml" />
+    <Content Include="Views\Question\EditQuestion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

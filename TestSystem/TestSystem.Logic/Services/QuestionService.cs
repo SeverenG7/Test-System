@@ -22,6 +22,20 @@ namespace TestSystem.Logic.Services
         }
         public void CreateQuestion(QuestionDTO questionDTO)
         {
+            int koeff = 0;
+            switch (questionDTO.Difficult)
+            {
+                case "Junior":
+                    koeff = 1;
+                    break;
+                case "Middle":
+                    koeff = 2;
+                    break;
+                case "Senior":
+                    koeff = 3;
+                    break;
+            }
+            questionDTO.Score = koeff * questionDTO.AnswerNumber;
             Question question = MapperToDB.Map<Question>(questionDTO);
             Database.Questions.Add(question);
             Database.Answers.AddRange(question.Answers);

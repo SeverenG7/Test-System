@@ -25,15 +25,7 @@ namespace TestSystem.Web.Controllers
         }
 
         #endregion
-
-
-        // GET: Question
-        public ActionResult Index()
-        {
-            Response.Write("Well");
-            return View();
-        }
-
+ 
         // GET: Question/Details/5
         public ActionResult DetailsQuestion(int id)
         {
@@ -58,8 +50,7 @@ namespace TestSystem.Web.Controllers
         public ActionResult CreateNewQuestion(QuestionCreateViewModel model,
             HttpPostedFileBase image = null)
         {
-            
-               
+                       
                     QuestionDTO question = new QuestionDTO
                     {
                         QuestionText = model.QuestionText,
@@ -71,7 +62,7 @@ namespace TestSystem.Web.Controllers
 
                     foreach (AnswerDTO ans in model.Answers)
                     {
-                        if (ans.AnswerText != null)
+                        if (!String.IsNullOrEmpty(ans.AnswerText))
                         {
                             question.Answers.Add(ans);
                         }
@@ -85,40 +76,68 @@ namespace TestSystem.Web.Controllers
                         question.QuestionImage = new byte[image.ContentLength];
                         image.InputStream.Read(question.QuestionImage, 0, image.ContentLength);
                     }
-      
-                    //TempData["message"] = string.Format("Question success created",
-                    //    question.QuestionText.Substring(0,19) + "...");
 
                     _questionService.CreateQuestion(question);
 
-                    return RedirectToAction("Details");
-                
+                    return RedirectToAction("GetInfoQuestion" , "Common");
+               
         }
-            
-        
-
         
 
         // GET: Question/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult EditQuestion(int id)
         {
-            return View();
+            QuestionDTO updatingQuestion = _questionService.GetQuestion(id);
+            QuestionCreateViewModel updateModel = new QuestionCreateViewModel
+            {
+                Answers = updatingQuestion.Answers.ToList(),
+                selectedDifficult = updatingQuestion.Difficult,
+                selectedTheme = updatingQuestion.Theme.ThemeName,
+                QuestionImage = updatingQuestion.QuestionImage,
+                QuestionText = updatingQuestion.QuestionText,
+            };
+            if (updatingQuestion.AnswerNumber < 5)
+            {
+                for (int i = 0; i < (5 - updatingQuestion.AnswerNumber); i++)
+                {
+                    updateModel.Answers.Add(new AnswerDTO());
+                }
+            }
+
+            updateModel.Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName");
+
+            return View(updateModel);
         }
 
         // POST: Question/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult EditQuestion(int id, QuestionCreateViewModel model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add update logic here
+                try
+                {
+                    QuestionDTO question = new QuestionDTO
+                    {
+                        QuestionText = model.QuestionText,
+                        Difficult = model.selectedDifficult,
+                        IdTheme = Int32.Parse(model.selectedTheme),
+                        Answers = model.Answers,
+                        AnswerNumber = model.Answers.Count,
+                        CreateDate = DateTime.Now,
+                        QuestionImage = model.QuestionImage,
+                    };
 
-                return RedirectToAction("Index");
+                    _questionService.UpdateQuestion(question);
+
+                    return RedirectToAction("GetInfoQuestion", "Common");
+                }
+                catch
+                {
+                    return View();
+                }
             }
-            catch
-            {
-                return View();
-            }
+            return View(model);
         }
 
         // GET: Question/Delete/5

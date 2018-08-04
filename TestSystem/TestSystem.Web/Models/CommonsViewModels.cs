@@ -12,6 +12,7 @@ namespace TestSystem.Web.Models
         public SelectList Difficult { get; set; }
         public IEnumerable<QuestionDTO> Questions { get; set; }
         public IEnumerable<AnswerDTO> Answers { get; set; }
+
         public FiltrationViewModel()
         {
             Difficult = new SelectList(new List<string>()

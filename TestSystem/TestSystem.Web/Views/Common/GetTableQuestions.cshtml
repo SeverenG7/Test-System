@@ -52,7 +52,7 @@
                     @Html.PagedListPager(Model, pageQuestions => Url.Action("CommonTables", new { pageQuestions }))
                 </div>
                 <div class="col-form-label-sm">
-                    <a class="nav-link" href="@Url.Action("CommonTables", "GetInfoQuestion")">
+                    <a class="nav-link" href="@Url.Action("GetInfoQuestion", "Common")">
                         <span class="nav-link-text">More questions</span>
                     </a>
                 </div>

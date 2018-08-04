@@ -16,7 +16,7 @@ namespace TestSystem.DataProvider.BaseClasses
     public class UnitOfWork : IUnitOfWork
     {
 
-        private readonly ApplicationContext _context; 
+        private readonly ApplicationContext _context;
         private bool _disposed = false;
 
         /// <summary>
@@ -33,12 +33,12 @@ namespace TestSystem.DataProvider.BaseClasses
             Themes = new ThemeRepository(_context);
             UserInfoes = new UserInfoRepository(_context);
             ApplicationRoleManagers = new ApplicationRoleManager
-                (new RoleStore < ApplicationRole >(_context) );
+                (new RoleStore<ApplicationRole>(_context));
             ApplicationUserManagers = new ApplicationUserManager
                 (new UserStore<ApplicationUser>(_context));
         }
 
-     
+
 
         public IRepository<Answer> Answers { get; private set; }
         public IRepository<Question> Questions { get; private set; }
