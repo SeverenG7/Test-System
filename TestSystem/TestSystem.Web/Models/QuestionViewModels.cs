@@ -33,6 +33,8 @@ namespace TestSystem.Web.Models
         [Range(2, 5, ErrorMessage = "In question you can place from 2 to 5 answers")]
         public List<AnswerDTO> Answers { get; set; }
 
+        public int IdQuestion { get; set; }
+
         public QuestionCreateViewModel()
         {
             Difficult = new SelectList(new List<string>()

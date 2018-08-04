@@ -7,6 +7,8 @@ using TestSystem.Logic.Interfaces;
 using TestSystem.Web.Models;
 using PagedList;
 using System.Web;
+using System.Net;
+using System.Data;
 
 namespace TestSystem.Web.Controllers
 {
@@ -88,56 +90,23 @@ namespace TestSystem.Web.Controllers
         public ActionResult EditQuestion(int id)
         {
             QuestionDTO updatingQuestion = _questionService.GetQuestion(id);
-            QuestionCreateViewModel updateModel = new QuestionCreateViewModel
-            {
-                Answers = updatingQuestion.Answers.ToList(),
-                selectedDifficult = updatingQuestion.Difficult,
-                selectedTheme = updatingQuestion.Theme.ThemeName,
-                QuestionImage = updatingQuestion.QuestionImage,
-                QuestionText = updatingQuestion.QuestionText,
-            };
-            if (updatingQuestion.AnswerNumber < 5)
-            {
-                for (int i = 0; i < (5 - updatingQuestion.AnswerNumber); i++)
-                {
-                    updateModel.Answers.Add(new AnswerDTO());
-                }
-            }
-
-            updateModel.Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName");
-
-            return View(updateModel);
+            return View(updatingQuestion);
         }
 
         // POST: Question/Edit/5
         [HttpPost]
-        public ActionResult EditQuestion(int id, QuestionCreateViewModel model)
+        public ActionResult EditQuestion (QuestionDTO model )
         {
-            if (ModelState.IsValid)
+
+            var questionUpdate = _questionService.GetQuestion(model.IdQuestion);
+            if (TryUpdateModel(questionUpdate, "",
+       new string[] { "QuestionText" }))
             {
-                try
-                {
-                    QuestionDTO question = new QuestionDTO
-                    {
-                        QuestionText = model.QuestionText,
-                        Difficult = model.selectedDifficult,
-                        IdTheme = Int32.Parse(model.selectedTheme),
-                        Answers = model.Answers,
-                        AnswerNumber = model.Answers.Count,
-                        CreateDate = DateTime.Now,
-                        QuestionImage = model.QuestionImage,
-                    };
-
-                    _questionService.UpdateQuestion(question);
-
-                    return RedirectToAction("GetInfoQuestion", "Common");
-                }
-                catch
-                {
-                    return View();
-                }
+                questionUpdate.Answers = model.Answers;
+                _questionService.UpdateQuestion(questionUpdate);
+              return  RedirectToAction("GetInfoQuestion", "Common");
             }
-            return View(model);
+                return View();
         }
 
         // GET: Question/Delete/5

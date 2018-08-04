@@ -86,7 +86,8 @@
                 <td>
                     @Html.ActionLink("Select", "GetInfoQuestion", new { IdQuestion = item.IdQuestion })
                     @*@Ajax.ActionLink("Select", "AllTests", new { id = item.IdTest }, new AjaxOptions() { UpdateTargetId = "1" }) |*@
-                    @Html.ActionLink("Edit this...", "EditQuestion", "Question" ,new { IdQuestion = item.IdQuestion }) |
+                    @*@Html.ActionLink("Edit this...", "EditQuestion", "Question" ,new { IdQuestion = item.IdQuestion })*@
+                    <a class="navbar-brand" href="@Url.Action("EditQuestion", "Question" ,new { id = item.IdQuestion })">Edit</a>|
                     @Html.ActionLink("Details", "Details", new { IdQuestion = item.IdQuestion }) |
                     @Html.ActionLink("Delete", "Delete", new { IdQuestion = item.IdQuestion })
                 </td>

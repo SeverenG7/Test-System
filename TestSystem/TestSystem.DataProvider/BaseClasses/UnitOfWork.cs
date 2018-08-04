@@ -38,8 +38,6 @@ namespace TestSystem.DataProvider.BaseClasses
                 (new UserStore<ApplicationUser>(_context));
         }
 
-
-
         public IRepository<Answer> Answers { get; private set; }
         public IRepository<Question> Questions { get; private set; }
         public IRepository<Result> Results { get; private set; }

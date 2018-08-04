@@ -11,5 +11,6 @@ namespace TestSystem.Logic.Interfaces
         void RemoveTest(int id);
         void UpdateTest(TestDTO testDTO);
         void Dispose();
+        IEnumerable<ThemeDTO> GetAllTheme();
     }
 }

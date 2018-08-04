@@ -66,9 +66,7 @@ namespace TestSystem.Web.Controllers
         // POST: Test/Create
         [HttpPost]
         public ActionResult CreateNewTest(TestCreateViewModel model)
-        {
-            model.Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName");
-        
+        {       
                     List<QuestionDTO> questions = new List<QuestionDTO>();
 
                     foreach (QuestionForTestViewModel question in model.Questions)

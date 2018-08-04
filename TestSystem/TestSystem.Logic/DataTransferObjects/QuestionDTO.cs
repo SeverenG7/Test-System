@@ -14,7 +14,7 @@ namespace TestSystem.Logic.DataTransferObjects
         public DateTime CreateDate { get; set; }
         public int? IdTheme { get; set; }
         public ThemeDTO Theme { get; set; }
-        public virtual ICollection<AnswerDTO> Answers { get; set; }
+        public virtual List<AnswerDTO> Answers { get; set; }
         public virtual ICollection<TestDTO> Tests { get; set; }
     }
 }

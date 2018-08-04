@@ -18,6 +18,7 @@ namespace TestSystem.DataProvider.Interfaces
         IEnumerable<TEntity> GetAll();
         IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate);
 
+
         /// <summary>
         /// Group of methods to adding objects.
         /// </summary>
@@ -32,6 +33,9 @@ namespace TestSystem.DataProvider.Interfaces
 
         void Updating(TEntity entity);
         void Update(TEntity entity);
+
+        void AddNewTest(TestSystem.Model.Models.Test test);
+        void AddQuestionsToTest(TestSystem.Model.Models.Test test, List<int> idQuestions);
 
     }
 }

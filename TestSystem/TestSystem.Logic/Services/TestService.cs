@@ -18,6 +18,11 @@ namespace TestSystem.Logic.Services
             Database = unitOfWork;
         }
 
+        public IEnumerable<ThemeDTO> GetAllTheme()
+        {
+            return MapperFromDB.Map<IEnumerable<Theme>, List<ThemeDTO>>(Database.Themes.GetAll());
+        }
+
         public void Dispose()
         {
             Database.Dispose();
@@ -52,8 +57,27 @@ namespace TestSystem.Logic.Services
 
         public void CreateTest(TestDTO testDTO)
         {
+            foreach (QuestionDTO questionDTO in testDTO.Questions)
+            {
+                Question question = Database.Questions.Get(questionDTO.IdQuestion);
+                Database.Questions.Updating(question);
+            }
+
+
             Test test = MapperToDB.Map<Test>(testDTO);
-            Database.Tests.Add(test);
+            Database.Tests.AddNewTest(test);
+            Database.Complete();
+            IEnumerable<Test> tests = Database.Tests.Find(x => x.TestName == test.TestName);
+
+            foreach (QuestionDTO questionDTO in testDTO.Questions)
+            {
+                Question question = Database.Questions.Get(questionDTO.IdQuestion);
+                Database.Questions.Updating(question);
+                test.Questions.Add(question);
+                Database.Questions.Update(question);
+            }
+           
+            Database.Tests.Update(test);
             Database.Complete();
         }
 
