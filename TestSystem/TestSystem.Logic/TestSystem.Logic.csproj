@@ -128,6 +128,7 @@
     <Compile Include="Infrastructure\EmailService.cs" />
     <Compile Include="Infrastructure\OperationDetails.cs" />
     <Compile Include="Infrastructure\QuestionServiceModule.cs" />
+    <Compile Include="Infrastructure\ResultServiceModule.cs" />
     <Compile Include="Infrastructure\TestServiceModule.cs" />
     <Compile Include="Infrastructure\ThemeServiceModule.cs" />
     <Compile Include="Infrastructure\UnitOfWorkModule.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Interfaces\IQuestionService.cs" />
     <Compile Include="Interfaces\IResultService.cs" />
     <Compile Include="Interfaces\IServiceCreator.cs" />
+    <Compile Include="Interfaces\ISimpleUserService.cs" />
     <Compile Include="Interfaces\ITestService.cs" />
     <Compile Include="Interfaces\IThemeService.cs" />
     <Compile Include="Interfaces\IUserService.cs" />

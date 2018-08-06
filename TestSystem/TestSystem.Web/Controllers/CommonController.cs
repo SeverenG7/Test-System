@@ -9,6 +9,7 @@ using PagedList;
 
 namespace TestSystem.Web.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class CommonController : Controller
     {
         #region Init services

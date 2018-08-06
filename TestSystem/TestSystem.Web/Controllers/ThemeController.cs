@@ -10,6 +10,7 @@ using System.Net;
 
 namespace TestSystem.Web.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class ThemeController : Controller
     {
         private readonly IThemeService _themeService;

@@ -45,7 +45,6 @@ namespace UserStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model)
         {
-            //await SetInitialDataAsync();
             if (ModelState.IsValid)
             {
                 try
@@ -63,8 +62,16 @@ namespace UserStore.Controllers
                         {
                             IsPersistent = true
                         }, claim);
-                        //return RedirectToAction("CommonTables", "Common");
-                        return RedirectToAction("Check");
+
+                        if (User.IsInRole("user"))
+                        {
+                            return RedirectToAction("MainMenu" , "User");
+                        }
+
+                        if (User.IsInRole("admin"))
+                        {
+                            return RedirectToAction("CommonTables", "Common");
+                        }
                     }
                 }
                 catch (DbEntityValidationException ex)
@@ -249,16 +256,5 @@ namespace UserStore.Controllers
             await UserService.SetInitialDataAsync( new List<string> { "user", "admin" });
         }
 
-
-        public ActionResult Check()
-        {
-            return View();
-        }
-
-        [Authorize(Roles ="user")]
-        public ActionResult Pass()
-        {
-            return View();
-        }
     }
 }

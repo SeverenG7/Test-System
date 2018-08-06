@@ -12,6 +12,7 @@ using System.Data;
 
 namespace TestSystem.Web.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class QuestionController : Controller
     {
 

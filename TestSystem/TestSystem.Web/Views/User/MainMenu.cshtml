@@ -1,0 +1,125 @@
+﻿@model TestSystem.Web.Models.UserMainViewModel
+
+
+@{
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Tests info</title>
+</head>
+<body>
+    <div class="container">
+        <h2 class="display-4">
+            Hello, @ViewBag.Name !
+            <small class="alert-heading">Today you will have such tasks:</small>
+        </h2>
+        <div class="row">
+            <div class="col-xl-3 col-sm-6 mb-3">
+                <div class="card text-white bg-warning o-hidden h-100">
+                    <div class="card-body">
+                        <div class="card-body-icon">
+                            <i class="fa fa-fw fa-list"></i>
+                        </div>
+                        <div class="mr-5">11 New Tasks!</div>
+                    </div>
+                    <a class="card-footer text-white clearfix small z-1" href="#">
+                        <span class="float-left">View Details</span>
+                        <span class="float-right">
+                            <i class="fa fa-angle-right"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6 mb-3">
+                <div class="card text-white bg-primary o-hidden h-100">
+                    <div class="card-body">
+                        <div class="card-body-icon">
+                            <i class="fa fa-fw fa-comments"></i>
+                        </div>
+                        <div class="mr-5">26 New Messages!</div>
+                    </div>
+                    <a class="card-footer text-white clearfix small z-1" href="#">
+                        <span class="float-left">View Details</span>
+                        <span class="float-right">
+                            <i class="fa fa-angle-right"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-sm-6 mb-3">
+                <div class="card bg-light mb-3" style="max-width: 18rem;">
+                    <div class="card-header">User info:</div>
+                    <div class="card-body">
+                        <h5 class="card-title">Your personal settings:</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row ">
+
+            <div class="col-md-3">
+
+                <table class="table table-bordered table-hover table-sm" cellspacing="0">
+                    <thead class="show">
+                        <tr>
+                            <th>Test </th>
+                            <th>Description</th>
+                            <th>Theme</th>
+                        </tr>
+                    </thead>
+
+                    @foreach (var item in Model.Results)
+                    {
+                        string selectedRow = "";
+                        if (item.IdResult == ViewBag.Result)
+                        {
+                            selectedRow = "bg-light";
+                        }
+                        <tr class="@selectedRow">
+                            <td>
+                                <a class="nav-link text-dark" href="@Url.Action("MainMenu", "User",new {id = item.IdResult })">
+                                    @Html.DisplayFor(modelItem => item.Test.TestName)
+                                </a>
+                            </td>
+                            <td>
+                                <a class="nav-link text-dark" href="@Url.Action("MainMenu", "User",new {id = item.IdResult })">
+                                    @Html.DisplayFor(modelItem => item.ResultDescription)
+                                </a>
+                            </td>
+                            <td>
+                                <a class="nav-link text-dark" href="@Url.Action("MainMenu", "User",new {id = item.IdResult })">
+                                    @Html.DisplayFor(modelItem => item.Test.Theme.ThemeName)
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+
+            <div class="col-md-6">
+                @if (Model.Test != null)
+                {
+                    <div class="col-md-6">
+                        <div class="card bg-primary text-white">
+                            <div class="card-header">Test</div>
+                            <div class="card-body">
+                                <h5 class="card-title">More info about @Model.Test.TestName</h5>
+                                <p>@Model.Test.TestDescription</p>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+            </div>
+        </div>
+</body>
+</html>

@@ -139,6 +139,27 @@ namespace TestSystem.Logic.Services
 
         #endregion
 
+
+        #region Custom methods
+
+        public UserDTO GetUserInfo(string userName)
+        {
+            UserDTO user = new UserDTO();
+            var somebody = Database.UserInfoes.Find(x => x.ApplicationUser.Email == userName).First();
+            if ( somebody != null)
+            {
+                  user = new UserDTO
+                {
+                    Id = somebody.ApplicationUser.Id,
+                    Email = userName,
+                    Role = somebody.ApplicationUser.Roles.FirstOrDefault().ToString(),
+                };
+            }
+
+            return user;
+        }
+
+        #endregion
     }
 }
 

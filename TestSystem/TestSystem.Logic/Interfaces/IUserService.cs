@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNet.Identity;
-using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -18,5 +17,6 @@ namespace TestSystem.Logic.Interfaces
         Task<OperationDetails> ForgotPasswordAsync(string email);
         Task<OperationDetails> ResetPassworAsync(string email, string token, string password);
 
+        UserDTO GetUserInfo(string userName);
     }
 }

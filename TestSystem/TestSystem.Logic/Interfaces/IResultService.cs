@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using TestSystem.Logic.DataTransferObjects;
 
 namespace TestSystem.Logic.Interfaces
