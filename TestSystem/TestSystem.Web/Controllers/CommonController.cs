@@ -79,6 +79,7 @@ namespace TestSystem.Web.Controllers
                     Answers;
             }
 
+            
             viewTests.Themes = new SelectList(themes, "IdTheme", "ThemeName");
 
             return View(viewTests);
@@ -146,7 +147,7 @@ namespace TestSystem.Web.Controllers
 
         public ActionResult GetTableTests(int? pageTests)
         {
-            int pageSize = 3;
+            int pageSize = 5;
             int pageNumber = (pageTests ?? 1);
 
             IEnumerable<TestDTO> testDTOs = _testService.GetTests();
@@ -173,6 +174,7 @@ namespace TestSystem.Web.Controllers
                 });
 
             }
+
 
             return PartialView(questionViews.ToPagedList(pageNumber, pageSize));
         }

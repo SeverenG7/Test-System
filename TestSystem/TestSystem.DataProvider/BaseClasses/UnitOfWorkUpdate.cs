@@ -3,17 +3,11 @@ using TestSystem.DataProvider.Repositories;
 using TestSystem.DataProvider.Context;
 using TestSystem.Model.Models;
 using System.Threading.Tasks;
-using TestSystem.DataProvider.IdentityManager;
 using System;
-using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace TestSystem.DataProvider.BaseClasses
 {
-
-    /// <summary>
-    /// Realization of IUnitOfWork interface
-    /// </summary>
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWorkUpdate : IUnitOfWorkUpdate
     {
 
         private readonly ApplicationContext _context;
@@ -23,31 +17,19 @@ namespace TestSystem.DataProvider.BaseClasses
         /// In this constructer we initialize all repositories.
         /// </summary>
         /// <param name="_context"></param>
-        public UnitOfWork(ApplicationContext context)
+        public UnitOfWorkUpdate(ApplicationContext context)
         {
             _context = context;
-            _context.Configuration.AutoDetectChangesEnabled = false;
-            Answers = new AnswerRepository(_context);
             Questions = new QuestionRepository(_context);
-            Results = new ResultRepository(_context);
             Tests = new TestRepository(_context);
             Themes = new ThemeRepository(_context);
-            UserInfoes = new UserInfoRepository(_context);
-            ApplicationRoleManagers = new ApplicationRoleManager
-                (new RoleStore<ApplicationRole>(_context));
-            ApplicationUserManagers = new ApplicationUserManager
-                (new UserStore<ApplicationUser>(_context));
         }
 
-        public IRepository<Answer> Answers { get; private set; }
+       
         public IRepository<Question> Questions { get; private set; }
-        public IRepository<Result> Results { get; private set; }
+
         public IRepository<Test> Tests { get; private set; }
         public IRepository<Theme> Themes { get; private set; }
-        public IRepository<UserInfo> UserInfoes { get; private set; }
-
-        public ApplicationUserManager ApplicationUserManagers { get; private set; }
-        public ApplicationRoleManager ApplicationRoleManagers { get; private set; }
 
         public int Complete() => _context.SaveChanges();
 
@@ -58,14 +40,9 @@ namespace TestSystem.DataProvider.BaseClasses
             {
                 if (disposing)
                 {
-                    Answers.Dispose();
                     Questions.Dispose();
-                    Results.Dispose();
                     Tests.Dispose();
                     Themes.Dispose();
-                    UserInfoes.Dispose();
-                    ApplicationRoleManagers.Dispose();
-                    ApplicationRoleManagers.Dispose();
                 }
                 this._disposed = true;
 
@@ -85,3 +62,5 @@ namespace TestSystem.DataProvider.BaseClasses
         }
     }
 }
+
+

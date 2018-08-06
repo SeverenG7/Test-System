@@ -34,8 +34,5 @@ namespace TestSystem.DataProvider.Interfaces
         void Updating(TEntity entity);
         void Update(TEntity entity);
 
-        void AddNewTest(TestSystem.Model.Models.Test test);
-        void AddQuestionsToTest(TestSystem.Model.Models.Test test, List<int> idQuestions);
-
     }
 }

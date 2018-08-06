@@ -7,6 +7,7 @@ using System;
 
 namespace TestSystem.Web.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class TestController : Controller
     {
         #region Init services
@@ -21,6 +22,7 @@ namespace TestSystem.Web.Controllers
             _testService = testService;
             _themeService = themeService;
             _questionService = questionService;
+
         }
 
         #endregion

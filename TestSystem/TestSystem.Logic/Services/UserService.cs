@@ -44,7 +44,7 @@ namespace TestSystem.Logic.Services
                 var result = await Database.ApplicationUserManagers.CreateAsync(user, userDto.Password);
                 if (result.Errors.Count() > 0)
                     return new OperationDetails(false, result.Errors.FirstOrDefault(), "" ,0 ,user.Id);
-              //  await Database.ApplicationUserManagers.AddToRoleAsync(user.Id, userDto.Role);
+                await Database.ApplicationUserManagers.AddToRoleAsync(user.Id, userDto.Role);
 
                 UserInfo userInfo = new UserInfo { IdUserInfo = user.Id, UserFirstName = userDto.UserFirstName, UserLastName = userDto.UserLastName};
                 Database.UserInfoes.Add(userInfo);
@@ -62,6 +62,7 @@ namespace TestSystem.Logic.Services
 
            
         }
+
         public async Task<ClaimsIdentity> AuthenticateAsync(UserDTO userDto)
         {
             ClaimsIdentity claim = null;
@@ -83,7 +84,8 @@ namespace TestSystem.Logic.Services
             }
             return claim;
         }
-        public async Task SetInitialDataAsync(UserDTO adminDto, List<string> roles)
+
+        public async Task SetInitialDataAsync( List<string> roles)
         {
             foreach (string roleName in roles)
             {
@@ -94,7 +96,6 @@ namespace TestSystem.Logic.Services
                     await Database.ApplicationRoleManagers.CreateAsync(role);
                 }
             }
-            await CreateAsync(adminDto);
         }
         public async Task SendEmailAsync(string id , string theme , string reference)
         {

@@ -427,13 +427,17 @@
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Common\GetInfoTest.cshtml" />
     <Content Include="Views\Question\CreateNewQuestion.cshtml" />
-    <Content Include="Views\Question\DetailsQuestion.cshtml" />
     <Content Include="Views\Test\CreateNewTest.cshtml" />
     <Content Include="Views\Test\GetQuestions.cshtml" />
     <Content Include="Views\Common\Some.cshtml" />
     <Content Include="Views\Common\GetInfoQuestion.cshtml" />
     <Content Include="Views\Theme\CreateNewTheme.cshtml" />
     <Content Include="Views\Question\EditQuestion.cshtml" />
+    <Content Include="Views\Question\DetailsQuestion.cshtml" />
+    <Content Include="Views\Question\DeleteQuestion.cshtml" />
+    <Content Include="Views\Theme\AboutThemes.cshtml" />
+    <Content Include="Views\Account\Check.cshtml" />
+    <Content Include="Views\Account\Pass.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

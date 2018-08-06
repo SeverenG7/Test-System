@@ -11,8 +11,5 @@ namespace TestSystem.Logic.Interfaces
         void CreateQuestion(QuestionDTO questionDTO);
         void RemoveQuestion(int id);
         void UpdateQuestion(QuestionDTO questionDTO);
-        void AddQuestionToTest(int idTest, int idQuestion);
-
-
     }
 }

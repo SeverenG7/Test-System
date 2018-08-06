@@ -2,6 +2,8 @@
 using System.ComponentModel.DataAnnotations;
 using TestSystem.Logic.DataTransferObjects;
 using System.Web.Mvc;
+using System;
+
 namespace TestSystem.Web.Models
 {
     public class QuestionCreateViewModel
@@ -70,6 +72,27 @@ namespace TestSystem.Web.Models
         public string Difficult { get; set; }
         public bool Chosen { get; set; }
 
+    }
+
+    public class QuestionDetailsViewModel
+    {
+        public string QuestionText { get; set; }
+        public int Score { get; set; }
+        public string Difficult { get; set; }
+        public DateTime CreateDate { get; set; }
+        public  string Theme { get; set; }
+        public virtual List<AnswerDTO> Answers { get; set; }
+        public virtual List<TestDTO> Tests { get; set; }
+
+        public QuestionDetailsViewModel(QuestionDTO question)
+        {
+            QuestionText = question.QuestionText;
+            Score = question.Score;
+            CreateDate = question.CreateDate;
+            Difficult = question.Difficult;
+            Answers = question.Answers;
+            Tests = new List<TestDTO>();
+        }
     }
 }
 

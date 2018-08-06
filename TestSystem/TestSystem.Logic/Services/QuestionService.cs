@@ -62,23 +62,31 @@ namespace TestSystem.Logic.Services
 
         public void UpdateQuestion(QuestionDTO questionDTO)
         {
+            //foreach (AnswerDTO ans in questionDTO.Answers)
+            //{
+            //    Answer answer = Database.Answers.Get(ans.IdAnswer);
+            //    Database.Answers.Updating(answer);
+            //}
+            //Question question = Database.Questions.Get(questionDTO.IdQuestion);
+            //Theme theme = Database.Themes.Get(questionDTO.IdTheme.Value);
+            //Database.Questions.Updating(question);
+            //Database.Themes.Updating(theme);
+
+
+            //Question questionUpdate = MapperToDB.Map<Question>(questionDTO);
+            //foreach (Answer ans in questionUpdate.Answers)
+            //{
+            //    Database.Answers.Update(ans);
+            //}
             foreach (AnswerDTO ans in questionDTO.Answers)
             {
                 Answer answer = Database.Answers.Get(ans.IdAnswer);
-                Database.Answers.Updating(answer);
+                answer.AnswerText = ans.AnswerText;
+                answer.Correct = ans.Correct;
+                Database.Answers.Update(answer);
             }
-            Question question = Database.Questions.Get(questionDTO.IdQuestion);
-            Theme theme = Database.Themes.Get(questionDTO.IdTheme.Value);
-            Database.Questions.Updating(question);
-            Database.Themes.Updating(theme);
-
-
-            Question questionUpdate = MapperToDB.Map<Question>(questionDTO);
-            foreach (Answer ans in questionUpdate.Answers)
-            {
-                Database.Answers.Update(ans);
-            }
-            Database.Questions.Update(questionUpdate);
+            Database.Questions.Update(Database.Questions.Get(questionDTO.IdQuestion));
+            Database.Complete();
         }
 
         public static int ComputeScore(QuestionDTO question)

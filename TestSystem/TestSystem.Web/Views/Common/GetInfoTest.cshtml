@@ -68,7 +68,7 @@
                 string selectedRow = "";
                 if (item.IdTest == ViewBag.IdTest)
                 {
-                    selectedRow = "bg-light";
+                    selectedRow = "bg-warning";
                 }
                 <tr class="@selectedRow">
                     <td>
@@ -114,7 +114,7 @@
                     }
                     <tr class="@selectedRow">
                         <td>
-                            @Html.ActionLink("Select", "GetInfoTest", new { idQuestion = item.IdQuestion })
+                            @Html.ActionLink("Select", "GetInfoTest", new { idQuestion = item.IdQuestion, idTest = ViewBag.IdTest})
                         </td>
                         <td>
                             @item.QuestionText

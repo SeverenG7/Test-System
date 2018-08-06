@@ -6,24 +6,50 @@ using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Logic.Interfaces;
 using TestSystem.Web.Models;
 using PagedList;
+using System.Net;
 
 namespace TestSystem.Web.Controllers
 {
     public class ThemeController : Controller
     {
         private readonly IThemeService _themeService;
+        private readonly ITestService _testService;
+        private readonly IQuestionService _questionService;
 
-        public ThemeController(IThemeService themeService)
+        public ThemeController(IThemeService themeService , ITestService testService 
+            , IQuestionService questionService)
         {
             _themeService = themeService;
+            _testService = testService;
+            _questionService = questionService;
         }
 
 
 
         // GET: Theme
-        public ActionResult Index()
+        public ActionResult AboutThemes(int? IdTheme )
         {
-            return View();
+            _themeService.GetAll();
+            ThemeAboutViewModel modelView = new ThemeAboutViewModel();
+            modelView.Themes = _themeService.GetAll().ToList();
+
+
+            if (IdTheme.HasValue)
+            {
+                if (modelView.Themes.Where(x => x.IdTheme == IdTheme) != null)
+                {
+                    ViewBag.IdTheme = IdTheme.Value;
+
+                    modelView.Tests = _testService.GetTests().
+                        Where(x => x.IdTheme == IdTheme.Value).ToList();
+
+                    modelView.Questions = _questionService.GetQuestions().
+                        Where(x => x.IdTheme == IdTheme.Value).ToList();
+                }
+            }
+
+
+            return View(modelView);
         }
 
         // GET: Theme/Details/5
@@ -53,7 +79,7 @@ namespace TestSystem.Web.Controllers
                     };
 
                     _themeService.Create(theme);
-                    return RedirectToAction("Index");
+                    return RedirectToAction("AboutThemes");
                 }
                 catch
                 {
@@ -85,26 +111,19 @@ namespace TestSystem.Web.Controllers
             }
         }
 
-        // GET: Theme/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult DeleteTheme(int? id)
         {
-            return View();
-        }
-
-        // POST: Theme/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
+            if (!id.HasValue)
             {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            catch
+            if (_themeService.Get(id.Value) == null)
             {
-                return View();
+                return HttpNotFound();
             }
-        }
+
+            _themeService.Remove(id.Value);
+            return RedirectToAction("AboutThemes");
+        }    
     }
 }

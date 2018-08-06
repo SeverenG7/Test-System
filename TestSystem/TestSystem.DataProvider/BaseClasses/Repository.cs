@@ -48,50 +48,20 @@ namespace TestSystem.DataProvider.BaseClasses
 
         public void Updating(TEntity entity)
         {
-            context.Entry(entity).State = EntityState.Detached;
-            context.SaveChanges();
+            string str = context.Entry(entity).State.ToString();
+            str = str + "";
         }
 
         public void Update(TEntity entity)
         {
             context.Entry(entity).State = EntityState.Modified;
-            context.SaveChanges();
         }
+
 
         public void Dispose()
         {
             context.Dispose();
         }
 
-
-        public void AddNewTest(TestSystem.Model.Models.Test test)
-        {
-            var testName = new SqlParameter("@TestName", test.TestName);
-            var numberQuestions = new SqlParameter("@QuestionsNumber", test.QuestionsNumber);
-            var description = new SqlParameter("@TestDescription", test.TestDescription);
-            var date = new SqlParameter("@CreateDate", test.CreateDate);
-            var theme = new SqlParameter("@IdTheme", test.IdTheme);
-            var difficult= new SqlParameter("@Difficult", test.Difficult);
-
- 
-            context.Database.ExecuteSqlCommand("Exec AddTest @TestName , @QuestionsNumber , @TestDescription," +
-                "@CreateDate ,@IdTheme ,@Difficult ",
-                testName, numberQuestions, description, date, theme, difficult);
-
-            
-        }
-
-        public void AddQuestionsToTest(TestSystem.Model.Models.Test test , List<int> idQuestions)
-        {
-
-            var IdTest = new SqlParameter("@IdTest", test.IdTest);
-            foreach (int id in idQuestions)
-            {
-                var IdQuestion = new SqlParameter("@IdQuestion", id);
-                context.Database.ExecuteSqlCommand("Exec InsertQuestion @IdTest , @IdQuestion",
-                    IdTest, IdQuestion);
-            }
-            context.SaveChanges();
-        }
     }
 }

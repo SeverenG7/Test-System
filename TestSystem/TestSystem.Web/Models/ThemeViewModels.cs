@@ -16,4 +16,21 @@ namespace TestSystem.Web.Models
         [Display(Name = "Description")]
         public string Description { get; set; }
     }
+
+
+    public class ThemeAboutViewModel
+    {
+        public IEnumerable<ThemeDTO> Themes { get; set; }
+        public IEnumerable<TestDTO> Tests { get; set; }
+        public IEnumerable<QuestionDTO> Questions { get; set; }
+        public List<int> TestsNumber { get; set; }
+        public List<int> QuestionsNumber { get; set; }
+
+        public ThemeAboutViewModel()
+        {
+            TestsNumber = new List<int>();
+            QuestionsNumber = new List<int>();
+        }
+    }
+
 }

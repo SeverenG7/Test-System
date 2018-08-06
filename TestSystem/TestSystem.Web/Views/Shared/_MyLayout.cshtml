@@ -44,7 +44,7 @@
                     </a>
                 </li>
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title=" More about themes">
-                    <a class="nav-link" href="@Url.Action("CreateNewTheme","Theme")">
+                    <a class="nav-link" href="@Url.Action("AboutThemes","Theme")">
                         <i class="fa fa-fw fa-table"></i>
                         <span class="nav-link-text">About themes</span>
                     </a>
@@ -251,8 +251,22 @@
             </div>
         </div>
         <div class="border-light">
-        @RenderBody()
-            </div>
+            <!-- Bootstrap core JavaScript-->
+            <script src=@Url.Content("Content/vendor/jquery/jquery.min.js")></script>
+            <script src=@Url.Content("Content/vendor/bootstrap/js/bootstrap.bundle.min.js")></script>
+            <!-- Core plugin JavaScript-->
+            <script src=@Url.Content("Content/vendor/jquery-easing/jquery.easing.min.js")></script>
+            <!-- Page level plugin JavaScript-->
+            <script src=@Url.Content("Content/vendor/chart.js/Chart.min.js")></script>
+            <script src=@Url.Content("Content/vendor/datatables/jquery.dataTables.js")></script>
+            <script src=@Url.Content("Content/vendor/datatables/dataTables.bootstrap4.js")></script>
+            <!-- Custom scripts for all pages-->
+            <script src=@Url.Content("Content/js/sb-admin.min.js")></script>
+            <!-- Custom scripts for this page-->
+            <script src=@Url.Content("Content/js/sb-admin-datatables.min.js")></script>
+            <script src=@Url.Content("Content/js/sb-admin-charts.min.js")></script>
+            @RenderBody()
+        </div>
     </div>
 </body>
 </html>

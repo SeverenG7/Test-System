@@ -63,7 +63,8 @@ namespace UserStore.Controllers
                         {
                             IsPersistent = true
                         }, claim);
-                        return RedirectToAction("CommonTables", "Common");
+                        //return RedirectToAction("CommonTables", "Common");
+                        return RedirectToAction("Check");
                     }
                 }
                 catch (DbEntityValidationException ex)
@@ -177,16 +178,16 @@ namespace UserStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
-            // await SetInitialDataAsync();
+             await SetInitialDataAsync();
             if (ModelState.IsValid)
             {
                 UserDTO userDto = new UserDTO
                 {
                     Email = model.Email,
                     Password = model.Password,
-                    UserFirstName = "Nick",
-                    UserLastName = "Chernyak"
-                    //Role = "user"
+                    UserFirstName = "name",
+                    UserLastName = "lastname",
+                    Role = "user"
                 };
                 try
                 {
@@ -245,13 +246,19 @@ namespace UserStore.Controllers
         
         private async Task SetInitialDataAsync()
         {
-            await UserService.SetInitialDataAsync(new UserDTO
-            {
-                Email = "somemail@mail.ru",
-                Password = "ad46D_ewr3",
-                Role = "admin",
-            }, new List<string> { "user", "admin" });
+            await UserService.SetInitialDataAsync( new List<string> { "user", "admin" });
         }
 
+
+        public ActionResult Check()
+        {
+            return View();
+        }
+
+        [Authorize(Roles ="user")]
+        public ActionResult Pass()
+        {
+            return View();
+        }
     }
 }

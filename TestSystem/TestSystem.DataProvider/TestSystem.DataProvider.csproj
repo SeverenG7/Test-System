@@ -82,11 +82,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseClasses\UnitOfWorkUpdate.cs" />
     <Compile Include="Context\ApplicationContext.cs" />
     <Compile Include="IdentityManagers\ApplicationRoleManager.cs" />
     <Compile Include="IdentityManagers\ApplicationUserManager.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Interfaces\IUnitOfWork.cs" />
+    <Compile Include="Interfaces\IUnitOfWorkUpdate.cs" />
     <Compile Include="Migrations\201807272048450_InitialCreate.cs" />
     <Compile Include="Migrations\201807272048450_InitialCreate.Designer.cs">
       <DependentUpon>201807272048450_InitialCreate.cs</DependentUpon>

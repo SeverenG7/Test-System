@@ -87,27 +87,27 @@
                                                 {
                                                     <tr>
                                                         <td>
-                                                            @Html.TextBoxFor(modelItem => modelItem.Questions[i].IdQuestion)
+                                                            @Html.HiddenFor(modelItem => modelItem.Questions[i].IdQuestion)
                                                         </td>
                                                         <td>
-                                                            <a class="nav-link" href="@Url.Action("Details", "Question", new { id = Model.Questions[i].IdQuestion })">
+                                                          
                                                                 @Html.DisplayFor(modelItem => modelItem.Questions[i].QuestionText)
-                                                            </a>
+                                                       
                                                         </td>
                                                         <td>
-                                                            <a class="nav-link" href="@Url.Action("Details", "Question", new { id = Model.Questions[i].IdQuestion })">
+                                                          
                                                                 @Html.DisplayFor(modelItem => modelItem.Questions[i].Theme)
-                                                            </a>
+                                                        
                                                         </td>
                                                         <td>
-                                                            <a class="nav-link" href="@Url.Action("Details", "Question", new { id = Model.Questions[i].IdQuestion })">
+                                                            
                                                                 @Html.DisplayFor(modelItem => modelItem.Questions[i].Difficult)
-                                                            </a>
+                                                       
                                                         </td>
                                                         <td>
-                                                            <a class="nav-link" href="@Url.Action("Details", "Question", new { id = Model.Questions[i].IdQuestion })">
+                                                           
                                                                 @Html.CheckBoxFor(modelItem => modelItem.Questions[i].Chosen)
-                                                            </a>
+                                                        
                                                         </td>
                                                     </tr>
                                                 }

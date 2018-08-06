@@ -85,23 +85,32 @@
                             </tr>
                             @foreach (var item in Model.Tests)
                             {
-                            <tr>
-                                <td>
-                                    @item.TestName
-                                </td>
-                                <td>
-                                    @item.TestDescription
-                                </td>
-                                <td>
-                                    @item.QuestionsNumber
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>
+                                        @item.TestName
+                                    </td>
+                                    <td>
+                                        @item.TestDescription
+                                    </td>
+                                    <td>
+                                        @item.QuestionsNumber
+                                    </td>
+                                </tr>
                             }
                         </table>
                     </div>
                 </div>
             </div>
         </div>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-actions no-color">
+                <input type="submit" value="Delete" class="btn-danger" /> |
+                @Html.ActionLink("Back to List", "Index")
+            </div>
+        }
     </div>
 </body>
 </html>

@@ -19,20 +19,20 @@ namespace TestSystem.Web.Controllers
 
         private readonly IQuestionService _questionService;
         private readonly IThemeService _themeService;
+        private readonly ITestService _testService;
 
-        public QuestionController(IQuestionService questionService, IThemeService themeService)
+        public QuestionController(IQuestionService questionService, IThemeService themeService,
+            ITestService testService)
         {
             _questionService = questionService;
             _themeService = themeService;
+            _testService = testService;
         }
 
         #endregion
  
-        // GET: Question/Details/5
-        public ActionResult DetailsQuestion(int id)
-        {
-            return View();
-        }
+
+        #region Create/Edit Question
 
         [HttpGet]
         public ActionResult CreateNewQuestion()
@@ -47,7 +47,6 @@ namespace TestSystem.Web.Controllers
             return View(newQuestion);
         }
 
-        // POST: Question/Create
         [HttpPost]
         public ActionResult CreateNewQuestion(QuestionCreateViewModel model,
             HttpPostedFileBase image = null)
@@ -84,16 +83,15 @@ namespace TestSystem.Web.Controllers
                     return RedirectToAction("GetInfoQuestion" , "Common");
                
         }
-        
 
-        // GET: Question/Edit/5
+
+        [HttpGet]
         public ActionResult EditQuestion(int id)
         {
             QuestionDTO updatingQuestion = _questionService.GetQuestion(id);
             return View(updatingQuestion);
         }
 
-        // POST: Question/Edit/5
         [HttpPost]
         public ActionResult EditQuestion (QuestionDTO model )
         {
@@ -109,27 +107,65 @@ namespace TestSystem.Web.Controllers
                 return View();
         }
 
-        // GET: Question/Delete/5
-        public ActionResult Delete(int id)
+        #endregion
+
+        #region Delete/Details Question
+
+        [HttpGet]
+        public ActionResult DeleteQuestion(int? id)
         {
-            return View();
+            if (!id.HasValue)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            QuestionDTO questionDetails = _questionService.GetQuestion(id.Value);
+            if (questionDetails == null)
+            {
+                return HttpNotFound();
+            }
+
+            _questionService.RemoveQuestion(id.Value);
+            return RedirectToAction("GetInfoQuestion", "Common");
         }
 
         // POST: Question/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Delete(int? id)
         {
             try
             {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
+                
+                
+                return RedirectToAction("GetInfoQuestion" , "Common");
             }
             catch
             {
                 return View();
             }
         }
+
+        public ActionResult DetailsQuestion(int? id)
+        {
+            if (!id.HasValue)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            QuestionDTO questionDetails = _questionService.GetQuestion(id.Value);
+            if (questionDetails == null)
+            {
+                return HttpNotFound();
+            }
+
+            QuestionDetailsViewModel model = new QuestionDetailsViewModel(questionDetails);
+            model.Theme = _themeService.Get(questionDetails.IdTheme).ThemeName;
+            foreach (TestDTO test in questionDetails.Tests)
+            {
+                model.Tests.Add(test);
+            }
+            return View(model);
+        }
+
+        #endregion
 
         //public FileContentResult GetImage(int gameId)
         //{

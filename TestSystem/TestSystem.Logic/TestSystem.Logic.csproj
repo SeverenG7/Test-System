@@ -131,6 +131,7 @@
     <Compile Include="Infrastructure\TestServiceModule.cs" />
     <Compile Include="Infrastructure\ThemeServiceModule.cs" />
     <Compile Include="Infrastructure\UnitOfWorkModule.cs" />
+    <Compile Include="Infrastructure\UpdateModule.cs" />
     <Compile Include="Infrastructure\UserServiceModule.cs" />
     <Compile Include="Interfaces\IAnswerService.cs" />
     <Compile Include="Interfaces\IQuestionService.cs" />

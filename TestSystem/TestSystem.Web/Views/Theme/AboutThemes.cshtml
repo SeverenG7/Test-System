@@ -1,0 +1,151 @@
+﻿@model TestSystem.Web.Models.ThemeAboutViewModel
+
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Tests info</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Tests</h2>
+        <div class="form-inline">
+            @using (Html.BeginForm())
+            {
+                <div class="col-md-12">
+                    <div class="input-group">
+
+                        @Html.TextBox("search",
+                       "", new { placeholder = "Search for..." , @class="form-control" })
+
+                        <span class="input-group-append">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            }
+
+
+            <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                <thead class="show">
+                    <tr>
+                        <th>Theme</th>
+                        <th>Description</th>
+                        <th>Tests for theme</th>
+                        <th>Questions for theme</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                @foreach (var item in Model.Themes)
+                {
+                    string selectedRow = "";
+                    if (item.IdTheme == ViewBag.IdTheme)
+                    {
+                        selectedRow = "bg-light";
+                    }
+                    <tr class="@selectedRow">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ThemeName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Tests.Count)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Questions.Count)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Select", "AboutThemes", new { idTheme = item.IdTheme })
+                            @*@Ajax.ActionLink("Select", "AllTests", new { id = item.IdTest }, new AjaxOptions() { UpdateTargetId = "1" }) |*@
+                            @Html.ActionLink("Create new", "CreateNewTheme", new { id = item.IdTheme }) |
+                            @Html.ActionLink("Delete", "DeleteTheme", new { id = item.IdTheme })
+                        </td>
+                    </tr>
+                }
+            </table>
+
+            @if (Model.Tests != null)
+            {
+                <h3>Tests by Selected Theme</h3>
+                <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                    <thead class="show">
+                        <tr>
+                            <th>Test</th>
+                            <th>Questions</th>
+                            <th>Theme</th>
+                            <th>Creation at</th>
+                        </tr>
+                    </thead>
+
+                    @foreach (var item in Model.Tests)
+                    {
+                        string selectedRow = "";
+                        if (item.IdTheme == ViewBag.IdTheme)
+                        {
+                            selectedRow = "bg-light";
+                        }
+                        <tr class="@selectedRow">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TestName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.QuestionsNumber)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Theme.ThemeName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CreateDate)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+
+            @if (Model.Questions != null)
+            {
+                <h3>Questions by Selected Theme</h3>
+                <table class="table table-bordered table-hover">
+                    <tr>
+                        <th>Question</th>
+                        <th>Answers</th>
+                        <th>Score</th>
+                    </tr>
+
+                    @foreach (var item in Model.Questions)
+                    {
+                        string selectedRow = "";
+                        if (item.IdTheme == ViewBag.IdTheme)
+                        {
+                            selectedRow = "success";
+                        }
+                        <tr class="@selectedRow">
+                            <td>
+                                @item.QuestionText
+                            </td>
+                            <td>
+                                @item.AnswerNumber
+                            </td>
+                            <td>
+                                @item.Score
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            }
+        </div>
+    </div>
+</body>
+</html>
+@Scripts.Render("~/scripts/jquery-3.3.1.js")
+@Scripts.Render("~/scripts/jquery.unobtrusive-ajax.js")
+

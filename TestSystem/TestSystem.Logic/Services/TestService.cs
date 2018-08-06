@@ -9,13 +9,15 @@ using TestSystem.Logic.MapGeneric;
 
 namespace TestSystem.Logic.Services
 {
-    public class TestService : MapClass<Test,TestDTO> ,ITestService
+    public class TestService : MapClass<Test, TestDTO>, ITestService
     {
         IUnitOfWork Database { get; set; }
+        IUnitOfWorkUpdate Update { get; set; }
 
-        public TestService(IUnitOfWork unitOfWork)
+        public TestService(IUnitOfWork unitOfWork, IUnitOfWorkUpdate unitOfWorkUpdate)
         {
             Database = unitOfWork;
+            Update = unitOfWorkUpdate;
         }
 
         public IEnumerable<ThemeDTO> GetAllTheme()
@@ -48,7 +50,7 @@ namespace TestSystem.Logic.Services
         public void RemoveTest(int id)
         {
             Test test = (Test)Database.Tests.Find(x => x.IdTest == id);
-            if(test != null)
+            if (test != null)
             {
                 Database.Tests.Remove(test);
                 Database.Complete();
@@ -57,27 +59,22 @@ namespace TestSystem.Logic.Services
 
         public void CreateTest(TestDTO testDTO)
         {
-            foreach (QuestionDTO questionDTO in testDTO.Questions)
+            Test test = new Test
             {
-                Question question = Database.Questions.Get(questionDTO.IdQuestion);
-                Database.Questions.Updating(question);
+                CreateDate = testDTO.CreateDate,
+                Difficult = testDTO.Difficult,
+                IdTheme = testDTO.IdTheme,
+                TestDescription = testDTO.TestDescription,
+                TestName = testDTO.TestName,
+                QuestionsNumber = testDTO.QuestionsNumber
+            };
+
+            foreach (QuestionDTO q in testDTO.Questions)
+            {
+                test.Questions.Add(Database.Questions.Get(q.IdQuestion));
             }
 
-
-            Test test = MapperToDB.Map<Test>(testDTO);
-            Database.Tests.AddNewTest(test);
-            Database.Complete();
-            IEnumerable<Test> tests = Database.Tests.Find(x => x.TestName == test.TestName);
-
-            foreach (QuestionDTO questionDTO in testDTO.Questions)
-            {
-                Question question = Database.Questions.Get(questionDTO.IdQuestion);
-                Database.Questions.Updating(question);
-                test.Questions.Add(question);
-                Database.Questions.Update(question);
-            }
-           
-            Database.Tests.Update(test);
+            Database.Tests.Add(test);
             Database.Complete();
         }
 
