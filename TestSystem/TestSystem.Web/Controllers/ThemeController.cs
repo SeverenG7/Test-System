@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Logic.Interfaces;
-using System.Data;
+using TestSystem.Web.Models;
+using PagedList;
 using System.Net;
 
 namespace TestSystem.Web.Controllers
@@ -14,15 +13,43 @@ namespace TestSystem.Web.Controllers
     public class ThemeController : Controller
     {
         private readonly IThemeService _themeService;
-        public ThemeController(IThemeService themeService)
+        private readonly ITestService _testService;
+        private readonly IQuestionService _questionService;
+
+        public ThemeController(IThemeService themeService , ITestService testService 
+            , IQuestionService questionService)
         {
             _themeService = themeService;
+            _testService = testService;
+            _questionService = questionService;
         }
 
+
+
         // GET: Theme
-        public ActionResult ThemeTable()
+        public ActionResult AboutThemes(int? IdTheme )
         {
-            return View(_themeService.GetAll());
+            _themeService.GetAll();
+            ThemeAboutViewModel modelView = new ThemeAboutViewModel();
+            modelView.Themes = _themeService.GetAll().ToList();
+
+
+            if (IdTheme.HasValue)
+            {
+                if (modelView.Themes.Where(x => x.IdTheme == IdTheme) != null)
+                {
+                    ViewBag.IdTheme = IdTheme.Value;
+
+                    modelView.Tests = _testService.GetTests().
+                        Where(x => x.IdTheme == IdTheme.Value).ToList();
+
+                    modelView.Questions = _questionService.GetQuestions().
+                        Where(x => x.IdTheme == IdTheme.Value).ToList();
+                }
+            }
+
+
+            return View(modelView);
         }
 
         // GET: Theme/Details/5
@@ -32,99 +59,71 @@ namespace TestSystem.Web.Controllers
         }
 
         // GET: Theme/Create
-        public ActionResult CreateTheme()
+        public ActionResult CreateNewTheme()
         {
             return View();
         }
 
         // POST: Theme/Create
         [HttpPost]
-        public ActionResult CreateTheme([Bind(Exclude = "IdTheme")]ThemeDTO theme)
+        public ActionResult CreateNewTheme(ThemeCreateViewModels model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                try
                 {
-                    _themeService.Create(theme);
-                    return RedirectToAction("ThemeTable");
-                }
+                    ThemeDTO theme = new ThemeDTO
+                    {
+                        ThemeName = model.ThemeName,
+                        Description = model.Description
+                    };
 
+                    _themeService.Create(theme);
+                    return RedirectToAction("AboutThemes");
+                }
+                catch
+                {
+                    return View();
+                }
             }
-            catch (DataException /* dex */)
-            {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
-                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
-            }
-            return View(theme);
+            return View(model);
         }
 
-        [HttpGet]
-        public ActionResult EditTheme(int? id)
+        // GET: Theme/Edit/5
+        public ActionResult Edit(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            ThemeDTO theme = _themeService.Get(id);
-            return View(theme);
+            return View();
         }
 
         // POST: Theme/Edit/5
-        [HttpPost , ActionName("Edit")]
-        [ValidateAntiForgeryToken]
-        public ActionResult EditPost(int? id)
-        {
-            ThemeDTO theme;
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            else
-            {
-                theme = _themeService.Get(id);
-            }
-            try
-            {
-                _themeService.Update(theme);
-                return RedirectToAction("ThemeTable");
-            }
-            catch (DataException)
-            {
-                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
-            }
-
-            return RedirectToAction("ThemeTable");
-        }
-
-        // GET: Theme/Delete/5
-        public ActionResult DeleteTheme(int? id , bool? saveChangesError)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            if (saveChangesError.GetValueOrDefault())
-            {
-                ViewBag.ErrorMessage = "Delete failed. Try again, and if the problem persists see your system administrator.";
-            }
-            return View(_themeService.Get(id));
-        }
-
-        // POST: Theme/Delete/5
         [HttpPost]
-        public ActionResult DeleteTheme(int id)
+        public ActionResult Edit(int id, FormCollection collection)
         {
             try
             {
-                _themeService.Remove(id);
-            }
-            catch (DataException/* dex */)
-            {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
-                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
-            }
-            return RedirectToAction("ThemeTable");
+                // TODO: Add update logic here
 
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
         }
+
+        public ActionResult DeleteTheme(int? id)
+        {
+            if (!id.HasValue)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (_themeService.Get(id.Value) == null)
+            {
+                return HttpNotFound();
+            }
+
+            _themeService.Remove(id.Value);
+            return RedirectToAction("AboutThemes");
+        }    
     }
 }

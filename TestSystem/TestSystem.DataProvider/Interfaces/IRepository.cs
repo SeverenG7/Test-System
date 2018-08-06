@@ -18,6 +18,7 @@ namespace TestSystem.DataProvider.Interfaces
         IEnumerable<TEntity> GetAll();
         IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate);
 
+
         /// <summary>
         /// Group of methods to adding objects.
         /// </summary>

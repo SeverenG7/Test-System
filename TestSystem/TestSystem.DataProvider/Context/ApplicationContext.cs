@@ -10,7 +10,6 @@ namespace TestSystem.DataProvider.Context
         { }
 
         public virtual DbSet<Answer> Answers { get; set; }
-        public virtual DbSet<Property> Properties { get; set; }
         public virtual DbSet<Question> Questions { get; set; }
         public virtual DbSet<Result> Results { get; set; }
         public virtual DbSet<Test> Tests { get; set; }

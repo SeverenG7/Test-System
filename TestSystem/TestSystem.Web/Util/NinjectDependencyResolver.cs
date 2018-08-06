@@ -34,9 +34,10 @@ namespace TestSystem.Web.Util
             AnswerServiceModule answerServiceModule = new AnswerServiceModule();
             ThemeServiceModule themeServiceModule = new ThemeServiceModule();
             UserServiceModule userServiceModule = new UserServiceModule();
+            UpdateModule updateModule = new UpdateModule();
 
             kernel.Load(unitOfWorkModule, testServiceModule,questionServiceModule,
-                answerServiceModule, themeServiceModule , userServiceModule);
+                answerServiceModule, themeServiceModule , userServiceModule ,updateModule);
 
         }
 

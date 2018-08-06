@@ -34,8 +34,8 @@ namespace TestSystem.Logic.Services
 
         #endregion
 
-
-        public async Task<OperationDetails> Create(UserDTO userDto)
+        #region Methods
+        public async Task<OperationDetails> CreateAsync(UserDTO userDto)
         {
             ApplicationUser user = await Database.ApplicationUserManagers.FindByEmailAsync(userDto.Email);
             if (user == null)
@@ -44,7 +44,7 @@ namespace TestSystem.Logic.Services
                 var result = await Database.ApplicationUserManagers.CreateAsync(user, userDto.Password);
                 if (result.Errors.Count() > 0)
                     return new OperationDetails(false, result.Errors.FirstOrDefault(), "" ,0 ,user.Id);
-              //  await Database.ApplicationUserManagers.AddToRoleAsync(user.Id, userDto.Role);
+                await Database.ApplicationUserManagers.AddToRoleAsync(user.Id, userDto.Role);
 
                 UserInfo userInfo = new UserInfo { IdUserInfo = user.Id, UserFirstName = userDto.UserFirstName, UserLastName = userDto.UserLastName};
                 Database.UserInfoes.Add(userInfo);
@@ -62,7 +62,8 @@ namespace TestSystem.Logic.Services
 
            
         }
-        public async Task<ClaimsIdentity> Authenticate(UserDTO userDto)
+
+        public async Task<ClaimsIdentity> AuthenticateAsync(UserDTO userDto)
         {
             ClaimsIdentity claim = null;
             ApplicationUser user = await Database.ApplicationUserManagers.FindAsync(userDto.Email, userDto.Password);
@@ -83,7 +84,8 @@ namespace TestSystem.Logic.Services
             }
             return claim;
         }
-        public async Task SetInitialData(UserDTO adminDto, List<string> roles)
+
+        public async Task SetInitialDataAsync( List<string> roles)
         {
             foreach (string roleName in roles)
             {
@@ -94,7 +96,6 @@ namespace TestSystem.Logic.Services
                     await Database.ApplicationRoleManagers.CreateAsync(role);
                 }
             }
-            await Create(adminDto);
         }
         public async Task SendEmailAsync(string id , string theme , string reference)
         {
@@ -104,7 +105,7 @@ namespace TestSystem.Logic.Services
         {
             return await Database.ApplicationUserManagers.ConfirmEmailAsync(userId, token);
         }
-        public async Task<OperationDetails> ForgotPassword(string email )
+        public async Task<OperationDetails> ForgotPasswordAsync(string email )
         {
             var user = await Database.ApplicationUserManagers.FindByNameAsync(email);
             if (user != null || !(await Database.ApplicationUserManagers.IsEmailConfirmedAsync(user.Id)))
@@ -117,7 +118,6 @@ namespace TestSystem.Logic.Services
                 return new OperationDetails(false, "", "", "", "");
             }
         }
-
         public async Task<OperationDetails> ResetPassworAsync(string email , string token , string password)
         {
             var user = await Database.ApplicationUserManagers.FindByEmailAsync(email);
@@ -132,12 +132,12 @@ namespace TestSystem.Logic.Services
                 return new OperationDetails(result.Succeeded, result.Errors.ToString(), "Reset password");
             }
         }
-
-
         public void Dispose()
         {
             Database.Dispose();
         }
+
+        #endregion
 
     }
 }

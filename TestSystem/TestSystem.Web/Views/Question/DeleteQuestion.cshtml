@@ -1,49 +1,117 @@
-﻿@model TestSystem.Web.Models.QuestionViewModel
+﻿@model TestSystem.Web.Models.QuestionDetailsViewModel
 
-@{
-    ViewBag.Title = "Delete";
-    Layout = "~/Views/Shared/_MyLayout.cshtml";
-}
 
-<h2>Delete</h2>
+<!DOCTYPE html>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>QuestionViewModel</h4>
-    <hr />
-    <dl class="dl-horizontal">
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Tests info</title>
+</head>
+<body>
+    <div class="container">
+        <h2>All info about this question ...</h2>
+        <div class="card-group">
+            <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                <thead class="thead-dark">
+                    <tr>
+                        <td>Question</td>
+                        <td>Theme</td>
+                        <td>Difficult</td>
+                        <td>Score</td>
+                        <td>Creation at</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.QuestionText)
-        </dt>
+                            @Html.DisplayFor(modelItem => modelItem.QuestionText)
+                        </td>
+                        <td>
 
-        <dd>
-            @Html.DisplayFor(model => model.QuestionText)
-        </dd>
+                            @Html.DisplayFor(modelItem => modelItem.Theme)
 
-        <dt>
-            @Html.DisplayNameFor(model => model.AnswerNumber)
-        </dt>
+                        </td>
+                        <td>
 
-        <dd>
-            @Html.DisplayFor(model => model.AnswerNumber)
-        </dd>
+                            @Html.DisplayFor(modelItem => modelItem.Difficult)
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Score)
-        </dt>
+                        </td>
+                        <td>
 
-        <dd>
-            @Html.DisplayFor(model => model.Score)
-        </dd>
-    </dl>
+                            @Html.DisplayFor(modelItem => modelItem.Score)
 
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
+                        </td>
+                        <td>
 
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+                            @Html.DisplayFor(modelItem => modelItem.CreateDate)
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="row col-md-12">
+                <div class="col-md-6">
+                    <div class="card-group ">
+                        <table class="table table-bordered table-hover">
+                            <tr>
+                                <th>Answer</th>
+                                <th>Correct</th>
+                            </tr>
+                            @foreach (var item in Model.Answers)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.AnswerText
+                                    </td>
+                                    <td>
+                                        @item.Correct
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card-group ">
+                        <table class="table table-bordered table-hover">
+                            <tr>
+                                <th>Test </th>
+                                <th>Description</th>
+                                <th>Question</th>
+                            </tr>
+                            @foreach (var item in Model.Tests)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.TestName
+                                    </td>
+                                    <td>
+                                        @item.TestDescription
+                                    </td>
+                                    <td>
+                                        @item.QuestionsNumber
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-    }
-</div>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-actions no-color">
+                <input type="submit" value="Delete" class="btn-danger" /> |
+                @Html.ActionLink("Back to List", "Index")
+            </div>
+        }
+    </div>
+</body>
+</html>
+

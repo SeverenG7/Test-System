@@ -11,7 +11,8 @@ namespace TestSystem.Model.Models
     {
         public Theme()
         {
-            Properties = new HashSet<Property>();
+            Tests = new HashSet<Test>();
+            Questions = new HashSet<Question>();
         }
 
         [Key]
@@ -24,6 +25,9 @@ namespace TestSystem.Model.Models
         [Column(TypeName = "text")]
         public string Description { get; set; }
 
-        public virtual ICollection<Property> Properties { get; set; }
+        public virtual ICollection<Test> Tests { get; set; }
+
+        public virtual ICollection<Question> Questions { get; set; }
+
     }
 }

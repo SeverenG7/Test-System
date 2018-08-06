@@ -4,8 +4,13 @@
     ViewBag.Title = "Common Tables";
 }
 
-<h2>Last changes:</h2>
+
 <div class="container">
-    @Html.Action("GetTableTests")
-    @Html.Action("GetTableQuestions")
+    <div>
+        <h2 class="display-4">Latest changes since you gone...</h2>
+    </div>
+    <div class="row">
+        @Html.Action("GetTableTests")
+        @Html.Action("GetTableQuestions")
+    </div>
 </div>

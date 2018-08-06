@@ -119,8 +119,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataTransferObjects\AnswerDTO.cs" />
-    <Compile Include="DataTransferObjects\PropertyDTO.cs" />
     <Compile Include="DataTransferObjects\QuestionDTO.cs" />
+    <Compile Include="DataTransferObjects\ResultDTO.cs" />
     <Compile Include="DataTransferObjects\TestDTO.cs" />
     <Compile Include="DataTransferObjects\ThemeDTO.cs" />
     <Compile Include="DataTransferObjects\UserDTO.cs" />
@@ -131,9 +131,11 @@
     <Compile Include="Infrastructure\TestServiceModule.cs" />
     <Compile Include="Infrastructure\ThemeServiceModule.cs" />
     <Compile Include="Infrastructure\UnitOfWorkModule.cs" />
+    <Compile Include="Infrastructure\UpdateModule.cs" />
     <Compile Include="Infrastructure\UserServiceModule.cs" />
     <Compile Include="Interfaces\IAnswerService.cs" />
     <Compile Include="Interfaces\IQuestionService.cs" />
+    <Compile Include="Interfaces\IResultService.cs" />
     <Compile Include="Interfaces\IServiceCreator.cs" />
     <Compile Include="Interfaces\ITestService.cs" />
     <Compile Include="Interfaces\IThemeService.cs" />
@@ -143,6 +145,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AnswerService.cs" />
     <Compile Include="Services\QuestionService.cs" />
+    <Compile Include="Services\ResultService.cs" />
     <Compile Include="Services\TestService.cs" />
     <Compile Include="Services\ThemeService.cs" />
     <Compile Include="Services\UserService.cs" />

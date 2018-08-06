@@ -18,7 +18,6 @@ namespace TestSystem.DataProvider.Interfaces
         IRepository<Test> Tests { get; }
         IRepository<Question> Questions { get; }
         IRepository<Answer> Answers { get; }
-        IRepository<Property> Properties { get; }
         IRepository<Result> Results { get; }
         IRepository<UserInfo> UserInfoes { get; }
         IRepository<Theme> Themes { get; }

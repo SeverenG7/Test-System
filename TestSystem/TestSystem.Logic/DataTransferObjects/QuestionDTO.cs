@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 
 namespace TestSystem.Logic.DataTransferObjects
 {
@@ -9,7 +10,11 @@ namespace TestSystem.Logic.DataTransferObjects
         public byte[] QuestionImage { get; set; }
         public int AnswerNumber { get; set; }
         public int Score { get; set; }
-        public int? IdProperty { get; set; }
-        public virtual ICollection<AnswerDTO> Answers { get; set; }
+        public string Difficult { get; set; }
+        public DateTime CreateDate { get; set; }
+        public int? IdTheme { get; set; }
+        public ThemeDTO Theme { get; set; }
+        public virtual List<AnswerDTO> Answers { get; set; }
+        public virtual ICollection<TestDTO> Tests { get; set; }
     }
 }

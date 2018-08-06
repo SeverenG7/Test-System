@@ -2,7 +2,6 @@
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.Owin.Security;
-using Microsoft.AspNet.Identity.Owin;
 using System.Threading.Tasks;
 using TestSystem.Web.Models;
 using TestSystem.Logic.DataTransferObjects;
@@ -33,7 +32,6 @@ namespace UserStore.Controllers
 
         #endregion
 
-
         #region Login/Logout & Forgot Password
         [HttpGet]
         [AllowAnonymous]
@@ -53,7 +51,7 @@ namespace UserStore.Controllers
                 try
                 {
                     UserDTO userDto = new UserDTO { Email = model.Email, Password = model.Password };
-                    ClaimsIdentity claim = await UserService.Authenticate(userDto);
+                    ClaimsIdentity claim = await UserService.AuthenticateAsync(userDto);
                     if (claim == null)
                     {
                         ModelState.AddModelError("", "Неверный логин или пароль , или не подтвержден e-mail");
@@ -65,7 +63,8 @@ namespace UserStore.Controllers
                         {
                             IsPersistent = true
                         }, claim);
-                        return RedirectToAction("CommonTables", "Common");
+                        //return RedirectToAction("CommonTables", "Common");
+                        return RedirectToAction("Check");
                     }
                 }
                 catch (DbEntityValidationException ex)
@@ -105,7 +104,7 @@ namespace UserStore.Controllers
         {
             if (ModelState.IsValid)
             {
-                OperationDetails operationDetails = await UserService.ForgotPassword(model.Email);
+                OperationDetails operationDetails = await UserService.ForgotPasswordAsync(model.Email);
                 if (operationDetails.Succedeed)
                 {
                     var callbackUrl = Url.Action("ResetPassword", "Account",
@@ -134,19 +133,22 @@ namespace UserStore.Controllers
         [AllowAnonymous]
         public ActionResult ResetPassword(string Value)
         {
+            TempData["token"] = Value;
             return Value == null ? View("Error") : View();
         }
 
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
+        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model )
         {
+            string token = TempData["token"] as string;
+
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-            OperationDetails details = await UserService.ResetPassworAsync(model.Email, model.Code, model.Password);
+            OperationDetails details = await UserService.ResetPassworAsync(model.Email, token, model.Password);
             if (details.Succedeed)
             {
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
@@ -176,20 +178,20 @@ namespace UserStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
-            // await SetInitialDataAsync();
+             await SetInitialDataAsync();
             if (ModelState.IsValid)
             {
                 UserDTO userDto = new UserDTO
                 {
                     Email = model.Email,
                     Password = model.Password,
-                    UserFirstName = "Nick",
-                    UserLastName = "Chernyak"
-                    //Role = "user"
+                    UserFirstName = "name",
+                    UserLastName = "lastname",
+                    Role = "user"
                 };
                 try
                 {
-                    OperationDetails operationDetails = await UserService.Create(userDto);
+                    OperationDetails operationDetails = await UserService.CreateAsync(userDto);
                     if (operationDetails.Succedeed)
                     {
                         userDto.Id = operationDetails.Id;
@@ -241,18 +243,22 @@ namespace UserStore.Controllers
         }
 
         #endregion
-
-
-
+        
         private async Task SetInitialDataAsync()
         {
-            await UserService.SetInitialData(new UserDTO
-            {
-                Email = "somemail@mail.ru",
-                Password = "ad46D_ewr3",
-                Role = "admin",
-            }, new List<string> { "user", "admin" });
+            await UserService.SetInitialDataAsync( new List<string> { "user", "admin" });
         }
 
+
+        public ActionResult Check()
+        {
+            return View();
+        }
+
+        [Authorize(Roles ="user")]
+        public ActionResult Pass()
+        {
+            return View();
+        }
     }
 }

@@ -1,220 +1,185 @@
-﻿// Copyright (c) 2011 rubicon IT GmbH
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Logic.Interfaces;
 using TestSystem.Web.Models;
-using PagedList.Mvc;
 using PagedList;
-using AutoMapper;
+using System.Web;
 using System.Net;
 using System.Data;
-using TestSystem.Logic.MapGeneric;
-using System.IO;
 
 namespace TestSystem.Web.Controllers
 {
-    public class QuestionController : Controller , IMapGeneric<QuestionDTO,QuestionViewModel>
+    public class QuestionController : Controller
     {
-        
+
+        #region Intit services
+
         private readonly IQuestionService _questionService;
-        private readonly IAnswerService _answerService;
-        List<QuestionViewModel> questionsTable;
+        private readonly IThemeService _themeService;
+        private readonly ITestService _testService;
 
-        public IMapper MapperToDb { get; set; }
-        public IMapper MapperFromDb { get; set; }
-
-        public QuestionController( IQuestionService questionService , IAnswerService answerService)
+        public QuestionController(IQuestionService questionService, IThemeService themeService,
+            ITestService testService)
         {
             _questionService = questionService;
-            _answerService = answerService;
-            MapperFromDb = new MapperConfiguration
-                (mcf => mcf.CreateMap<QuestionDTO, QuestionViewModel>()).CreateMapper();
-            MapperToDb = new MapperConfiguration
-                        (mcf => mcf.CreateMap<QuestionViewModel, QuestionDTO>()).CreateMapper();
-        }
-        // GET: Question
-        public ActionResult AllQuestions()
-        {
-            IEnumerable<QuestionDTO> questionDTOs = _questionService.GetQuestions();
-             questionsTable = MapperFromDb.Map<IEnumerable<QuestionDTO>, List<QuestionViewModel>>(questionDTOs);
-            return View(questionsTable);
+            _themeService = themeService;
+            _testService = testService;
         }
 
-        // GET: Question/Details/5
-        public ActionResult QuestionFullInfo(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            QuestionViewModel question;
-            QuestionDTO questionDTO = _questionService.GetQuestion(id);
-            if (questionDTO == null)
-            {
-                return HttpNotFound();
-            }
-            else
-            {
-                question = MapperFromDb.Map<QuestionViewModel>(questionDTO);
-            }
+        #endregion
+ 
 
-            return View(question);
-        }
+        #region Create/Edit Question
 
         [HttpGet]
-        public ActionResult CreateQuestion()
+        public ActionResult CreateNewQuestion()
         {
-            return View();
+            QuestionCreateViewModel newQuestion = new QuestionCreateViewModel();
+            newQuestion.Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName");
+            newQuestion.Answers = new List<AnswerDTO>();
+            for (int i = 0; i < 5; i++)
+            {
+                newQuestion.Answers.Add(new AnswerDTO());
+            }
+            return View(newQuestion);
         }
 
-        // POST: Question/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult CreateQuestion([Bind(Exclude  = "IdQuestion, IdProperty")]QuestionViewModel question,
-            HttpPostedFileBase Image = null)
+        public ActionResult CreateNewQuestion(QuestionCreateViewModel model,
+            HttpPostedFileBase image = null)
         {
-            try
-            {
-                if (ModelState.IsValid )
-                { 
-                    if (Image == null)
+                       
+                    QuestionDTO question = new QuestionDTO
                     {
-                        QuestionDTO questionDTO = MapperToDb.Map<QuestionDTO>(question);
-                        _questionService.CreateQuestion(questionDTO);
-                        return RedirectToAction("AllQuestions");
-                    }
-                    else
+                        QuestionText = model.QuestionText,
+                        Difficult = model.selectedDifficult,
+                        IdTheme = Int32.Parse(model.selectedTheme)
+                    };
+
+                    question.Answers = new List<AnswerDTO>();
+
+                    foreach (AnswerDTO ans in model.Answers)
                     {
-                        question.QuestionImage = new byte[Image.ContentLength];
-                        Image.InputStream.Read(question.QuestionImage, 0, Image.ContentLength);
-                        QuestionDTO questionDTO = MapperToDb.Map<QuestionDTO>(question);
-                        _questionService.CreateQuestion(questionDTO);
-                         return RedirectToAction("AllQuestions");
+                        if (!String.IsNullOrEmpty(ans.AnswerText))
+                        {
+                            question.Answers.Add(ans);
+                        }
                     }
-                }
-            }
-            catch (DataException /* dex */)
-            {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
-                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
-            }
-            return View(question);
+
+                    question.AnswerNumber = question.Answers.Count;
+                    question.CreateDate = DateTime.Now;
+
+                    if (image != null)
+                    {
+                        question.QuestionImage = new byte[image.ContentLength];
+                        image.InputStream.Read(question.QuestionImage, 0, image.ContentLength);
+                    }
+
+                    _questionService.CreateQuestion(question);
+
+                    return RedirectToAction("GetInfoQuestion" , "Common");
+               
         }
 
-        public ActionResult EditQuestion(int? id)
+
+        [HttpGet]
+        public ActionResult EditQuestion(int id)
         {
-            if (id == null)
+            QuestionDTO updatingQuestion = _questionService.GetQuestion(id);
+            return View(updatingQuestion);
+        }
+
+        [HttpPost]
+        public ActionResult EditQuestion (QuestionDTO model )
+        {
+
+            var questionUpdate = _questionService.GetQuestion(model.IdQuestion);
+            if (TryUpdateModel(questionUpdate, "",
+       new string[] { "QuestionText" }))
+            {
+                questionUpdate.Answers = model.Answers;
+                _questionService.UpdateQuestion(questionUpdate);
+              return  RedirectToAction("GetInfoQuestion", "Common");
+            }
+                return View();
+        }
+
+        #endregion
+
+        #region Delete/Details Question
+
+        [HttpGet]
+        public ActionResult DeleteQuestion(int? id)
+        {
+            if (!id.HasValue)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            QuestionViewModel question;
-            QuestionDTO questionDTO = _questionService.GetQuestion(id);
-            if (questionDTO == null)
+            QuestionDTO questionDetails = _questionService.GetQuestion(id.Value);
+            if (questionDetails == null)
             {
                 return HttpNotFound();
             }
-            else
-            {
-                question = MapperFromDb.Map<QuestionViewModel>(questionDTO);
-                ViewBag.Answers = question.Answers;
-            }
 
-            return View(question);
-           
-        }
-
-        [HttpPost, ActionName("EditQuestion")]
-        [ValidateAntiForgeryToken]
-        public ActionResult EditPostQuestion(int? id)
-        {
-            QuestionViewModel questionUpdate;
-            QuestionDTO questionDTO = _questionService.GetQuestion(id);
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            else
-            {
-                questionUpdate = MapperFromDb.Map<QuestionViewModel>(questionDTO);
-            }
-            if (TryUpdateModel(questionDTO, "",
-               new string[] { "QuestionText" , "AnswerNumber" , "Score" }))
-            {
-                try
-                {
-                    _questionService.UpdateQuestion(questionDTO);
-
-                    return RedirectToAction("AllQuestions");
-                }
-                catch (DataException /* dex */)
-                {
-                    //Log the error (uncomment dex variable name and add a line here to write a log.
-                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
-                }
-            }
-            return View(questionUpdate);
-        }
-
-        // GET: Question/Delete/5
-        public ActionResult DeleteQuestion(int? id, bool? saveChangesError = false)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            if (saveChangesError.GetValueOrDefault())
-            {
-                ViewBag.ErrorMessage = "Delete failed. Try again, and if the problem persists see your system administrator.";
-            }
-            QuestionViewModel question;
-
-            QuestionDTO questionDTO = _questionService.GetQuestion(id);
-            if (questionDTO == null)
-            {
-                return HttpNotFound();
-            }
-            else
-            {
-                question = MapperFromDb.Map<QuestionViewModel>(questionDTO);
-            }
-            return View(question);
+            _questionService.RemoveQuestion(id.Value);
+            return RedirectToAction("GetInfoQuestion", "Common");
         }
 
         // POST: Question/Delete/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteQuestion(int id)
+        public ActionResult Delete(int? id)
         {
             try
             {
-                _questionService.RemoveQuestion(id);
+                
+                
+                return RedirectToAction("GetInfoQuestion" , "Common");
             }
-            catch (DataException/* dex */)
+            catch
             {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
-                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
+                return View();
             }
-            return RedirectToAction("AllQuestions");
         }
 
-        public ActionResult CreateAnswer(int? answerNumber)
+        public ActionResult DetailsQuestion(int? id)
         {
-            List<AnswerViewModel> creatingAnswers = new List<AnswerViewModel>();
-            for (int i = 0; i < answerNumber; i++)
+            if (!id.HasValue)
             {
-                creatingAnswers.Add(new AnswerViewModel());
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ViewBag.Answers = creatingAnswers;
-            return PartialView();
+            QuestionDTO questionDetails = _questionService.GetQuestion(id.Value);
+            if (questionDetails == null)
+            {
+                return HttpNotFound();
+            }
+
+            QuestionDetailsViewModel model = new QuestionDetailsViewModel(questionDetails);
+            model.Theme = _themeService.Get(questionDetails.IdTheme).ThemeName;
+            foreach (TestDTO test in questionDetails.Tests)
+            {
+                model.Tests.Add(test);
+            }
+            return View(model);
         }
 
+        #endregion
 
+        //public FileContentResult GetImage(int gameId)
+        //{
+        //    Game game = repository.Games
+        //        .FirstOrDefault(g => g.GameId == gameId);
 
+        //    if (game != null)
+        //    {
+        //        return File(game.ImageData, game.ImageMimeType);
+        //    }
+        //    else
+        //    {
+        //        return null;
+        //    }
+        //}
     }
 }

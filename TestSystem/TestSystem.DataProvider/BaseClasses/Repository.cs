@@ -5,8 +5,7 @@ using System.Data.Entity;
 using TestSystem.DataProvider.Interfaces;
 using System.Linq.Expressions;
 using Microsoft.AspNet.Identity.EntityFramework;
-
-
+using System.Data.SqlClient;
 
 namespace TestSystem.DataProvider.BaseClasses
 {
@@ -17,7 +16,7 @@ namespace TestSystem.DataProvider.BaseClasses
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <returns>TEntity here is a like generic type of any data objcet. </returns>
-    public class Repository<TEntity> : IRepository<TEntity> , IDisposable where TEntity : class 
+    public class Repository<TEntity> : IRepository<TEntity>, IDisposable where TEntity : class
     {
         /// <summary>
         /// Also here use generic DbContext, for bigger agility
@@ -39,6 +38,8 @@ namespace TestSystem.DataProvider.BaseClasses
         {
             return context.Set<TEntity>().Where(predicate);
         }
+ 
+
         public void Add(TEntity entity) => context.Set<TEntity>().Add(entity);
         public void AddRange(IEnumerable<TEntity> entities) => context.Set<TEntity>().AddRange(entities);
 
@@ -47,19 +48,20 @@ namespace TestSystem.DataProvider.BaseClasses
 
         public void Updating(TEntity entity)
         {
-            context.Entry(entity).State = EntityState.Detached;
-            context.SaveChanges();
+            string str = context.Entry(entity).State.ToString();
+            str = str + "";
         }
 
         public void Update(TEntity entity)
         {
             context.Entry(entity).State = EntityState.Modified;
-            context.SaveChanges();
         }
+
 
         public void Dispose()
         {
             context.Dispose();
         }
+
     }
 }

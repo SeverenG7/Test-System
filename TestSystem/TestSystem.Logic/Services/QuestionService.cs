@@ -22,8 +22,10 @@ namespace TestSystem.Logic.Services
         }
         public void CreateQuestion(QuestionDTO questionDTO)
         {
+            questionDTO.Score = ComputeScore(questionDTO);
             Question question = MapperToDB.Map<Question>(questionDTO);
             Database.Questions.Add(question);
+            Database.Answers.AddRange(question.Answers);
             Database.Complete();
         }
 
@@ -60,20 +62,49 @@ namespace TestSystem.Logic.Services
 
         public void UpdateQuestion(QuestionDTO questionDTO)
         {
-            //truly magic i guess
+            //foreach (AnswerDTO ans in questionDTO.Answers)
+            //{
+            //    Answer answer = Database.Answers.Get(ans.IdAnswer);
+            //    Database.Answers.Updating(answer);
+            //}
+            //Question question = Database.Questions.Get(questionDTO.IdQuestion);
+            //Theme theme = Database.Themes.Get(questionDTO.IdTheme.Value);
+            //Database.Questions.Updating(question);
+            //Database.Themes.Updating(theme);
+
+
+            //Question questionUpdate = MapperToDB.Map<Question>(questionDTO);
+            //foreach (Answer ans in questionUpdate.Answers)
+            //{
+            //    Database.Answers.Update(ans);
+            //}
             foreach (AnswerDTO ans in questionDTO.Answers)
             {
                 Answer answer = Database.Answers.Get(ans.IdAnswer);
-                Database.Answers.Updating(answer);
+                answer.AnswerText = ans.AnswerText;
+                answer.Correct = ans.Correct;
+                Database.Answers.Update(answer);
             }
-            Question question = Database.Questions.Get(questionDTO.IdQuestion);
-            Database.Questions.Updating(question);
-            Question questionUpdate = MapperToDB.Map<Question>(questionDTO);
-            foreach (Answer ans in questionUpdate.Answers)
+            Database.Questions.Update(Database.Questions.Get(questionDTO.IdQuestion));
+            Database.Complete();
+        }
+
+        public static int ComputeScore(QuestionDTO question)
+        {
+            int koeff = 0;
+            switch (question.Difficult)
             {
-                Database.Answers.Update(ans);
+                case "Junior":
+                    koeff = 1;
+                    break;
+                case "Middle":
+                    koeff = 2;
+                    break;
+                case "Senior":
+                    koeff = 3;
+                    break;
             }
-            Database.Questions.Update(questionUpdate);
+            return (koeff * question.AnswerNumber);
         }
     }
 }

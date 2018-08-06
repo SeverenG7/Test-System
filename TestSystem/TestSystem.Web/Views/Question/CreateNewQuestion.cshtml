@@ -1,0 +1,115 @@
+﻿@model TestSystem.Web.Models.QuestionCreateViewModel
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Creating new question</title>
+</head>
+<body>
+    <div class="container">
+       <div class="card-header-tabs">
+    @using (Html.BeginForm("CreateNewQuestion", "Question", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+      
+            <h4 class="text-info alert-info">Add new question here...</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="row float-lg-left col-md-5"  >
+                <div class="container">
+                    <div class="form-inline">
+                        <div class=" form-group">
+                            <div class="col-md-12">
+                                <label class="text-center col-md-12"> Choose theme... </label>
+                                @Html.DropDownListFor(model => model.selectedTheme , Model.Theme,
+                                            htmlAttributes: new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class=" form-group">
+                            <div class="col-md-12">
+                                <label class="text-center col-md-12">Choose difficult...</label>
+                                @Html.DropDownListFor(model => model.selectedDifficult  , Model.Difficult,
+                                        htmlAttributes: new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.QuestionText, htmlAttributes: new { @class = "control-label col-md-12" })
+                        <div class="col-md-12">
+                            @Html.EditorFor(model => model.QuestionText, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.QuestionText, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div style="position:relative">
+                            <a class='btn' href='javascript:;'>
+                                If you need picture, browse int from here...
+                                <input type="file" name="Image" size="400"
+                                       style="position:absolute;z-index:2;top:0;
+                                left:0;filter: alpha(opacity=0); opacity:0;
+                                background-color:transparent;color:transparent;"
+                                       onchange='$("#upload-file-info").html($(this).val());'>
+                            </a>
+                            <span class='label label-info' id="upload-file-info"></span>
+                        </div>
+                        @*@if (Model.QuestionImage == null)
+                        {
+                            <div class="form-control-static">Нет картинки</div>
+                        }
+                        else
+                        {
+                            <img class="img-thumbnail" width="300" height="300"
+                                 src="@Url.Action("GetImage", "Game",
+                        new { Model.GameId })" />
+                        }*@
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="row col-md-5">
+                <label class=""> Put answers : </label>
+                <div class="card-group ">
+                    @for (int i = 0; i < Model.Answers.Count; i++)
+                    {
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.TextBoxFor(model => model.Answers[i].AnswerText,
+                               htmlAttributes: new { @class= "form-control"})
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            @Html.CheckBoxFor(model => model.Answers[i].Correct,
+                           htmlAttributes: new { @class = "control" })
+                        </div>
+                    }
+                </div>
+            </div>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+      
+    }
+           </div>
+        </div>
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+   
+</body>
+</html>

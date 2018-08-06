@@ -16,7 +16,7 @@ namespace TestSystem.DataProvider.BaseClasses
     public class UnitOfWork : IUnitOfWork
     {
 
-        private readonly ApplicationContext _context; 
+        private readonly ApplicationContext _context;
         private bool _disposed = false;
 
         /// <summary>
@@ -26,23 +26,20 @@ namespace TestSystem.DataProvider.BaseClasses
         public UnitOfWork(ApplicationContext context)
         {
             _context = context;
+            _context.Configuration.AutoDetectChangesEnabled = false;
             Answers = new AnswerRepository(_context);
-            Properties = new PropertyRepository(_context);
             Questions = new QuestionRepository(_context);
             Results = new ResultRepository(_context);
             Tests = new TestRepository(_context);
             Themes = new ThemeRepository(_context);
             UserInfoes = new UserInfoRepository(_context);
             ApplicationRoleManagers = new ApplicationRoleManager
-                (new RoleStore < ApplicationRole >(_context) );
+                (new RoleStore<ApplicationRole>(_context));
             ApplicationUserManagers = new ApplicationUserManager
                 (new UserStore<ApplicationUser>(_context));
         }
 
-     
-
         public IRepository<Answer> Answers { get; private set; }
-        public IRepository<Property> Properties { get; private set; }
         public IRepository<Question> Questions { get; private set; }
         public IRepository<Result> Results { get; private set; }
         public IRepository<Test> Tests { get; private set; }
@@ -62,7 +59,6 @@ namespace TestSystem.DataProvider.BaseClasses
                 if (disposing)
                 {
                     Answers.Dispose();
-                    Properties.Dispose();
                     Questions.Dispose();
                     Results.Dispose();
                     Tests.Dispose();
