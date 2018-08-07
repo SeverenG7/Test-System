@@ -7,7 +7,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Tests info</title>
+    <title>Themes info</title>
 </head>
 <body>
     <div class="container">
@@ -68,15 +68,16 @@
                             @Html.DisplayFor(modelItem => item.Questions.Count)
                         </td>
                         <td>
-                            <button class="btn btn-primary"
-                                    onclick="location.href='@Url.Action("AboutThemes", "Theme", new { idTheme = item.IdTheme} )'">
-                                Select
-                            </button>
-                            <button class="btn btn-danger"
-                                    onclick="location.href='@Url.Action("DeleteTheme", "Theme", new { id = item.IdTheme} )'">
-                                Delete
-                            </button>
-
+                            <div class="btn-group">
+                                <button class="btn btn-primary"
+                                        onclick="location.href='@Url.Action("AboutThemes", "Theme", new { idTheme = item.IdTheme} )'">
+                                    Select
+                                </button>
+                                <button class="btn btn-danger"
+                                        onclick="location.href='@Url.Action("DeleteTheme", "Theme", new { id = item.IdTheme} )'">
+                                    Delete
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 }

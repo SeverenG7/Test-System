@@ -28,12 +28,16 @@ namespace TestSystem.Web.Controllers
 
 
         // GET: Theme
-        public ActionResult AboutThemes(int? IdTheme )
+        public ActionResult AboutThemes(int? IdTheme , string search)
         {
             _themeService.GetAll();
             ThemeAboutViewModel modelView = new ThemeAboutViewModel();
             modelView.Themes = _themeService.GetAll().ToList();
 
+            if (!String.IsNullOrEmpty(search))
+            {
+                modelView.Themes = modelView.Themes.Where(x => x.ThemeName.Contains(search));
+            }
 
             if (IdTheme.HasValue)
             {

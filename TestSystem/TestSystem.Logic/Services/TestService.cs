@@ -49,7 +49,7 @@ namespace TestSystem.Logic.Services
 
         public void RemoveTest(int id)
         {
-            Test test = (Test)Database.Tests.Find(x => x.IdTest == id);
+            Test test = Database.Tests.Get(id);
             if (test != null)
             {
                 Database.Tests.Remove(test);

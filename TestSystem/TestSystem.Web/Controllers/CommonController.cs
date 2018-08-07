@@ -83,6 +83,8 @@ namespace TestSystem.Web.Controllers
             
             viewTests.Themes = new SelectList(themes, "IdTheme", "ThemeName");
 
+
+
             return View(viewTests);
         }
 
@@ -123,6 +125,10 @@ namespace TestSystem.Web.Controllers
                     Where(x => x.IdQuestion == IdQuestion).
                     SingleOrDefault().
                     Answers;
+                viewQuestions.Tests = viewQuestions.Questions.
+                    Where(x => x.IdQuestion == IdQuestion).
+                    SingleOrDefault().
+                    Tests;
             }
             if (IdTest.HasValue)
             {

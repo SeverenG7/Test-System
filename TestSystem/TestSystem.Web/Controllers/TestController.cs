@@ -4,6 +4,7 @@ using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Logic.Interfaces;
 using TestSystem.Web.Models;
 using System;
+using System.Net;
 
 namespace TestSystem.Web.Controllers
 {
@@ -119,9 +120,18 @@ namespace TestSystem.Web.Controllers
         }
 
         // GET: Test/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult DeleteTest(int? id)
         {
-            return View();
+            if (!id.HasValue)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (_testService.GetTest(id.Value) == null)
+            {
+                return HttpNotFound();
+            }
+            _testService.RemoveTest(id.Value);
+            return RedirectToAction("GetInfoTest" , "Common");
         }
 
         // POST: Test/Delete/5

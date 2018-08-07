@@ -43,9 +43,9 @@ namespace TestSystem.Web.Controllers
         }
 
         // GET: User/Details/5
-        public ActionResult DetailsTest(int? id)
+        public ActionResult StartTest(int? id)
         {
-
+     
             return View();
         }
 

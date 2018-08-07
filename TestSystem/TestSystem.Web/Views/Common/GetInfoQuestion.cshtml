@@ -133,7 +133,7 @@
 
         @if (Model.Tests != null)
         {
-            <h3>Questions by Selected Test</h3>
+            <h3>Test in which u can find this question:</h3>
             <table class="table table-bordered table-hover">
                 <tr>
                     <th>Test</th>
@@ -150,13 +150,10 @@
                     }
                     <tr class="@selectedRow">
                         <td>
-                            @Html.ActionLink("Select", "GetInfo", new { idTest = item.IdTest })
-                        </td>
-                        <td>
                             @item.TestName
                         </td>
                         <td>
-                            @item.Theme
+                            @item.Theme.ThemeName
                         </td>
                         <td>
                             @item.TestDescription

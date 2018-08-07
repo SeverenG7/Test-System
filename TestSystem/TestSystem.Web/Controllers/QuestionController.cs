@@ -108,6 +108,19 @@ namespace TestSystem.Web.Controllers
                 return View();
         }
 
+        public ActionResult DeleteFromTest(int? idQuestion , int? idTest)
+        {
+            if (idTest.HasValue && idQuestion.HasValue)
+            {
+                _questionService.DeleteQuestionFromTest(idQuestion.Value, idTest.Value);
+                return RedirectToAction("GetInfoTest", "Common");
+            }
+            else
+            {
+                return  new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+        }
+
         #endregion
 
         #region Delete/Details Question

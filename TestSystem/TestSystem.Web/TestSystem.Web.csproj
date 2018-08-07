@@ -208,6 +208,7 @@
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\EnterController.cs" />
     <Compile Include="Controllers\ErrController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\TestController.cs" />
@@ -444,6 +445,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Enter\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
