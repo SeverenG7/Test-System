@@ -32,43 +32,52 @@
                 }
 
                 <div class="col-md-2">
-                    <div class="form-inline">
-                        @Html.DropDownList("IdTheme", Model.Themes as SelectList,
-                                    htmlAttributes: new { @class = "form-control" ,
-                                    placeholder = "Theme..."})
+                    <div class="row">
+                        <div class="text-left ml-5">
+                            Choose theme
+                        </div>
+                        <div class="form-check-inline mb-3 ml-5">
+                            @Html.DropDownList("IdTheme", Model.Themes as SelectList,
+                                        htmlAttributes: new { @class = "form-control" ,
+                                        placeholder = "Theme..."})
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-2">
-                    <div class="form-inline">
+                    <div class="row">
+                        <div class="text-left">
+                            Choose theme
+                        </div>
+                        <div class="form-inline mb-3 mr-3">
 
-                        @Html.DropDownList("difficult", Model.Difficult as SelectList,
-                                htmlAttributes: new { @class = "form-control" ,
-                                placeholder = "Difficult..."})
+                            @Html.DropDownList("difficult", Model.Difficult as SelectList,
+                                    htmlAttributes: new { @class = "form-control" ,
+                                    placeholder = "Difficult..."})
 
+                        </div>
+                        <input type="submit" value="Sort" class="btn btn-success mb-3" />
                     </div>
-                    </div>
-                    <input type="submit" value="Sort" class="btn btn-default" />
-
                 </div>
-</form>
+            </div>
+        </form>
 
-        <table class="table table-bordered table-hover"  id="dataTable" width="100%" cellspacing="0">
+        <table class="table table-bordered table-hover" id="dataTable" width="100" cellspacing="0">
             <thead class="show">
-            <tr>
-                <th>Test</th>
-                <th>Questions</th>
-                <th>Theme</th>
-                <th>Creation at</th>
-                <th></th>
-            </tr>
-                </thead>
+                <tr>
+                    <th>Test</th>
+                    <th>Questions</th>
+                    <th>Theme</th>
+                    <th>Creation at</th>
+                    <th></th>
+                </tr>
+            </thead>
 
             @foreach (var item in Model.Tests)
             {
                 string selectedRow = "";
                 if (item.IdTest == ViewBag.IdTest)
                 {
-                    selectedRow = "bg-warning";
+                    selectedRow = "bg-light";
                 }
                 <tr class="@selectedRow">
                     <td>
@@ -84,11 +93,14 @@
                         @Html.DisplayFor(modelItem => item.CreateDate)
                     </td>
                     <td>
-                        @Html.ActionLink("Select", "GetInfoTest", new { idTest = item.IdTest })
-                        @*@Ajax.ActionLink("Select", "AllTests", new { id = item.IdTest }, new AjaxOptions() { UpdateTargetId = "1" }) |*@
-                        @Html.ActionLink("Edit", "Edit", new { id = item.IdTest }) |
-                        @Html.ActionLink("Details", "Details", new { id = item.IdTest }) |
-                        @Html.ActionLink("Delete", "Delete", new { id = item.IdTest })
+                        <button class="btn btn-primary"
+                                onclick="location.href='@Url.Action("GetInfoTest" , "Common" ,new { idTest = item.IdTest })'">
+                            Select
+                        </button>
+                        <button class="btn btn-danger"
+                                onclick="location.href='@Url.Action("GetInfoTest" , "Common" ,new { idTest = item.IdTest })'">
+                            Delete
+                        </button>
                     </td>
                 </tr>
             }
@@ -114,7 +126,11 @@
                     }
                     <tr class="@selectedRow">
                         <td>
-                            @Html.ActionLink("Select", "GetInfoTest", new { idQuestion = item.IdQuestion, idTest = ViewBag.IdTest})
+                            <button class="btn btn-primary"
+                                    onclick="location.href='
+                                    @Url.Action("GetInfoTest" , "Common" , new { idQuestion = item.IdQuestion, idTest = ViewBag.IdTest })'">
+                                Select
+                            </button>
                         </td>
                         <td>
                             @item.QuestionText

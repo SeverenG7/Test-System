@@ -1,9 +1,7 @@
 ﻿@model TestSystem.Web.Models.FiltrationViewModel
 
 
-
 <!DOCTYPE html>
-
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
@@ -70,42 +68,42 @@
                 {
                     selectedRow = "bg-light";
                 }
-            <tr class="@selectedRow">
-                <td>
-                    @Html.DisplayFor(modelItem => item.QuestionText)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Theme.ThemeName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Difficult)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreateDate)
-                </td>
-                <td>
-                    <button class="btn btn-primary"
-                            onclick="location.href='@Url.Action( "GetInfoQuestion","Common" , new { IdQuestion = item.IdQuestion })'">
-                        More...
-                    </button>
-                    @*@Ajax.ActionLink("Select", "AllTests", new { id = item.IdTest }, new AjaxOptions() { UpdateTargetId = "1" }) |*@
-                    @*@Html.ActionLink("Edit this...", "EditQuestion", "Question" ,new { IdQuestion = item.IdQuestion })*@
-                    <button class="btn btn-primary"
-                            onclick="location.href='@Url.Action("EditQuestion", "Question" ,new { id = item.IdQuestion })'">
-                        Edit
-                    </button>
-                    <button class="btn btn-primary"
-                            onclick="location.href='@Url.Action("DetailsQuestion", "Question",new {id = item.IdQuestion })'">
-                        Details
-                    </button>
-                    <button class="btn btn-danger"
-                            onclick="location.href='@Url.Action("DeleteQuestion", "Question",new {id = item.IdQuestion })'">
-                        Delete
-                    </button>
+                <tr class="@selectedRow">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.QuestionText)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Theme.ThemeName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Difficult)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreateDate)
+                    </td>
+                    <td>
+                        <button class="btn btn-primary"
+                                onclick="location.href='@Url.Action( "GetInfoQuestion","Common" , new { IdQuestion = item.IdQuestion })'">
+                            More...
+                        </button>
+                        @*@Ajax.ActionLink("Select", "AllTests", new { id = item.IdTest }, new AjaxOptions() { UpdateTargetId = "1" }) |*@
+                        @*@Html.ActionLink("Edit this...", "EditQuestion", "Question" ,new { IdQuestion = item.IdQuestion })*@
+                        <button class="btn btn-primary"
+                                onclick="location.href='@Url.Action("EditQuestion", "Question" ,new { id = item.IdQuestion })'">
+                            Edit
+                        </button>
+                        <button class="btn btn-primary"
+                                onclick="location.href='@Url.Action("DetailsQuestion", "Question",new {id = item.IdQuestion })'">
+                            Details
+                        </button>
+                        <button class="btn btn-danger"
+                                onclick="location.href='@Url.Action("DeleteQuestion", "Question",new {id = item.IdQuestion })'">
+                            Delete
+                        </button>
 
 
-                </td>
-            </tr>
+                    </td>
+                </tr>
             }
         </table>
 
@@ -133,42 +131,42 @@
             </table>
         }
 
-            @if (Model.Tests != null)
-            {
-                <h3>Questions by Selected Test</h3>
-                <table class="table table-bordered table-hover">
-                    <tr>
-                        <th>Test</th>
-                        <th>Theme</th>
-                        <th>Desrciption</th>
-                    </tr>
+        @if (Model.Tests != null)
+        {
+            <h3>Questions by Selected Test</h3>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Test</th>
+                    <th>Theme</th>
+                    <th>Desrciption</th>
+                </tr>
 
-                    @foreach (var item in Model.Tests)
+                @foreach (var item in Model.Tests)
+                {
+                    string selectedRow = "";
+                    if (item.IdTest == ViewBag.IdTest)
                     {
-                        string selectedRow = "";
-                        if (item.IdTest == ViewBag.IdTest)
-                        {
-                            selectedRow = "success";
-                        }
-                        <tr class="@selectedRow">
-                            <td>
-                                @Html.ActionLink("Select", "GetInfo", new { idTest = item.IdTest })
-                            </td>
-                            <td>
-                                @item.TestName
-                            </td>
-                            <td>
-                                @item.Theme
-                            </td>
-                            <td>
-                                @item.TestDescription
-                            </td>
-                        </tr>
+                        selectedRow = "success";
                     }
+                    <tr class="@selectedRow">
+                        <td>
+                            @Html.ActionLink("Select", "GetInfo", new { idTest = item.IdTest })
+                        </td>
+                        <td>
+                            @item.TestName
+                        </td>
+                        <td>
+                            @item.Theme
+                        </td>
+                        <td>
+                            @item.TestDescription
+                        </td>
+                    </tr>
+                }
 
-                </table>
-            }
-        </div>
+            </table>
+        }
+    </div>
 </body>
 </html>
 @Scripts.Render("~/scripts/jquery-3.3.1.js")

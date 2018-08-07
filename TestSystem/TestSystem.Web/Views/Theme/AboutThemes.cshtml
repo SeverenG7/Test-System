@@ -30,7 +30,12 @@
                 </div>
             }
 
-
+            <div class="text-center">
+                <button class="btn btn-success"
+                        onclick="location.href='@Url.Action("CreateNewTheme", "Theme" )'">
+                    Create new
+                </button>
+            </div>
             <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
                 <thead class="show">
                     <tr>
@@ -63,10 +68,15 @@
                             @Html.DisplayFor(modelItem => item.Questions.Count)
                         </td>
                         <td>
-                            @Html.ActionLink("Select", "AboutThemes", new { idTheme = item.IdTheme })
-                            @*@Ajax.ActionLink("Select", "AllTests", new { id = item.IdTest }, new AjaxOptions() { UpdateTargetId = "1" }) |*@
-                            @Html.ActionLink("Create new", "CreateNewTheme", new { id = item.IdTheme }) |
-                            @Html.ActionLink("Delete", "DeleteTheme", new { id = item.IdTheme })
+                            <button class="btn btn-primary"
+                                    onclick="location.href='@Url.Action("AboutThemes", "Theme", new { idTheme = item.IdTheme} )'">
+                                Select
+                            </button>
+                            <button class="btn btn-danger"
+                                    onclick="location.href='@Url.Action("DeleteTheme", "Theme", new { id = item.IdTheme} )'">
+                                Delete
+                            </button>
+
                         </td>
                     </tr>
                 }
