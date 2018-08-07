@@ -50,7 +50,8 @@ namespace UserStore.Controllers
                 try
                 {
                     UserDTO userDto = new UserDTO { Email = model.Email, Password = model.Password };
-                    ClaimsIdentity claim = await UserService.AuthenticateAsync(userDto);
+                    OperationDetails details = await UserService.AuthenticateAsync(userDto);
+                    ClaimsIdentity claim = details.Value;
                     if (claim == null)
                     {
                         ModelState.AddModelError("", "Неверный логин или пароль , или не подтвержден e-mail");
@@ -63,12 +64,12 @@ namespace UserStore.Controllers
                             IsPersistent = true
                         }, claim);
 
-                        if (User.IsInRole("user"))
+                        if (details.Message.Equals("user"))
                         {
                             return RedirectToAction("MainMenu" , "User");
                         }
 
-                        if (User.IsInRole("admin"))
+                        if (details.Message.Equals("admin"))
                         {
                             return RedirectToAction("CommonTables", "Common");
                         }
@@ -194,7 +195,7 @@ namespace UserStore.Controllers
                     Password = model.Password,
                     UserFirstName = "name",
                     UserLastName = "lastname",
-                    Role = "admin"
+                    Role = "user"
                 };
                 try
                 {

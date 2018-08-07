@@ -63,18 +63,21 @@ namespace TestSystem.Logic.Services
            
         }
 
-        public async Task<ClaimsIdentity> AuthenticateAsync(UserDTO userDto)
+        public async Task<OperationDetails> AuthenticateAsync(UserDTO userDto)
         {
             ClaimsIdentity claim = null;
             ApplicationUser user = await Database.ApplicationUserManagers.FindAsync(userDto.Email, userDto.Password);
+       
 
             if (user != null)
             {
                 if (user.EmailConfirmed)
                 {
+                    UserInfo role = Database.UserInfoes.Find(x => x.IdUserInfo == user.Id).FirstOrDefault();
+                    
                     claim = await Database.ApplicationUserManagers.CreateIdentityAsync(user,
                                                DefaultAuthenticationTypes.ApplicationCookie);
-                    return claim;
+                    return new OperationDetails(true, role.UserFirstName, "", claim, "");
                 }
                 else
                 {
@@ -82,7 +85,7 @@ namespace TestSystem.Logic.Services
                                                 DefaultAuthenticationTypes.ApplicationCookie);
                 }
             }
-            return claim;
+            return new OperationDetails(true, "", "", claim, "");
         }
 
         public async Task SetInitialDataAsync( List<string> roles)

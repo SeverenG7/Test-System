@@ -10,7 +10,7 @@ namespace TestSystem.Logic.Interfaces
     public interface IUserService
     {
         Task<OperationDetails> CreateAsync(UserDTO userDto);
-        Task<ClaimsIdentity> AuthenticateAsync(UserDTO userDto);
+        Task<OperationDetails> AuthenticateAsync(UserDTO userDto);
         Task SetInitialDataAsync( List<string> roles);
         Task SendEmailAsync(string id, string theme, string reference);
         Task<IdentityResult> ConfirmEmailAsync(string userId, string token);
