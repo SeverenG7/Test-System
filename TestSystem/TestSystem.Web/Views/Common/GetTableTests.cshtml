@@ -43,7 +43,7 @@
                         @Html.PagedListPager(Model, pageTests => Url.Action("CommonTables", new { pageTests }))
                     </div>
                     <div class="container">
-                        <form action="@Url.Action("GetInfoTest", "Common")">
+                        <form action="@Url.Action("GetInfoTest", "Test")">
                             <button class="btn btn-primary" type="submit">More about tests...</button>
                         </form>
                     </div>

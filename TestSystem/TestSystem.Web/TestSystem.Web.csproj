@@ -211,6 +211,7 @@
     <Compile Include="Controllers\EnterController.cs" />
     <Compile Include="Controllers\ErrController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
+    <Compile Include="Controllers\ResultController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\ThemeController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -220,6 +221,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CommonsViewModels.cs" />
     <Compile Include="Models\QuestionViewModels.cs" />
+    <Compile Include="Models\ResultsViewModel.cs" />
     <Compile Include="Models\TestViewModels.cs" />
     <Compile Include="Models\ThemeViewModels.cs" />
     <Compile Include="Models\UsersViewModels.cs" />
@@ -429,11 +431,10 @@
     <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
-    <Content Include="Views\Common\GetInfoTest.cshtml" />
+    <Content Include="Views\Test\GetInfoTest.cshtml" />
     <Content Include="Views\Question\CreateNewQuestion.cshtml" />
     <Content Include="Views\Test\CreateNewTest.cshtml" />
-    <Content Include="Views\Test\GetQuestions.cshtml" />
-    <Content Include="Views\Common\GetInfoQuestion.cshtml" />
+    <Content Include="Views\Question\GetInfoQuestion.cshtml" />
     <Content Include="Views\Theme\CreateNewTheme.cshtml" />
     <Content Include="Views\Question\EditQuestion.cshtml" />
     <Content Include="Views\Question\DetailsQuestion.cshtml" />
@@ -444,9 +445,11 @@
     <Content Include="Views\Err\NotFoundPage.cshtml" />
     <Content Include="Views\Test\GenerateTest.cshtml" />
     <Content Include="Views\Err\ForbiddenPage.cshtml" />
+    <Content Include="Views\Common\GetTableResults.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Result\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

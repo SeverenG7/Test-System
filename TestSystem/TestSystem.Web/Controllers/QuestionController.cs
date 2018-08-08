@@ -126,6 +126,64 @@ namespace TestSystem.Web.Controllers
         #region Delete/Details Question
 
         [HttpGet]
+        public ActionResult GetInfoQuestion
+            (int? IdTheme, string difficult, int? IdQuestion, int? IdTest, string search)
+        {
+            FiltrationViewModel viewQuestions = new FiltrationViewModel();
+
+            IEnumerable<QuestionDTO> questions = _questionService.GetQuestions().
+                OrderBy(x => x.CreateDate);
+
+            if (IdTheme.HasValue && IdTheme != 0)
+            {
+                questions = questions.Where(x => x.IdTheme == IdTheme);
+            }
+
+            if (!String.IsNullOrEmpty(difficult) && !difficult.Equals("All"))
+            {
+                questions = questions.Where(x => x.Difficult == difficult);
+            }
+
+            if (!String.IsNullOrEmpty(search))
+            {
+                questions = questions.Where(x => x.QuestionText.Contains(search));
+            }
+
+            List<ThemeDTO> themes = _themeService.GetAll().ToList();
+            themes.Insert(0, new ThemeDTO() { IdTheme = 0, ThemeName = "All" });
+            viewQuestions.Questions = questions.ToList();
+
+
+            if (IdQuestion.HasValue)
+            {
+                if (viewQuestions.Questions == null)
+                    ViewBag.IdQuestion = IdQuestion.Value;
+                viewQuestions.Answers = _questionService.GetQuestions().
+                    Where(x => x.IdQuestion == IdQuestion).
+                    SingleOrDefault().
+                    Answers;
+                viewQuestions.Tests = viewQuestions.Questions.
+                    Where(x => x.IdQuestion == IdQuestion).
+                    SingleOrDefault().
+                    Tests;
+            }
+            if (IdTest.HasValue)
+            {
+                ViewBag.IdTest = IdTest.Value;
+                viewQuestions.Questions = viewQuestions.Tests.
+                    Where(x => x.IdTest == IdTest).
+                    SingleOrDefault().
+                    Questions.ToList();
+            }
+
+            viewQuestions.Themes = new SelectList(themes, "IdTheme", "ThemeName");
+
+            return View(viewQuestions);
+
+        }
+
+
+        [HttpGet]
         public ActionResult DeleteQuestion(int? id)
         {
             if (!id.HasValue)
