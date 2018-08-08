@@ -150,44 +150,27 @@ namespace TestSystem.Web.Controllers
             }
         }
 
-        //[HttpGet]
-        //public ActionResult GetQuestions(int? pageQuestions)
-        //{
+        [HttpGet]
+        public ActionResult GenerateTest()
+        {
+            TestGenerateViewModel model = new TestGenerateViewModel();
+            model.Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName");
+            return View(model);
+        }
 
-        //        int pageSize = 5;
-        //        int pageNumber = (pageQuestions ?? 1);
+        [HttpPost]
+        public ActionResult GenerateTest(TestGenerateViewModel model)
+        {
+          
+                model.Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName");
+    
+            TestDTO test =  _testService.GenerateTest(model.selectedNumber, Int32.Parse(model.selectedTheme), model.selectedDifficult);
+            foreach (QuestionDTO question in test.Questions)
+            {
+                model.Questions.Add(question);
+            }
 
-        //        IEnumerable<QuestionDTO> questionDTOs = _questionService.GetQuestions();
-        //        List<QuestionForTestViewModel> questionViews = new List<QuestionForTestViewModel>();
-
-        //        foreach (QuestionDTO question in questionDTOs)
-        //        {
-        //            questionViews.Add(new QuestionForTestViewModel
-        //            {
-        //                IdQuestion = question.IdQuestion,
-        //                QuestionText = question.QuestionText,
-        //                Difficult = question.Difficult,
-        //                Theme = "Some Theme",
-        //                Chosen = false
-        //            });
-
-        //        }
-        //        return PartialView(questionViews);
-        //}
-
-        //[HttpPost]
-        //public void GetQuestions(List<QuestionForTestViewModel> model)
-        //{
-        //    List<int> listID = new List<int>();
-        //    foreach (QuestionForTestViewModel question in model)
-        //    {
-        //        if (question.Chosen)
-        //        {
-        //            listID.Add(question.IdQuestion);
-        //        }
-        //    }
-        //    Session["IdQuestions"] = listID;
-        //    RedirectToAction("CreateNewTest");
-        //}
+            return View(model);
+        }
     }
 }

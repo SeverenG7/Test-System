@@ -90,24 +90,24 @@
                                                             @Html.HiddenFor(modelItem => modelItem.Questions[i].IdQuestion)
                                                         </td>
                                                         <td>
-                                                          
-                                                                @Html.DisplayFor(modelItem => modelItem.Questions[i].QuestionText)
-                                                       
+
+                                                            @Html.DisplayFor(modelItem => modelItem.Questions[i].QuestionText)
+
                                                         </td>
                                                         <td>
-                                                          
-                                                                @Html.DisplayFor(modelItem => modelItem.Questions[i].Theme)
-                                                        
+
+                                                            @Html.DisplayFor(modelItem => modelItem.Questions[i].Theme)
+
                                                         </td>
                                                         <td>
-                                                            
-                                                                @Html.DisplayFor(modelItem => modelItem.Questions[i].Difficult)
-                                                       
+
+                                                            @Html.DisplayFor(modelItem => modelItem.Questions[i].Difficult)
+
                                                         </td>
                                                         <td>
-                                                           
-                                                                @Html.CheckBoxFor(modelItem => modelItem.Questions[i].Chosen)
-                                                        
+
+                                                            @Html.CheckBoxFor(modelItem => modelItem.Questions[i].Chosen)
+
                                                         </td>
                                                     </tr>
                                                 }
@@ -135,10 +135,14 @@
             </div>
         </div>
     }
-        <div>
-            @Html.ActionLink("Back to List", "Index")
-        </div>
+    <div >
+        <label>Also, u can generate test </label>
+        <button class="btn btn-warning" 
+                onclick="location.href='@Url.Action("GenerateTest" , "Test")'">
+            Go to generate
+        </button>
+    </div>
 
-    </body>
+</body>
 </html>
 

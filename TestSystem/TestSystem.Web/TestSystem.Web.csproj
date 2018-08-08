@@ -442,10 +442,11 @@
     <Content Include="Views\Shared\_UserLayout.cshtml" />
     <Content Include="Views\User\MainMenu.cshtml" />
     <Content Include="Views\Err\NotFoundPage.cshtml" />
+    <Content Include="Views\Test\GenerateTest.cshtml" />
+    <Content Include="Views\Err\ForbiddenPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Enter\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

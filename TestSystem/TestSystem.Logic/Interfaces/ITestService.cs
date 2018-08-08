@@ -12,5 +12,6 @@ namespace TestSystem.Logic.Interfaces
         void UpdateTest(TestDTO testDTO);
         void Dispose();
         IEnumerable<ThemeDTO> GetAllTheme();
+        TestDTO GenerateTest(int questionNumbers , int IdTheme , string difficult);
     }
 }

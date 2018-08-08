@@ -5,7 +5,7 @@ using TestSystem.Logic.Interfaces;
 using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Model.Models;
 using TestSystem.Logic.MapGeneric;
-
+using System.Linq;
 
 namespace TestSystem.Logic.Services
 {
@@ -89,5 +89,44 @@ namespace TestSystem.Logic.Services
             }
         }
 
+        public TestDTO GenerateTest(int questionNumbers, int IdTheme, string difficult)
+        {
+            Random randomGenerate = new Random();
+
+            
+            var questionsId = Database.Questions.GetAll().
+                Where(x => x.Difficult == difficult && x.IdTheme == IdTheme).
+                Select(x => x.IdQuestion).
+                OrderBy(x => randomGenerate.Next()).
+                Take((int)Math.Round(questionNumbers * 0.8));
+
+            List<int> questions_1 = questionsId.ToList();
+
+            var questionsIdAdding = Database.Questions.GetAll().
+                Where(x => x.Difficult != difficult && x.IdTheme != IdTheme).
+                Select(x => x.IdQuestion).
+                OrderBy(x => randomGenerate.Next()).
+                Take(questionNumbers - questions_1.Count());
+
+
+            List<int> questions_2 = questionsIdAdding.ToList();
+
+            TestDTO generateTest = new TestDTO
+            {
+                Difficult = difficult,
+                IdTheme = IdTheme
+            };
+            generateTest.Questions = new List<QuestionDTO>();
+
+            foreach (int id in questions_1.Concat(questions_2))
+            {
+                generateTest.Questions.Add(MapperFromDB.Map<QuestionDTO>(Database.Questions.Get(id)));
+            }
+
+            return generateTest;
+        }
+
     }
+
 }
+
