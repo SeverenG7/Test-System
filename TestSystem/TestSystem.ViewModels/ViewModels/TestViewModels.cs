@@ -40,6 +40,7 @@ namespace TestSystem.Web.Models
 
     public class TestGenerateViewModel
     {
+        [Required(ErrorMessage = "Test must have its own name")]
         public string TestName { get; set; }
 
         [Required(ErrorMessage = "Every question must have its own difficult")]
@@ -59,6 +60,7 @@ namespace TestSystem.Web.Models
 
         public IEnumerable<SelectListItem> NumberQuestions { get; set; }
         public int selectedNumber { get; set; }
+
         public bool Create { get; set; }
 
         public TestGenerateViewModel()
