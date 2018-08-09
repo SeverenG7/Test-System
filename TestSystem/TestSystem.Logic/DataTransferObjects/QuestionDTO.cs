@@ -3,7 +3,7 @@ using System;
 
 namespace TestSystem.Logic.DataTransferObjects
 {
-    public class QuestionDTO
+    public class QuestionDto
     {
         public int IdQuestion { get; set; }
         public string QuestionText { get; set; }
@@ -13,8 +13,8 @@ namespace TestSystem.Logic.DataTransferObjects
         public string Difficult { get; set; }
         public DateTime CreateDate { get; set; }
         public int? IdTheme { get; set; }
-        public ThemeDTO Theme { get; set; }
-        public virtual List<AnswerDTO> Answers { get; set; }
-        public virtual ICollection<TestDTO> Tests { get; set; }
+        public ThemeDto Theme { get; set; }
+        public virtual List<AnswerDto> Answers { get; set; }
+        public virtual ICollection<TestDto> Tests { get; set; }
     }
 }

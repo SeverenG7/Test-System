@@ -2,7 +2,7 @@
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
-namespace TestSystem.DataProvider.IdentityManager
+namespace TestSystem.DataProvider.IdentityManagers
 {
     public class ApplicationRoleManager : RoleManager<ApplicationRole>
     {

@@ -7,7 +7,7 @@ namespace TestSystem.Logic.Infrastructure
 {
     public class UnitOfWorkModule : NinjectModule
     {
-        private ApplicationContext _context = new ApplicationContext();
+        private readonly ApplicationContext _context = new ApplicationContext();
 
         public override void Load()
         {

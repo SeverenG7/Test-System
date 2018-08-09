@@ -6,7 +6,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using TestSystem.Logic.Interfaces;
 using TestSystem.Logic.Infrastructure;
-using TestSystem.Web.Util;
+using TestSystem.Web.Infrasrtuctre;
 
 namespace TestSystem.Web
 {

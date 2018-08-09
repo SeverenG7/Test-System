@@ -9,18 +9,14 @@ using AutoMapper;
 
 namespace TestSystem.Logic.Services
 {
-    public class QuestionService : MapClass<Question, QuestionDTO>, IQuestionService
+    public class QuestionService : MapClass<Question, QuestionDto>, IQuestionService
     {
-        IUnitOfWork Database { get; set; }
+        private IUnitOfWork Database { get;}
         public QuestionService(IUnitOfWork unitOfWork)
         {
             Database = unitOfWork;
         }
-        public void AddQuestionToTest(int idTest, int idQuestion)
-        {
-            Database.Tests.Get(idTest).Questions.Add(Database.Questions.Get(idQuestion));
-        }
-        public void CreateQuestion(QuestionDTO questionDTO)
+        public void CreateQuestion(QuestionDto questionDTO)
         {
             questionDTO.Score = ComputeScore(questionDTO);
             Question question = MapperToDB.Map<Question>(questionDTO);
@@ -34,20 +30,20 @@ namespace TestSystem.Logic.Services
             Database.Dispose();
         }
 
-        public QuestionDTO GetQuestion(int? id)
+        public QuestionDto GetQuestion(int? id)
         {
             if (id == null)
                 throw new Exception();
             Question question = Database.Questions.Get(id.Value);
             if (question == null)
                 throw new Exception();
-            var mapper = new MapperConfiguration(mcf => mcf.CreateMap<Question, QuestionDTO>()).CreateMapper();
-            return mapper.Map<Question,QuestionDTO>(question);
+            var mapper = new MapperConfiguration(mcf => mcf.CreateMap<Question, QuestionDto>()).CreateMapper();
+            return mapper.Map<Question,QuestionDto>(question);
         }
 
-        public IEnumerable<QuestionDTO> GetQuestions()
+        public IEnumerable<QuestionDto> GetQuestions()
         {
-            return MapperFromDB.Map<IEnumerable<Question>, List<QuestionDTO>>(Database.Questions.GetAll());
+            return MapperFromDB.Map<IEnumerable<Question>, List<QuestionDto>>(Database.Questions.GetAll());
         }
 
         public void RemoveQuestion(int id)
@@ -60,9 +56,9 @@ namespace TestSystem.Logic.Services
             }
         }
 
-        public void UpdateQuestion(QuestionDTO questionDTO)
+        public void UpdateQuestion(QuestionDto questionDTO)
         {
-            foreach (AnswerDTO ans in questionDTO.Answers)
+            foreach (AnswerDto ans in questionDTO.Answers)
             {
                 Answer answer = Database.Answers.Get(ans.IdAnswer);
                 answer.AnswerText = ans.AnswerText;
@@ -90,7 +86,7 @@ namespace TestSystem.Logic.Services
             }
         }
 
-        public static int ComputeScore(QuestionDTO question)
+        public static int ComputeScore(QuestionDto question)
         {
             int koeff = 0;
             switch (question.Difficult)

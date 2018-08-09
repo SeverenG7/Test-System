@@ -40,10 +40,10 @@ namespace TestSystem.Web.Controllers
         {
             QuestionCreateViewModel newQuestion = new QuestionCreateViewModel();
             newQuestion.Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName");
-            newQuestion.Answers = new List<AnswerDTO>();
+            newQuestion.Answers = new List<AnswerDto>();
             for (int i = 0; i < 5; i++)
             {
-                newQuestion.Answers.Add(new AnswerDTO());
+                newQuestion.Answers.Add(new AnswerDto());
             }
             return View(newQuestion);
         }
@@ -53,16 +53,16 @@ namespace TestSystem.Web.Controllers
             HttpPostedFileBase image = null)
         {
                        
-                    QuestionDTO question = new QuestionDTO
+                    QuestionDto question = new QuestionDto
                     {
                         QuestionText = model.QuestionText,
                         Difficult = model.selectedDifficult,
                         IdTheme = Int32.Parse(model.selectedTheme)
                     };
 
-                    question.Answers = new List<AnswerDTO>();
+                    question.Answers = new List<AnswerDto>();
 
-                    foreach (AnswerDTO ans in model.Answers)
+                    foreach (AnswerDto ans in model.Answers)
                     {
                         if (!String.IsNullOrEmpty(ans.AnswerText))
                         {
@@ -89,12 +89,12 @@ namespace TestSystem.Web.Controllers
         [HttpGet]
         public ActionResult EditQuestion(int id)
         {
-            QuestionDTO updatingQuestion = _questionService.GetQuestion(id);
+            QuestionDto updatingQuestion = _questionService.GetQuestion(id);
             return View(updatingQuestion);
         }
 
         [HttpPost]
-        public ActionResult EditQuestion (QuestionDTO model )
+        public ActionResult EditQuestion (QuestionDto model )
         {
 
             var questionUpdate = _questionService.GetQuestion(model.IdQuestion);
@@ -131,7 +131,7 @@ namespace TestSystem.Web.Controllers
         {
             FiltrationViewModel viewQuestions = new FiltrationViewModel();
 
-            IEnumerable<QuestionDTO> questions = _questionService.GetQuestions().
+            IEnumerable<QuestionDto> questions = _questionService.GetQuestions().
                 OrderBy(x => x.CreateDate);
 
             if (IdTheme.HasValue && IdTheme != 0)
@@ -149,8 +149,8 @@ namespace TestSystem.Web.Controllers
                 questions = questions.Where(x => x.QuestionText.Contains(search));
             }
 
-            List<ThemeDTO> themes = _themeService.GetAll().ToList();
-            themes.Insert(0, new ThemeDTO() { IdTheme = 0, ThemeName = "All" });
+            List<ThemeDto> themes = _themeService.GetAll().ToList();
+            themes.Insert(0, new ThemeDto() { IdTheme = 0, ThemeName = "All" });
             viewQuestions.Questions = questions.ToList();
 
 
@@ -190,14 +190,14 @@ namespace TestSystem.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            QuestionDTO questionDetails = _questionService.GetQuestion(id.Value);
+            QuestionDto questionDetails = _questionService.GetQuestion(id.Value);
             if (questionDetails == null)
             {
                 return HttpNotFound();
             }
 
             _questionService.RemoveQuestion(id.Value);
-            return RedirectToAction("GetInfoQuestion", "Common");
+            return RedirectToAction("GetInfoQuestion", "Question");
         }
 
         // POST: Question/Delete/5
@@ -208,7 +208,7 @@ namespace TestSystem.Web.Controllers
             {
                 
                 
-                return RedirectToAction("GetInfoQuestion" , "Common");
+                return RedirectToAction("GetInfoQuestion" , "Question");
             }
             catch
             {
@@ -222,7 +222,7 @@ namespace TestSystem.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            QuestionDTO questionDetails = _questionService.GetQuestion(id.Value);
+            QuestionDto questionDetails = _questionService.GetQuestion(id.Value);
             if (questionDetails == null)
             {
                 return HttpNotFound();
@@ -230,7 +230,7 @@ namespace TestSystem.Web.Controllers
 
             QuestionDetailsViewModel model = new QuestionDetailsViewModel(questionDetails);
             model.Theme = _themeService.Get(questionDetails.IdTheme).ThemeName;
-            foreach (TestDTO test in questionDetails.Tests)
+            foreach (TestDto test in questionDetails.Tests)
             {
                 model.Tests.Add(test);
             }

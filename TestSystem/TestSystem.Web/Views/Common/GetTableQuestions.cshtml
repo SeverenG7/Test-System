@@ -25,17 +25,17 @@
                             {
                                 <tr >
                                     <td >
-                                        <a class="nav-link text-dark" href="@Url.Action("DetailsQuestion", "Question",new {id = item.IdQuestion })">
+                                        <a class="nav-link text-dark" href="@Url.Action("GetInfoQuestion", "Question",new {IdQuestion  = item.IdQuestion })">
                                             @Html.DisplayFor(modelItem => item.QuestionText)
                                         </a>
                                     </td>
                                     <td>
-                                        <a class="nav-link text-dark" href="@Url.Action("DetailsQuestion", "Question", new {id = item.IdQuestion })">
+                                        <a class="nav-link text-dark" href="@Url.Action("GetInfoQuestion", "Question",new {IdQuestion  = item.IdQuestion })">
                                             @Html.DisplayFor(modelItem => item.Theme)
                                         </a>
                                     </td>
                                     <td>
-                                        <a class="nav-link text-dark" href="@Url.Action("DetailsQuestion", "Question", new {id = item.IdQuestion })">
+                                        <a class="nav-link text-dark" href="@Url.Action("GetInfoQuestion", "Question",new {IdQuestion  = item.IdQuestion })">
                                             @Html.DisplayFor(modelItem => item.Difficult)
                                         </a>
                                     </td>

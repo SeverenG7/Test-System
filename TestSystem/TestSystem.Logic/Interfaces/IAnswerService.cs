@@ -4,9 +4,9 @@ namespace TestSystem.Logic.Interfaces
 {
     public interface IAnswerService
     {
-        void Create(int idQuestion, AnswerDTO answerDTO);
+        void Create(int idQuestion, AnswerDto answerDTO);
         void Remove(int id);
-        void Update(AnswerDTO answerDTO);
+        void Update(AnswerDto answerDTO);
         void Dispose();
     }
 }

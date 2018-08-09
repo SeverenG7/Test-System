@@ -54,10 +54,10 @@ namespace TestSystem.Web.Controllers
             int pageSize = 5;
             int pageNumber = (pageQuestions ?? 1);
 
-            IEnumerable<QuestionDTO> questionDTOs = _questionService.GetQuestions();
+            IEnumerable<QuestionDto> questionDTOs = _questionService.GetQuestions();
             List<QuestionViewModel> questionViews = new List<QuestionViewModel>();
 
-            foreach (QuestionDTO question in questionDTOs)
+            foreach (QuestionDto question in questionDTOs)
             {
                 questionViews.Add(new QuestionViewModel
                 {

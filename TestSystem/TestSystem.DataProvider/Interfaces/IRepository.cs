@@ -31,7 +31,6 @@ namespace TestSystem.DataProvider.Interfaces
         void Remove(TEntity entity);
         void RemoveRange(IEnumerable<TEntity> entities);
 
-        void Updating(TEntity entity);
         void Update(TEntity entity);
 
     }

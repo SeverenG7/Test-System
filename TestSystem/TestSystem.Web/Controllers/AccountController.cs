@@ -49,7 +49,7 @@ namespace UserStore.Controllers
             {
                 try
                 {
-                    UserDTO userDto = new UserDTO { Email = model.Email, Password = model.Password };
+                    UserDto userDto = new UserDto { Email = model.Email, Password = model.Password };
                     OperationDetails details = await UserService.AuthenticateAsync(userDto);
                     ClaimsIdentity claim = details.Value;
                     if (claim == null)
@@ -189,7 +189,7 @@ namespace UserStore.Controllers
              await SetInitialDataAsync();
             if (ModelState.IsValid)
             {
-                UserDTO userDto = new UserDTO
+                UserDto userDto = new UserDto
                 {
                     Email = model.Email,
                     Password = model.Password,

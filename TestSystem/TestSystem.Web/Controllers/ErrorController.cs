@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using System.Net;
 
 namespace TestSystem.Web.Controllers
 {
     public class ErrorController : Controller
     {
-        public ActionResult NotFound()
+        public ActionResult NotFoundPage()
         {
             if (HttpContext.User.Identity.IsAuthenticated)
             {
@@ -27,19 +24,19 @@ namespace TestSystem.Web.Controllers
             }
 
 
-            Response.StatusCode = 404;
+            Response.StatusCode = (int)HttpStatusCode.NotFound;
             return View();
         }
 
-        public ActionResult Forbidden()
+        public ActionResult ForbiddenPage()
         {
-            Response.StatusCode = 403;
+            Response.StatusCode = (int)HttpStatusCode.Forbidden;
             return View();
         }
 
-        public ActionResult InternalServerError()
+        public ActionResult InternalServerErrorPage()
         {
-            Response.StatusCode = 500;
+            Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             return View();
         }
     }

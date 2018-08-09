@@ -12,7 +12,7 @@ namespace TestSystem.Web.Models
 
         public double ResultScore { get; set; }
 
-        public virtual TestDTO Test { get; set; }
+        public virtual TestDto Test { get; set; }
 
         public DateTime CreateDate { get; set; }
 

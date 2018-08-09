@@ -36,7 +36,7 @@ namespace TestSystem.Web.Controllers
         {
             FiltrationViewModel viewTests = new FiltrationViewModel();
 
-            IEnumerable<TestDTO> tests = _testService.GetTests().
+            IEnumerable<TestDto> tests = _testService.GetTests().
                 OrderBy(x => x.CreateDate);
 
             if (IdTheme.HasValue && IdTheme != 0)
@@ -54,8 +54,8 @@ namespace TestSystem.Web.Controllers
                 tests = tests.Where(x => x.TestName.Contains(search));
             }
 
-            List<ThemeDTO> themes = _themeService.GetAll().ToList();
-            themes.Insert(0, new ThemeDTO() { IdTheme = 0, ThemeName = "All" });
+            List<ThemeDto> themes = _themeService.GetAll().ToList();
+            themes.Insert(0, new ThemeDto() { IdTheme = 0, ThemeName = "All" });
             viewTests.Tests = tests.ToList();
 
             if (IdTest.HasValue)
@@ -94,17 +94,16 @@ namespace TestSystem.Web.Controllers
                 Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName")
             };
 
-            IEnumerable<QuestionDTO> questionDTOs = _questionService.GetQuestions();
+            IEnumerable<QuestionDto> questionDTOs = _questionService.GetQuestions();
             model.Questions = new List<QuestionForTestViewModel>();
 
-            foreach (QuestionDTO question in questionDTOs)
+            foreach (QuestionDto question in questionDTOs)
             {
                 model.Questions.Add(new QuestionForTestViewModel
                 {
                     IdQuestion = question.IdQuestion,
                     QuestionText = question.QuestionText,
                     Difficult = question.Difficult,
-                    Theme = "Some Theme",
                     Chosen = false
                 });
 
@@ -117,7 +116,7 @@ namespace TestSystem.Web.Controllers
         [HttpPost]
         public ActionResult CreateNewTest(TestCreateViewModel model)
         {
-            List<QuestionDTO> questions = new List<QuestionDTO>();
+            List<QuestionDto> questions = new List<QuestionDto>();
 
             foreach (QuestionForTestViewModel question in model.Questions)
             {
@@ -127,7 +126,7 @@ namespace TestSystem.Web.Controllers
                 }
             }
 
-            TestDTO test = new TestDTO
+            TestDto test = new TestDto
             {
                 TestName = model.TestName,
                 TestDescription = model.TestDescription,
@@ -140,7 +139,7 @@ namespace TestSystem.Web.Controllers
 
             _testService.CreateTest(test);
 
-            return RedirectToAction("GetInfoTest", "Common");
+            return RedirectToAction("GetInfoTest", "Test");
 
         }
 
@@ -155,7 +154,7 @@ namespace TestSystem.Web.Controllers
                 return HttpNotFound();
             }
             _testService.RemoveTest(id.Value);
-            return RedirectToAction("GetInfoTest", "Common");
+            return RedirectToAction("GetInfoTest", "Test");
         }
 
         [HttpGet]
@@ -177,8 +176,8 @@ namespace TestSystem.Web.Controllers
                 {
                     model.Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName");
 
-                    TestDTO test = _testService.GenerateTest(model.selectedNumber, Int32.Parse(model.selectedTheme), model.selectedDifficult);
-                    foreach (QuestionDTO question in test.Questions)
+                    TestDto test = _testService.GenerateTest(model.selectedNumber, Int32.Parse(model.selectedTheme), model.selectedDifficult);
+                    foreach (QuestionDto question in test.Questions)
                     {
                         model.Questions.Add(question);
                     }
@@ -186,7 +185,7 @@ namespace TestSystem.Web.Controllers
 
                 else
                 {
-                    TestDTO test = new TestDTO
+                    TestDto test = new TestDto
                     {
                         TestName = model.TestName,
                         TestDescription = model.TestDescription,
@@ -198,7 +197,7 @@ namespace TestSystem.Web.Controllers
                     };
 
                     _testService.CreateTest(test);
-                    return RedirectToAction("GetInfoTest", "Common");
+                    return RedirectToAction("GetInfoTest", "Test");
                 }
             }
 

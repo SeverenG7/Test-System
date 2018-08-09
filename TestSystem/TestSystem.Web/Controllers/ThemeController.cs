@@ -77,7 +77,7 @@ namespace TestSystem.Web.Controllers
             {
                 try
                 {
-                    ThemeDTO theme = new ThemeDTO
+                    ThemeDto theme = new ThemeDto
                     {
                         ThemeName = model.ThemeName,
                         Description = model.Description

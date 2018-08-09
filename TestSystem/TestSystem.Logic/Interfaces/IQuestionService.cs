@@ -6,11 +6,11 @@ namespace TestSystem.Logic.Interfaces
 {
     public interface IQuestionService : IDisposable
     {
-        IEnumerable<QuestionDTO> GetQuestions();
-        QuestionDTO GetQuestion(int? id);
-        void CreateQuestion(QuestionDTO questionDTO);
+        IEnumerable<QuestionDto> GetQuestions();
+        QuestionDto GetQuestion(int? id);
+        void CreateQuestion(QuestionDto questionDto);
         void RemoveQuestion(int id);
-        void UpdateQuestion(QuestionDTO questionDTO);
+        void UpdateQuestion(QuestionDto questionDto);
         void DeleteQuestionFromTest(int? idQuestion, int? idTest);
     }
 }

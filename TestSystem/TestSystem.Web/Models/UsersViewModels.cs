@@ -13,7 +13,7 @@ namespace TestSystem.Web.Models
         public string UserLastName { get; set; }
         public string Role { get; set; }
 
-        public IEnumerable<ResultDTO> Results { get; set; }
-        public TestDTO Test { get; set; }
+        public IEnumerable<ResultDto> Results { get; set; }
+        public TestDto Test { get; set; }
     }
 }

@@ -35,7 +35,7 @@ namespace TestSystem.Logic.Services
         #endregion
 
         #region Methods
-        public async Task<OperationDetails> CreateAsync(UserDTO userDto)
+        public async Task<OperationDetails> CreateAsync(UserDto userDto)
         {
             ApplicationUser user = await Database.ApplicationUserManagers.FindByEmailAsync(userDto.Email);
             if (user == null)
@@ -63,7 +63,7 @@ namespace TestSystem.Logic.Services
            
         }
 
-        public async Task<OperationDetails> AuthenticateAsync(UserDTO userDto)
+        public async Task<OperationDetails> AuthenticateAsync(UserDto userDto)
         {
             ClaimsIdentity claim = null;
             ApplicationUser user = await Database.ApplicationUserManagers.FindAsync(userDto.Email, userDto.Password);
@@ -145,13 +145,13 @@ namespace TestSystem.Logic.Services
 
         #region Custom methods
 
-        public UserDTO GetUserInfo(string userName)
+        public UserDto GetUserInfo(string userName)
         {
-            UserDTO user = new UserDTO();
+            UserDto user = new UserDto();
             var somebody = Database.UserInfoes.Find(x => x.ApplicationUser.Email == userName).First();
             if ( somebody != null)
             {
-                  user = new UserDTO
+                  user = new UserDto
                 {
                     Id = somebody.ApplicationUser.Id,
                     Email = userName,

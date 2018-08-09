@@ -33,7 +33,7 @@ namespace TestSystem.Web.Models
 
             });
 
-            Theme = new SelectList(new List<ThemeDTO>());
+            Theme = new SelectList(new List<ThemeDto>());
         }
 
     }
@@ -55,7 +55,7 @@ namespace TestSystem.Web.Models
         [DataType(DataType.MultilineText)]
         public string TestDescription { get; set; }
 
-        public List<QuestionDTO> Questions { get; set; }
+        public List<QuestionDto> Questions { get; set; }
 
         public IEnumerable<SelectListItem> NumberQuestions { get; set; }
         public int selectedNumber { get; set; }
@@ -77,8 +77,8 @@ namespace TestSystem.Web.Models
                 list.Add(i);
             }
             NumberQuestions = new SelectList(list);
-            Theme = new SelectList(new List<ThemeDTO>());
-            Questions = new List<QuestionDTO>();
+            Theme = new SelectList(new List<ThemeDto>());
+            Questions = new List<QuestionDto>();
 
         }
     }

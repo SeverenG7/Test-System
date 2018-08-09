@@ -1,9 +1,8 @@
 ﻿using System;
-using TestSystem.Model.Models;
 
 namespace TestSystem.Logic.DataTransferObjects
 {
-    public class ResultDTO
+    public class ResultDto
     {
         public int IdResult { get; set; }
 
@@ -15,7 +14,7 @@ namespace TestSystem.Logic.DataTransferObjects
 
         public string ResultDescription { get; set; }
 
-        public virtual TestDTO Test { get; set; }
+        public virtual TestDto Test { get; set; }
 
         public DateTime CreateDate { get; set; }
 

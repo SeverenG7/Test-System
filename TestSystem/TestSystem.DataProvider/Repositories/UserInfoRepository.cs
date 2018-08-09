@@ -13,11 +13,6 @@ namespace TestSystem.DataProvider.Repositories
     {
         public UserInfoRepository(ApplicationContext context) : base(context)
         { }
-
-        public ApplicationContext testContext
-        {
-            get => context as ApplicationContext;
-        }
     }
 }
 

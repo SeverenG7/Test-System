@@ -7,11 +7,11 @@ namespace TestSystem.Web.Models
 {
     public class FiltrationViewModel
    {
-        public IEnumerable<TestDTO> Tests { get; set; }
+        public IEnumerable<TestDto> Tests { get; set; }
         public SelectList Themes { get; set; }
         public SelectList Difficult { get; set; }
-        public IEnumerable<QuestionDTO> Questions { get; set; }
-        public IEnumerable<AnswerDTO> Answers { get; set; }
+        public IEnumerable<QuestionDto> Questions { get; set; }
+        public IEnumerable<AnswerDto> Answers { get; set; }
 
         public FiltrationViewModel()
         {

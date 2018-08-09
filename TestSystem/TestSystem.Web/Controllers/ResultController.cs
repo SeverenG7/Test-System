@@ -25,8 +25,6 @@ namespace TestSystem.Web.Controllers
 
         public ActionResult GetInfoResult ()
         {
-
-
             return View();
         }
     }

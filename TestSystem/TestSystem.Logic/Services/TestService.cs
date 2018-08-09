@@ -9,20 +9,18 @@ using System.Linq;
 
 namespace TestSystem.Logic.Services
 {
-    public class TestService : MapClass<Test, TestDTO>, ITestService
+    public class TestService : MapClass<Test, TestDto>, ITestService
     {
-        IUnitOfWork Database { get; set; }
-        IUnitOfWorkUpdate Update { get; set; }
+        IUnitOfWork Database { get; }
 
-        public TestService(IUnitOfWork unitOfWork, IUnitOfWorkUpdate unitOfWorkUpdate)
+        public TestService(IUnitOfWork unitOfWork)
         {
             Database = unitOfWork;
-            Update = unitOfWorkUpdate;
         }
 
-        public IEnumerable<ThemeDTO> GetAllTheme()
+        public IEnumerable<ThemeDto> GetAllTheme()
         {
-            return MapperFromDB.Map<IEnumerable<Theme>, List<ThemeDTO>>(Database.Themes.GetAll());
+            return MapperFromDB.Map<IEnumerable<Theme>, List<ThemeDto>>(Database.Themes.GetAll());
         }
 
         public void Dispose()
@@ -30,7 +28,7 @@ namespace TestSystem.Logic.Services
             Database.Dispose();
         }
 
-        public TestDTO GetTest(int? id)
+        public TestDto GetTest(int? id)
         {
             if (id == null)
                 throw new Exception();
@@ -38,13 +36,13 @@ namespace TestSystem.Logic.Services
             if (test == null)
                 throw new Exception();
 
-            TestDTO testDTO = MapperFromDB.Map<TestDTO>(test);
+            TestDto testDTO = MapperFromDB.Map<TestDto>(test);
             return testDTO;
         }
 
-        public IEnumerable<TestDTO> GetTests()
+        public IEnumerable<TestDto> GetTests()
         {
-            return MapperFromDB.Map<IEnumerable<Test>, List<TestDTO>>(Database.Tests.GetAll());
+            return MapperFromDB.Map<IEnumerable<Test>, List<TestDto>>(Database.Tests.GetAll());
         }
 
         public void RemoveTest(int id)
@@ -57,7 +55,7 @@ namespace TestSystem.Logic.Services
             }
         }
 
-        public void CreateTest(TestDTO testDTO)
+        public void CreateTest(TestDto testDTO)
         {
             Test test = new Test
             {
@@ -69,7 +67,7 @@ namespace TestSystem.Logic.Services
                 QuestionsNumber = testDTO.QuestionsNumber
             };
 
-            foreach (QuestionDTO q in testDTO.Questions)
+            foreach (QuestionDto q in testDTO.Questions)
             {
                 test.Questions.Add(Database.Questions.Get(q.IdQuestion));
             }
@@ -78,7 +76,7 @@ namespace TestSystem.Logic.Services
             Database.Complete();
         }
 
-        public void UpdateTest(TestDTO testDTO)
+        public void UpdateTest(TestDto testDTO)
         {
             Test test = (Test)Database.Tests.Find(x => x.IdTest == testDTO.IdTest);
 
@@ -89,7 +87,7 @@ namespace TestSystem.Logic.Services
             }
         }
 
-        public TestDTO GenerateTest(int questionNumbers, int IdTheme, string difficult)
+        public TestDto GenerateTest(int questionNumbers, int IdTheme, string difficult)
         {
             Random randomGenerate = new Random();
 
@@ -111,16 +109,16 @@ namespace TestSystem.Logic.Services
 
             List<int> questions_2 = questionsIdAdding.ToList();
 
-            TestDTO generateTest = new TestDTO
+            TestDto generateTest = new TestDto
             {
                 Difficult = difficult,
                 IdTheme = IdTheme
             };
-            generateTest.Questions = new List<QuestionDTO>();
+            generateTest.Questions = new List<QuestionDto>();
 
             foreach (int id in questions_1.Concat(questions_2))
             {
-                generateTest.Questions.Add(MapperFromDB.Map<QuestionDTO>(Database.Questions.Get(id)));
+                generateTest.Questions.Add(MapperFromDB.Map<QuestionDto>(Database.Questions.Get(id)));
             }
 
             return generateTest;

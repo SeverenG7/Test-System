@@ -5,11 +5,10 @@ using TestSystem.Logic.Interfaces;
 using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Model.Models;
 using TestSystem.Logic.MapGeneric;
-using System.Linq.Expressions;
 
 namespace TestSystem.Logic.Services
 {
-    public class ResultService : MapClass<Result, ResultDTO> ,IResultService
+    public class ResultService : MapClass<Result, ResultDto> ,IResultService
     {
         IUnitOfWork Database { get; set; }
 
@@ -19,7 +18,7 @@ namespace TestSystem.Logic.Services
         }
 
 
-        public void CreateResult(ResultDTO resultDTO)
+        public void CreateResult(ResultDto resultDTO)
         {
             
         }
@@ -29,16 +28,14 @@ namespace TestSystem.Logic.Services
             Database.Dispose();
         }
 
-        public ResultDTO GetResult(int? id)
+        public ResultDto GetResult(int? id)
         {
-            Result result = Database.Results.Get(id.Value);
-            ResultDTO resultDTO = MapperFromDB.Map<ResultDTO>(result);
-            return resultDTO;
+            return MapperFromDB.Map<ResultDto>(Database.Results.Get(id.Value));
         }
 
-        public IEnumerable<ResultDTO> GetResults()
+        public IEnumerable<ResultDto> GetResults()
         {
-            return MapperFromDB.Map<IEnumerable<Result>, List<ResultDTO>>(Database.Results.GetAll());
+            return MapperFromDB.Map<IEnumerable<Result>, List<ResultDto>>(Database.Results.GetAll());
         }
 
         public void RemoveResult(int id)
@@ -51,7 +48,7 @@ namespace TestSystem.Logic.Services
             }
         }
 
-        public void UpdateResult(ResultDTO resultDTO)
+        public void UpdateResult(ResultDto resultDTO)
         {
             throw new NotImplementedException();
         }

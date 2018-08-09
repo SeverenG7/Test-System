@@ -6,7 +6,7 @@ using TestSystem.Logic.MapGeneric;
 
 namespace TestSystem.Logic.Services
 {
-    public class AnswerService : MapClass<Answer , AnswerDTO> , IAnswerService
+    public class AnswerService : MapClass<Answer , AnswerDto> , IAnswerService
     {
         IUnitOfWork Database { get; set; }
         
@@ -15,7 +15,7 @@ namespace TestSystem.Logic.Services
             Database = unitOfWork;
         }
 
-        public void Create(int idQuestion, AnswerDTO answerDTO)
+        public void Create(int idQuestion, AnswerDto answerDTO)
         {   
             Answer answer = MapperToDB.Map<Answer>(answerDTO);
             Database.Answers.Add(answer);
@@ -37,7 +37,7 @@ namespace TestSystem.Logic.Services
             }
         }
 
-        public void Update(AnswerDTO answerDTO)
+        public void Update(AnswerDto answerDTO)
         {
             Answer answer = (Answer)Database.Answers.Find(x => x.IdAnswer == answerDTO.IdAnswer);
 

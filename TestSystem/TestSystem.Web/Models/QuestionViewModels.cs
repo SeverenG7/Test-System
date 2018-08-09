@@ -33,7 +33,7 @@ namespace TestSystem.Web.Models
 
         [Required(ErrorMessage = "Every question must have answers")]
         [Range(2, 5, ErrorMessage = "In question you can place from 2 to 5 answers")]
-        public List<AnswerDTO> Answers { get; set; }
+        public List<AnswerDto> Answers { get; set; }
 
         public int IdQuestion { get; set; }
 
@@ -48,7 +48,7 @@ namespace TestSystem.Web.Models
             });
 
 
-            Theme = new SelectList(new List<ThemeDTO>());
+            Theme = new SelectList(new List<ThemeDto>());
 
         }
 
@@ -81,17 +81,17 @@ namespace TestSystem.Web.Models
         public string Difficult { get; set; }
         public DateTime CreateDate { get; set; }
         public  string Theme { get; set; }
-        public virtual List<AnswerDTO> Answers { get; set; }
-        public virtual List<TestDTO> Tests { get; set; }
+        public virtual List<AnswerDto> Answers { get; set; }
+        public virtual List<TestDto> Tests { get; set; }
 
-        public QuestionDetailsViewModel(QuestionDTO question)
+        public QuestionDetailsViewModel(QuestionDto question)
         {
             QuestionText = question.QuestionText;
             Score = question.Score;
             CreateDate = question.CreateDate;
             Difficult = question.Difficult;
             Answers = question.Answers;
-            Tests = new List<TestDTO>();
+            Tests = new List<TestDto>();
         }
     }
 }

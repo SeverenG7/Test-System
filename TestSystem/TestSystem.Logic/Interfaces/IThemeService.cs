@@ -5,11 +5,10 @@ namespace TestSystem.Logic.Interfaces
 {
     public interface IThemeService
     {
-        IEnumerable<ThemeDTO> GetAll();
-        ThemeDTO Get(int? id);
-        void Create(ThemeDTO themeDTO);
+        IEnumerable<ThemeDto> GetAll();
+        ThemeDto Get(int? id);
+        void Create(ThemeDto themeDto);
         void Remove(int? id);
-        void Update(ThemeDTO theme);
-        void Dispose();
+        void Update(ThemeDto theme);
     }
 }
