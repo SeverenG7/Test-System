@@ -15,14 +15,14 @@ namespace TestSystem.Web.Controllers
     {
 
         private readonly IUserService _userService;
-        private readonly ITestService _testService;
+        private readonly ITestPassService _testPassService;
         private readonly IResultService _resultService;
 
-        public UserController(IUserService userService , ITestService testService,
+        public UserController(IUserService userService , ITestPassService testPassService,
             IResultService resultService)
         {
             _userService = userService;
-            _testService = testService;
+            _testPassService = testPassService;
             _resultService = resultService;
         }
 
@@ -43,10 +43,9 @@ namespace TestSystem.Web.Controllers
             return View(model);
         }
 
-        public ActionResult StartTest(int? idTest)
+        public ActionResult StartTest(int IdResult)
         {
-
-            return View();
+            return View(_testPassService.StartTest(IdResult));
         }
      
     }

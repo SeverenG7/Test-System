@@ -6,6 +6,6 @@ namespace TestSystem.Logic.Interfaces
 {
     public interface ITestPassService
     {
-        void StartTest(int IdResult, int IdTest);
+        QuestionDto StartTest(int IdResult);     
     }
 }

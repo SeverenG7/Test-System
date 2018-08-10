@@ -101,6 +101,7 @@
     <Compile Include="Repositories\QuestionRepository.cs" />
     <Compile Include="BaseClasses\Repository.cs" />
     <Compile Include="Repositories\ResultRepository.cs" />
+    <Compile Include="Repositories\TempResultRepository.cs" />
     <Compile Include="Repositories\TestRepository.cs" />
     <Compile Include="Repositories\ThemeRepository.cs" />
     <Compile Include="BaseClasses\UnitOfWork.cs" />

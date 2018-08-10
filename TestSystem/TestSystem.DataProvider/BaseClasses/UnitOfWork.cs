@@ -33,6 +33,7 @@ namespace TestSystem.DataProvider.BaseClasses
             Tests = new TestRepository(_context);
             Themes = new ThemeRepository(_context);
             UserInfoes = new UserInfoRepository(_context);
+            TempResults = new TempResultRepository(_context);
             ApplicationRoleManagers = new ApplicationRoleManager
                 (new RoleStore<ApplicationRole>(_context));
             ApplicationUserManagers = new ApplicationUserManager
@@ -45,6 +46,7 @@ namespace TestSystem.DataProvider.BaseClasses
         public IRepository<Test> Tests { get; }
         public IRepository<Theme> Themes { get; }
         public IRepository<UserInfo> UserInfoes { get; }
+        public IRepository<TempResult> TempResults { get; }
 
         public ApplicationUserManager ApplicationUserManagers { get; }
         public ApplicationRoleManager ApplicationRoleManagers { get; }

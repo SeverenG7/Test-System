@@ -35,10 +35,12 @@ namespace TestSystem.Web.Infrasrtuctre
             ThemeServiceModule themeServiceModule = new ThemeServiceModule();
             UserServiceModule userServiceModule = new UserServiceModule();
             ResultServiceModule resultServiceModule = new ResultServiceModule();
+            TestPassServiceModule testPassServiceModule = new TestPassServiceModule();
 
             _kernel.Load(unitOfWorkModule, testServiceModule,questionServiceModule,
                 answerServiceModule, themeServiceModule , userServiceModule ,
-                resultServiceModule);
+                resultServiceModule ,
+                testPassServiceModule);
 
         }
 

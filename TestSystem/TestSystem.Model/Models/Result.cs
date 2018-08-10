@@ -24,6 +24,8 @@ namespace TestSystem.Model.Models
 
         public virtual Test Test { get; set; }
 
+        public virtual TempResult TempResult { get; set; }
+
         public virtual UserInfo UserInfo { get; set; }
 
         public DateTime CreateDate { get; set; }
