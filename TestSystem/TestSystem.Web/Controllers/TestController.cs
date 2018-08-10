@@ -4,6 +4,8 @@ using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Logic.Interfaces;
 using TestSystem.Web.Models;
 using System;
+using System.Net;
+using System.Linq;
 
 namespace TestSystem.Web.Controllers
 {
@@ -17,7 +19,7 @@ namespace TestSystem.Web.Controllers
         private readonly IQuestionService _questionService;
 
         public TestController
-            (ITestService testService , IThemeService themeService , IQuestionService questionService)
+            (ITestService testService, IThemeService themeService, IQuestionService questionService)
         {
             _testService = testService;
             _themeService = themeService;
@@ -28,35 +30,80 @@ namespace TestSystem.Web.Controllers
         #endregion
 
 
-        // GET: Test
-        public ActionResult Index()
+        [HttpGet]
+        public ActionResult GetInfoTest
+          (int? IdTheme, string difficult, int? IdTest, int? IdQuestion, string search)
         {
-            return View();
+            FiltrationViewModel viewTests = new FiltrationViewModel();
+
+            IEnumerable<TestDto> tests = _testService.GetTests().
+                OrderBy(x => x.CreateDate);
+
+            if (IdTheme.HasValue && IdTheme != 0)
+            {
+                tests = tests.Where(x => x.IdTheme == IdTheme);
+            }
+
+            if (!String.IsNullOrEmpty(difficult) && !difficult.Equals("All"))
+            {
+                tests = tests.Where(x => x.Difficult == difficult);
+            }
+
+            if (!String.IsNullOrEmpty(search))
+            {
+                tests = tests.Where(x => x.TestName.Contains(search));
+            }
+
+            List<ThemeDto> themes = _themeService.GetAll().ToList();
+            themes.Insert(0, new ThemeDto() { IdTheme = 0, ThemeName = "All" });
+            viewTests.Tests = tests.ToList();
+
+            if (IdTest.HasValue)
+            {
+                ViewBag.IdTest = IdTest.Value;
+                viewTests.Questions = viewTests.Tests.
+                    Where(x => x.IdTest == IdTest).
+                    SingleOrDefault().
+                    Questions.ToList();
+            }
+
+            if (IdQuestion.HasValue)
+            {
+                if (viewTests.Questions == null)
+                    ViewBag.IdQuestion = IdQuestion.Value;
+                viewTests.Answers = _questionService.GetQuestions().
+                    Where(x => x.IdQuestion == IdQuestion).
+                    SingleOrDefault().
+                    Answers;
+            }
+
+
+            viewTests.Themes = new SelectList(themes, "IdTheme", "ThemeName");
+
+
+
+            return View(viewTests);
         }
 
-        // GET: Test/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
 
         [HttpGet]
         public ActionResult CreateNewTest()
         {
-            TestCreateViewModel model = new TestCreateViewModel();
-            model.Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName");
+            TestCreateViewModel model = new TestCreateViewModel
+            {
+                Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName")
+            };
 
-            IEnumerable<QuestionDTO> questionDTOs = _questionService.GetQuestions();
+            IEnumerable<QuestionDto> questionDTOs = _questionService.GetQuestions();
             model.Questions = new List<QuestionForTestViewModel>();
 
-            foreach (QuestionDTO question in questionDTOs)
+            foreach (QuestionDto question in questionDTOs)
             {
                 model.Questions.Add(new QuestionForTestViewModel
                 {
                     IdQuestion = question.IdQuestion,
                     QuestionText = question.QuestionText,
                     Difficult = question.Difficult,
-                    Theme = "Some Theme",
                     Chosen = false
                 });
 
@@ -68,116 +115,94 @@ namespace TestSystem.Web.Controllers
         // POST: Test/Create
         [HttpPost]
         public ActionResult CreateNewTest(TestCreateViewModel model)
-        {       
-                    List<QuestionDTO> questions = new List<QuestionDTO>();
+        {
+            List<QuestionDto> questions = new List<QuestionDto>();
 
-                    foreach (QuestionForTestViewModel question in model.Questions)
+            foreach (QuestionForTestViewModel question in model.Questions)
+            {
+                if (question.Chosen)
+                {
+                    questions.Add(_questionService.GetQuestion(question.IdQuestion));
+                }
+            }
+
+            TestDto test = new TestDto
+            {
+                TestName = model.TestName,
+                TestDescription = model.TestDescription,
+                IdTheme = Int32.Parse(model.selectedTheme),
+                Difficult = model.selectedDifficult,
+                CreateDate = DateTime.Now,
+                Questions = questions,
+                QuestionsNumber = questions.Count
+            };
+
+            _testService.CreateTest(test);
+
+            return RedirectToAction("GetInfoTest", "Test");
+
+        }
+
+        public ActionResult DeleteTest(int? id)
+        {
+            if (!id.HasValue)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (_testService.GetTest(id.Value) == null)
+            {
+                return HttpNotFound();
+            }
+            _testService.RemoveTest(id.Value);
+            return RedirectToAction("GetInfoTest", "Test");
+        }
+
+        [HttpGet]
+        public ActionResult GenerateTest()
+        {
+            TestGenerateViewModel model = new TestGenerateViewModel
+            {
+                Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName")
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult GenerateTest(TestGenerateViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (!model.Create)
+                {
+                    model.Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName");
+
+                    TestDto test = _testService.GenerateTest(model.selectedNumber, Int32.Parse(model.selectedTheme), model.selectedDifficult);
+                    foreach (QuestionDto question in test.Questions)
                     {
-                        if (question.Chosen)
-                        {
-                            questions.Add(_questionService.GetQuestion(question.IdQuestion));
-                        }
+                        model.Questions.Add(question);
                     }
+                }
 
-                    TestDTO test = new TestDTO
+                else
+                {
+                    TestDto test = new TestDto
                     {
                         TestName = model.TestName,
                         TestDescription = model.TestDescription,
                         IdTheme = Int32.Parse(model.selectedTheme),
                         Difficult = model.selectedDifficult,
                         CreateDate = DateTime.Now,
-                        Questions = questions,
-                        QuestionsNumber = questions.Count
+                        Questions = model.Questions,
+                        QuestionsNumber = model.Questions.Count
                     };
 
-                     _testService.CreateTest(test);
-
-                    return RedirectToAction("GetInfoTest" , "Common");    
-          
-        }
-
-        // GET: Test/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Test/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
+                    _testService.CreateTest(test);
+                    return RedirectToAction("GetInfoTest", "Test");
+                }
             }
-            catch
-            {
-                return View();
-            }
+
+            return View(model);
+
         }
-
-        // GET: Test/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Test/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        //[HttpGet]
-        //public ActionResult GetQuestions(int? pageQuestions)
-        //{
-
-        //        int pageSize = 5;
-        //        int pageNumber = (pageQuestions ?? 1);
-
-        //        IEnumerable<QuestionDTO> questionDTOs = _questionService.GetQuestions();
-        //        List<QuestionForTestViewModel> questionViews = new List<QuestionForTestViewModel>();
-
-        //        foreach (QuestionDTO question in questionDTOs)
-        //        {
-        //            questionViews.Add(new QuestionForTestViewModel
-        //            {
-        //                IdQuestion = question.IdQuestion,
-        //                QuestionText = question.QuestionText,
-        //                Difficult = question.Difficult,
-        //                Theme = "Some Theme",
-        //                Chosen = false
-        //            });
-
-        //        }
-        //        return PartialView(questionViews);
-        //}
-
-        //[HttpPost]
-        //public void GetQuestions(List<QuestionForTestViewModel> model)
-        //{
-        //    List<int> listID = new List<int>();
-        //    foreach (QuestionForTestViewModel question in model)
-        //    {
-        //        if (question.Chosen)
-        //        {
-        //            listID.Add(question.IdQuestion);
-        //        }
-        //    }
-        //    Session["IdQuestions"] = listID;
-        //    RedirectToAction("CreateNewTest");
-        //}
     }
 }

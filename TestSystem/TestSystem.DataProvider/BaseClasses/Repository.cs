@@ -5,7 +5,6 @@ using System.Data.Entity;
 using TestSystem.DataProvider.Interfaces;
 using System.Linq.Expressions;
 using Microsoft.AspNet.Identity.EntityFramework;
-using System.Data.SqlClient;
 
 namespace TestSystem.DataProvider.BaseClasses
 {
@@ -16,51 +15,45 @@ namespace TestSystem.DataProvider.BaseClasses
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <returns>TEntity here is a like generic type of any data objcet. </returns>
-    public class Repository<TEntity> : IRepository<TEntity>, IDisposable where TEntity : class
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         /// <summary>
         /// Also here use generic DbContext, for bigger agility
         /// </summary>
-        protected readonly IdentityDbContext context;
+        protected readonly IdentityDbContext Context;
 
-        public Repository(IdentityDbContext _context)
+        public Repository(IdentityDbContext context)
         {
-            context = _context;
+            Context = context;
         }
         /// <summary>
         /// More information for all this group of methods you can find in IRepository.
         /// </summary>
-        public TEntity Get(int id) => context.Set<TEntity>().Find(id);
+        public TEntity Get(int id) => Context.Set<TEntity>().Find(id);
 
-        public IEnumerable<TEntity> GetAll() => context.Set<TEntity>().ToList();
+        public IEnumerable<TEntity> GetAll() => Context.Set<TEntity>().ToList();
 
         public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
         {
-            return context.Set<TEntity>().Where(predicate);
+            return Context.Set<TEntity>().Where(predicate);
         }
  
 
-        public void Add(TEntity entity) => context.Set<TEntity>().Add(entity);
-        public void AddRange(IEnumerable<TEntity> entities) => context.Set<TEntity>().AddRange(entities);
+        public void Add(TEntity entity) => Context.Set<TEntity>().Add(entity);
+        public void AddRange(IEnumerable<TEntity> entities) => Context.Set<TEntity>().AddRange(entities);
 
-        public void Remove(TEntity entity) => context.Set<TEntity>().Remove(entity);
-        public void RemoveRange(IEnumerable<TEntity> entities) => context.Set<TEntity>().RemoveRange(entities);
-
-        public void Updating(TEntity entity)
-        {
-            string str = context.Entry(entity).State.ToString();
-            str = str + "";
-        }
+        public void Remove(TEntity entity) => Context.Set<TEntity>().Remove(entity);
+        public void RemoveRange(IEnumerable<TEntity> entities) => Context.Set<TEntity>().RemoveRange(entities);
 
         public void Update(TEntity entity)
         {
-            context.Entry(entity).State = EntityState.Modified;
+            Context.Entry(entity).State = EntityState.Modified;
         }
 
 
         public void Dispose()
         {
-            context.Dispose();
+            Context.Dispose();
         }
 
     }

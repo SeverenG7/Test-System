@@ -58,6 +58,7 @@
     <Compile Include="Models\Answer.cs" />
     <Compile Include="Models\ApplicationRole.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
+    <Compile Include="Models\TempResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\Question.cs" />
     <Compile Include="Models\Result.cs" />

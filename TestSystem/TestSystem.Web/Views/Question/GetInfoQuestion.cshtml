@@ -1,9 +1,7 @@
 ﻿@model TestSystem.Web.Models.FiltrationViewModel
 
 
-
 <!DOCTYPE html>
-
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
@@ -11,7 +9,7 @@
 </head>
 <body>
     <div class="container">
-        <h2>Tests</h2>
+        <h2>More information about questions</h2>
         <form method="get">
             <div class="form-inline">
                 @using (Html.BeginForm())
@@ -46,90 +44,62 @@
                                 placeholder = "Difficult..."})
 
                     </div>
-                    </div>
-                    <input type="submit" value="Sort" class="btn btn-default" />
-
                 </div>
-</form>
+                <input type="submit" value="Sort" class="btn btn-default" />
 
-        <table class="table table-bordered table-hover"  id="dataTable" width="100%" cellspacing="0">
+            </div>
+        </form>
+
+        <table class="table table-bordered table-hover" id="dataTable" width="100" cellspacing="0">
             <thead class="show">
-            <tr>
-                <th>Test</th>
-                <th>Questions</th>
-                <th>Theme</th>
-                <th>Creation at</th>
-                <th></th>
-            </tr>
-                </thead>
+                <tr>
+                    <th>Question </th>
+                    <th>Theme</th>
+                    <th>Difficult</th>
+                    <th>Creation at</th>
+                    <th></th>
+                </tr>
+            </thead>
 
-            @foreach (var item in Model.Tests)
+            @foreach (var item in Model.Questions)
             {
                 string selectedRow = "";
-                if (item.IdTest == ViewBag.IdTest)
+                if (item.IdQuestion == ViewBag.IdQuestion)
                 {
-                    selectedRow = "bg-warning";
+                    selectedRow = "bg-light";
                 }
                 <tr class="@selectedRow">
                     <td>
-                        @Html.DisplayFor(modelItem => item.TestName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.QuestionsNumber)
+                        @Html.DisplayFor(modelItem => item.QuestionText)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Theme.ThemeName)
                     </td>
                     <td>
+                        @Html.DisplayFor(modelItem => item.Difficult)
+                    </td>
+                    <td>
                         @Html.DisplayFor(modelItem => item.CreateDate)
                     </td>
                     <td>
-                        @Html.ActionLink("Select", "GetInfoTest", new { idTest = item.IdTest })
-                        @*@Ajax.ActionLink("Select", "AllTests", new { id = item.IdTest }, new AjaxOptions() { UpdateTargetId = "1" }) |*@
-                        @Html.ActionLink("Edit", "Edit", new { id = item.IdTest }) |
-                        @Html.ActionLink("Details", "Details", new { id = item.IdTest }) |
-                        @Html.ActionLink("Delete", "Delete", new { id = item.IdTest })
+                        <button class="btn btn-primary"
+                                onclick="location.href='@Url.Action( "GetInfoQuestion","Question" , new { IdQuestion = item.IdQuestion })'">
+                            More...
+                        </button>
+                        <button class="btn btn-primary"
+                                onclick="location.href='@Url.Action("EditQuestion", "Question" ,new { IdQuestion = item.IdQuestion })'">
+                            Edit
+                        </button>
+                        <button class="btn btn-danger"
+                                onclick="location.href='@Url.Action("DeleteQuestion", "Question",new {IdQuestion = item.IdQuestion })'">
+                            Delete
+                        </button>
+
+
                     </td>
                 </tr>
             }
         </table>
-
-        @if (Model.Questions != null)
-        {
-            <h3>Questions by Selected Test</h3>
-            <table class="table table-bordered table-hover">
-                <tr>
-                    <th></th>
-                    <th>Question</th>
-                    <th>Answers</th>
-                    <th>Score</th>
-                </tr>
-
-                @foreach (var item in Model.Questions)
-                {
-                    string selectedRow = "";
-                    if (item.IdQuestion == ViewBag.IdQuestion)
-                    {
-                        selectedRow = "success";
-                    }
-                    <tr class="@selectedRow">
-                        <td>
-                            @Html.ActionLink("Select", "GetInfoTest", new { idQuestion = item.IdQuestion, idTest = ViewBag.IdTest})
-                        </td>
-                        <td>
-                            @item.QuestionText
-                        </td>
-                        <td>
-                            @item.AnswerNumber
-                        </td>
-                        <td>
-                            @item.Score
-                        </td>
-                    </tr>
-                }
-
-            </table>
-        }
 
         @if (Model.Answers != null)
         {
@@ -152,6 +122,39 @@
                         </td>
                     </tr>
                 }
+            </table>
+        }
+
+        @if (Model.Tests != null)
+        {
+            <h3>Test in which u can find this question:</h3>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Test</th>
+                    <th>Theme</th>
+                    <th>Desrciption</th>
+                </tr>
+
+                @foreach (var item in Model.Tests)
+                {
+                    string selectedRow = "";
+                    if (item.IdTest == ViewBag.IdTest)
+                    {
+                        selectedRow = "success";
+                    }
+                    <tr class="@selectedRow">
+                        <td>
+                            @item.TestName
+                        </td>
+                        <td>
+                            @item.Theme.ThemeName
+                        </td>
+                        <td>
+                            @item.TestDescription
+                        </td>
+                    </tr>
+                }
+
             </table>
         }
     </div>

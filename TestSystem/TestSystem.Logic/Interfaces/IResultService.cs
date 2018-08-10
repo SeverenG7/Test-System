@@ -5,11 +5,14 @@ namespace TestSystem.Logic.Interfaces
 {
     public interface IResultService
     {
-        IEnumerable<ResultDTO> GetResults();
-        ResultDTO GetResult(int? id);
-        void CreateResult(ResultDTO resultDTO);
+        IEnumerable<ResultDto> GetResultsById(string id);
+        IEnumerable<ResultDto> GetResults();
+        ResultDto GetResult(int? id);
+        void GivePremission(int IdTest , string IdUser , string Description);
         void RemoveResult(int id);
-        void UpdateResult(ResultDTO resultDTO);
+        void UpdateResult(ResultDto resultDTO);
+        UserInfoDto GetUser(int id);
+        IEnumerable<UserInfoDto> GetUsers(string search);
         void Dispose();
     }
 }

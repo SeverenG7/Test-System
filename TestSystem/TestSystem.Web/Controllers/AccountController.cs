@@ -45,13 +45,13 @@ namespace UserStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model)
         {
-            //await SetInitialDataAsync();
             if (ModelState.IsValid)
             {
                 try
                 {
-                    UserDTO userDto = new UserDTO { Email = model.Email, Password = model.Password };
-                    ClaimsIdentity claim = await UserService.AuthenticateAsync(userDto);
+                    UserDto userDto = new UserDto { Email = model.Email, Password = model.Password };
+                    OperationDetails details = await UserService.AuthenticateAsync(userDto);
+                    ClaimsIdentity claim = details.Value;
                     if (claim == null)
                     {
                         ModelState.AddModelError("", "Неверный логин или пароль , или не подтвержден e-mail");
@@ -63,8 +63,16 @@ namespace UserStore.Controllers
                         {
                             IsPersistent = true
                         }, claim);
-                        //return RedirectToAction("CommonTables", "Common");
-                        return RedirectToAction("Check");
+
+                        if (details.Message.Equals("user"))
+                        {
+                            return RedirectToAction("MainMenu" , "User");
+                        }
+
+                        if (details.Message.Equals("admin"))
+                        {
+                            return RedirectToAction("CommonTables", "Common");
+                        }
                     }
                 }
                 catch (DbEntityValidationException ex)
@@ -181,12 +189,12 @@ namespace UserStore.Controllers
              await SetInitialDataAsync();
             if (ModelState.IsValid)
             {
-                UserDTO userDto = new UserDTO
+                UserDto userDto = new UserDto
                 {
                     Email = model.Email,
                     Password = model.Password,
-                    UserFirstName = "name",
-                    UserLastName = "lastname",
+                    UserFirstName = model.FirstName,
+                    UserLastName = model.LastName,
                     Role = "user"
                 };
                 try
@@ -249,16 +257,5 @@ namespace UserStore.Controllers
             await UserService.SetInitialDataAsync( new List<string> { "user", "admin" });
         }
 
-
-        public ActionResult Check()
-        {
-            return View();
-        }
-
-        [Authorize(Roles ="user")]
-        public ActionResult Pass()
-        {
-            return View();
-        }
     }
 }

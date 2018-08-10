@@ -1,0 +1,117 @@
+﻿@model TestSystem.Web.Models.ResultViewModel
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Tests info</title>
+</head>
+<body>
+    <div class="container">
+        <h2>More information about questions</h2>
+        <form method="get">
+            <div class="form-inline">
+                @using (Html.BeginForm())
+                {
+                    <div class="col-md-3">
+                        <div class="input-group">
+
+                            @Html.TextBox("search",
+                           "", new { placeholder = "Search for..." , @class="form-control" })
+
+                            <span class="input-group-append">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                }
+
+            </div>
+            </form>
+
+
+            <table class="table table-bordered table-hover" id="dataTable" width="100" cellspacing="0">
+                <thead class="show">
+                    <tr>
+                        <th>Name </th>
+                        <th>Lastname</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+
+                @foreach (var item in Model.Users)
+                {
+                    string selectedRow = "";
+                    {
+                        selectedRow = "bg-light";
+                    }
+                    <tr class="@selectedRow">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserFirstName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserLastName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ApplicationUser.Email)
+                        </td>
+                        <td>
+                            <button class="btn btn-primary"
+                                    onclick="location.href='@Url.Action( "GetInfoResult","Result" , new { IdUser = item.ApplicationUser.Id })'">
+                                More...
+                            </button>
+                            <button class="btn btn-warning"
+                                    onclick="location.href='@Url.Action("GivePremission", "Result" ,new { IdUser = item.ApplicationUser.Id })'">
+                                Give premission
+                            </button>
+                            @*<button class="btn btn-primary"
+                                    onclick="location.href='@Url.Action("DetailsQuestion", "Question",new {id = item.IdQuestion })'">
+                                Details
+                            </button>
+                            <button class="btn btn-danger"
+                                    onclick="location.href='@Url.Action("DeleteQuestion", "Question",new {id = item.IdQuestion })'">
+                                Delete
+                            </button>*@
+
+
+                        </td>
+                    </tr>
+                }
+            </table>
+
+            @if (Model.Results != null)
+            {
+                <h3>
+                    Results of selected user
+                </h3>
+                <table class="table table-bordered table-hover">
+                    <tr>
+                        <th>Test</th>
+                        <th>Score</th>
+                        <th>Date</th>
+                    </tr>
+                    @foreach (var item in Model.Results)
+                    {
+                        <tr>
+                            <td>
+                                @item.Test.TestName
+                            </td>
+                            <td>
+                                @item.ResultScore
+                            </td>
+                            <td>
+                                @item.CreateDate
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+    </div>
+</body>
+</html>
+@Scripts.Render("~/scripts/jquery-3.3.1.js")
+@Scripts.Render("~/scripts/jquery.unobtrusive-ajax.js")
+

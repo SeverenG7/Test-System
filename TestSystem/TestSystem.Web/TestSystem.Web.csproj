@@ -208,19 +208,25 @@
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\EnterController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
+    <Compile Include="Controllers\ResultController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\ThemeController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CommonsViewModels.cs" />
     <Compile Include="Models\QuestionViewModels.cs" />
+    <Compile Include="Models\ResultsViewModel.cs" />
     <Compile Include="Models\TestViewModels.cs" />
     <Compile Include="Models\ThemeViewModels.cs" />
+    <Compile Include="Models\UsersViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Util\NinjectDependencyResolver.cs" />
+    <Compile Include="Infrasrtuctre\NinjectDependencyResolver.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\actionImages\iconInfo.png" />
@@ -425,19 +431,23 @@
     <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
-    <Content Include="Views\Common\GetInfoTest.cshtml" />
+    <Content Include="Views\Test\GetInfoTest.cshtml" />
     <Content Include="Views\Question\CreateNewQuestion.cshtml" />
     <Content Include="Views\Test\CreateNewTest.cshtml" />
-    <Content Include="Views\Test\GetQuestions.cshtml" />
-    <Content Include="Views\Common\Some.cshtml" />
-    <Content Include="Views\Common\GetInfoQuestion.cshtml" />
+    <Content Include="Views\Question\GetInfoQuestion.cshtml" />
     <Content Include="Views\Theme\CreateNewTheme.cshtml" />
     <Content Include="Views\Question\EditQuestion.cshtml" />
-    <Content Include="Views\Question\DetailsQuestion.cshtml" />
     <Content Include="Views\Question\DeleteQuestion.cshtml" />
     <Content Include="Views\Theme\AboutThemes.cshtml" />
-    <Content Include="Views\Account\Check.cshtml" />
-    <Content Include="Views\Account\Pass.cshtml" />
+    <Content Include="Views\Shared\_UserLayout.cshtml" />
+    <Content Include="Views\User\MainMenu.cshtml" />
+    <Content Include="Views\Error\NotFoundPage.cshtml" />
+    <Content Include="Views\Test\GenerateTest.cshtml" />
+    <Content Include="Views\Error\ForbiddenPage.cshtml" />
+    <Content Include="Views\Common\GetTableResults.cshtml" />
+    <Content Include="Views\Result\GetInfoResult.cshtml" />
+    <Content Include="Views\Result\GivePremission.cshtml" />
+    <Content Include="Views\User\StartTest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

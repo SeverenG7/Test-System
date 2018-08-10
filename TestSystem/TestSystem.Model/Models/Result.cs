@@ -10,18 +10,23 @@ namespace TestSystem.Model.Models
         [Key]
         public int IdResult { get; set; }
 
-        [Required]
-        [StringLength(20)]
-        public string UserLogin { get; set; }
+        [ForeignKey("UserInfo")]
+        public string IdUserInfo { get; set; }
 
+        [Required]
+        [ForeignKey("Test")]
         public int IdTest { get; set; }
 
-        public double ResultScore { get; set; }
+        public double? ResultScore { get; set; }
 
         [Column(TypeName = "text")]
         public string ResultDescription { get; set; }
 
         public virtual Test Test { get; set; }
+
+        public virtual TempResult TempResult { get; set; }
+
+        public virtual UserInfo UserInfo { get; set; }
 
         public DateTime CreateDate { get; set; }
     }

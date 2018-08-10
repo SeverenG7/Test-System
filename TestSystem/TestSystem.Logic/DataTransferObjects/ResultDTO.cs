@@ -1,22 +1,16 @@
 ﻿using System;
-using TestSystem.Model.Models;
 
 namespace TestSystem.Logic.DataTransferObjects
 {
-    public class ResultDTO
+    public class ResultDto
     {
         public int IdResult { get; set; }
-
-        public string UserLogin { get; set; }
-
+        public string IdUserInfo { get; set; }
         public int IdTest { get; set; }
-
         public double ResultScore { get; set; }
-
         public string ResultDescription { get; set; }
-
-        public virtual Test Test { get; set; }
-
+        public virtual TestDto Test { get; set; }
+        public virtual UserInfoDto UserInfo { get; set; }
         public DateTime CreateDate { get; set; }
 
     }

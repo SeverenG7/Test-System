@@ -5,13 +5,13 @@ using System.Web.Mvc;
 using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Logic.Interfaces;
 using TestSystem.Web.Models;
-using PagedList;
 using System.Web;
 using System.Net;
 using System.Data;
 
 namespace TestSystem.Web.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class QuestionController : Controller
     {
 
@@ -39,10 +39,10 @@ namespace TestSystem.Web.Controllers
         {
             QuestionCreateViewModel newQuestion = new QuestionCreateViewModel();
             newQuestion.Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName");
-            newQuestion.Answers = new List<AnswerDTO>();
+            newQuestion.Answers = new List<AnswerDto>();
             for (int i = 0; i < 5; i++)
             {
-                newQuestion.Answers.Add(new AnswerDTO());
+                newQuestion.Answers.Add(new AnswerDto());
             }
             return View(newQuestion);
         }
@@ -52,16 +52,16 @@ namespace TestSystem.Web.Controllers
             HttpPostedFileBase image = null)
         {
                        
-                    QuestionDTO question = new QuestionDTO
+                    QuestionDto question = new QuestionDto
                     {
                         QuestionText = model.QuestionText,
                         Difficult = model.selectedDifficult,
                         IdTheme = Int32.Parse(model.selectedTheme)
                     };
 
-                    question.Answers = new List<AnswerDTO>();
+                    question.Answers = new List<AnswerDto>();
 
-                    foreach (AnswerDTO ans in model.Answers)
+                    foreach (AnswerDto ans in model.Answers)
                     {
                         if (!String.IsNullOrEmpty(ans.AnswerText))
                         {
@@ -80,20 +80,20 @@ namespace TestSystem.Web.Controllers
 
                     _questionService.CreateQuestion(question);
 
-                    return RedirectToAction("GetInfoQuestion" , "Common");
+                    return RedirectToAction("GetInfoQuestion" , "Question");
                
         }
 
 
         [HttpGet]
-        public ActionResult EditQuestion(int id)
+        public ActionResult EditQuestion(int IdQuestion)
         {
-            QuestionDTO updatingQuestion = _questionService.GetQuestion(id);
+            QuestionDto updatingQuestion = _questionService.GetQuestion(IdQuestion);
             return View(updatingQuestion);
         }
 
         [HttpPost]
-        public ActionResult EditQuestion (QuestionDTO model )
+        public ActionResult EditQuestion (QuestionDto model )
         {
 
             var questionUpdate = _questionService.GetQuestion(model.IdQuestion);
@@ -102,9 +102,22 @@ namespace TestSystem.Web.Controllers
             {
                 questionUpdate.Answers = model.Answers;
                 _questionService.UpdateQuestion(questionUpdate);
-              return  RedirectToAction("GetInfoQuestion", "Common");
+              return  RedirectToAction("GetInfoQuestion", "Question" , model.IdQuestion);
             }
                 return View();
+        }
+
+        public ActionResult DeleteFromTest(int? idQuestion , int? idTest)
+        {
+            if (idTest.HasValue && idQuestion.HasValue)
+            {
+                _questionService.DeleteQuestionFromTest(idQuestion.Value, idTest.Value);
+                return RedirectToAction("GetInfoTest", "Test");
+            }
+            else
+            {
+                return  new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
         }
 
         #endregion
@@ -112,57 +125,76 @@ namespace TestSystem.Web.Controllers
         #region Delete/Details Question
 
         [HttpGet]
-        public ActionResult DeleteQuestion(int? id)
+        public ActionResult GetInfoQuestion
+            (int? IdTheme, string difficult, int? IdQuestion, int? IdTest, string search)
         {
-            if (!id.HasValue)
+            FiltrationViewModel viewQuestions = new FiltrationViewModel();
+
+            IEnumerable<QuestionDto> questions = _questionService.GetQuestions().
+                OrderBy(x => x.CreateDate);
+
+            if (IdTheme.HasValue && IdTheme != 0)
+            {
+                questions = questions.Where(x => x.IdTheme == IdTheme);
+            }
+
+            if (!String.IsNullOrEmpty(difficult) && !difficult.Equals("All"))
+            {
+                questions = questions.Where(x => x.Difficult == difficult);
+            }
+
+            if (!String.IsNullOrEmpty(search))
+            {
+                questions = questions.Where(x => x.QuestionText.Contains(search));
+            }
+
+            List<ThemeDto> themes = _themeService.GetAll().ToList();
+            themes.Insert(0, new ThemeDto() { IdTheme = 0, ThemeName = "All" });
+            viewQuestions.Questions = questions.ToList();
+
+
+            if (IdQuestion.HasValue)
+            {
+                if (viewQuestions.Questions == null)
+                    ViewBag.IdQuestion = IdQuestion.Value;
+                viewQuestions.Answers = _questionService.GetQuestions().
+                    Where(x => x.IdQuestion == IdQuestion).
+                    SingleOrDefault().
+                    Answers;
+                viewQuestions.Tests = viewQuestions.Questions.
+                    Where(x => x.IdQuestion == IdQuestion).
+                    SingleOrDefault().
+                    Tests;
+            }
+            if (IdTest.HasValue)
+            {
+                ViewBag.IdTest = IdTest.Value;
+                viewQuestions.Questions = viewQuestions.Tests.
+                    Where(x => x.IdTest == IdTest).
+                    SingleOrDefault().
+                    Questions.ToList();
+            }
+
+            viewQuestions.Themes = new SelectList(themes, "IdTheme", "ThemeName");
+
+            return View(viewQuestions);
+
+        }
+        [HttpGet]
+        public ActionResult DeleteQuestion(int? IdQuestion)
+        {
+            if (!IdQuestion.HasValue)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            QuestionDTO questionDetails = _questionService.GetQuestion(id.Value);
+            QuestionDto questionDetails = _questionService.GetQuestion(IdQuestion.Value);
             if (questionDetails == null)
             {
                 return HttpNotFound();
             }
 
-            _questionService.RemoveQuestion(id.Value);
-            return RedirectToAction("GetInfoQuestion", "Common");
-        }
-
-        // POST: Question/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int? id)
-        {
-            try
-            {
-                
-                
-                return RedirectToAction("GetInfoQuestion" , "Common");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        public ActionResult DetailsQuestion(int? id)
-        {
-            if (!id.HasValue)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            QuestionDTO questionDetails = _questionService.GetQuestion(id.Value);
-            if (questionDetails == null)
-            {
-                return HttpNotFound();
-            }
-
-            QuestionDetailsViewModel model = new QuestionDetailsViewModel(questionDetails);
-            model.Theme = _themeService.Get(questionDetails.IdTheme).ThemeName;
-            foreach (TestDTO test in questionDetails.Tests)
-            {
-                model.Tests.Add(test);
-            }
-            return View(model);
+            _questionService.RemoveQuestion(IdQuestion.Value);
+            return RedirectToAction("GetInfoQuestion", "Question");
         }
 
         #endregion

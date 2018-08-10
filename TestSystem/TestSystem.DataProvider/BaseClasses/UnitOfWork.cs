@@ -3,7 +3,7 @@ using TestSystem.DataProvider.Repositories;
 using TestSystem.DataProvider.Context;
 using TestSystem.Model.Models;
 using System.Threading.Tasks;
-using TestSystem.DataProvider.IdentityManager;
+using TestSystem.DataProvider.IdentityManagers;
 using System;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -17,12 +17,12 @@ namespace TestSystem.DataProvider.BaseClasses
     {
 
         private readonly ApplicationContext _context;
-        private bool _disposed = false;
+        private bool _disposed;
 
         /// <summary>
         /// In this constructer we initialize all repositories.
         /// </summary>
-        /// <param name="_context"></param>
+        /// <param name="context"></param>
         public UnitOfWork(ApplicationContext context)
         {
             _context = context;
@@ -33,21 +33,23 @@ namespace TestSystem.DataProvider.BaseClasses
             Tests = new TestRepository(_context);
             Themes = new ThemeRepository(_context);
             UserInfoes = new UserInfoRepository(_context);
+            TempResults = new TempResultRepository(_context);
             ApplicationRoleManagers = new ApplicationRoleManager
                 (new RoleStore<ApplicationRole>(_context));
             ApplicationUserManagers = new ApplicationUserManager
                 (new UserStore<ApplicationUser>(_context));
         }
 
-        public IRepository<Answer> Answers { get; private set; }
-        public IRepository<Question> Questions { get; private set; }
-        public IRepository<Result> Results { get; private set; }
-        public IRepository<Test> Tests { get; private set; }
-        public IRepository<Theme> Themes { get; private set; }
-        public IRepository<UserInfo> UserInfoes { get; private set; }
+        public IRepository<Answer> Answers { get; }
+        public IRepository<Question> Questions { get; }
+        public IRepository<Result> Results { get; }
+        public IRepository<Test> Tests { get; }
+        public IRepository<Theme> Themes { get; }
+        public IRepository<UserInfo> UserInfoes { get; }
+        public IRepository<TempResult> TempResults { get; }
 
-        public ApplicationUserManager ApplicationUserManagers { get; private set; }
-        public ApplicationRoleManager ApplicationRoleManagers { get; private set; }
+        public ApplicationUserManager ApplicationUserManagers { get; }
+        public ApplicationRoleManager ApplicationRoleManagers { get; }
 
         public int Complete() => _context.SaveChanges();
 
@@ -67,7 +69,7 @@ namespace TestSystem.DataProvider.BaseClasses
                     ApplicationRoleManagers.Dispose();
                     ApplicationRoleManagers.Dispose();
                 }
-                this._disposed = true;
+                _disposed = true;
 
             }
 

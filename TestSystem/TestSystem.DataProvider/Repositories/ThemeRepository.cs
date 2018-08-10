@@ -13,11 +13,6 @@ namespace TestSystem.DataProvider.Repositories
     {
         public ThemeRepository(ApplicationContext context) : base(context)
         { }
-
-        public ApplicationContext testContext
-        {
-            get => context as ApplicationContext;
-        }
     }
 }
 

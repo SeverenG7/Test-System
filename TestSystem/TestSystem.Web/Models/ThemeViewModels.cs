@@ -20,9 +20,9 @@ namespace TestSystem.Web.Models
 
     public class ThemeAboutViewModel
     {
-        public IEnumerable<ThemeDTO> Themes { get; set; }
-        public IEnumerable<TestDTO> Tests { get; set; }
-        public IEnumerable<QuestionDTO> Questions { get; set; }
+        public IEnumerable<ThemeDto> Themes { get; set; }
+        public IEnumerable<TestDto> Tests { get; set; }
+        public IEnumerable<QuestionDto> Questions { get; set; }
         public List<int> TestsNumber { get; set; }
         public List<int> QuestionsNumber { get; set; }
 

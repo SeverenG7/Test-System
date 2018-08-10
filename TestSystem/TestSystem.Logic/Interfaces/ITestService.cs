@@ -5,12 +5,11 @@ namespace TestSystem.Logic.Interfaces
 {
     public interface ITestService
     {
-        IEnumerable<TestDTO> GetTests();
-        TestDTO GetTest(int? id);
-        void CreateTest(TestDTO testDTO);
+        IEnumerable<TestDto> GetTests();
+        TestDto GetTest(int? id);
+        void CreateTest(TestDto testDto);
         void RemoveTest(int id);
-        void UpdateTest(TestDTO testDTO);
-        void Dispose();
-        IEnumerable<ThemeDTO> GetAllTheme();
+        TestDto GenerateTest(int questionNumbers , int idTheme , string difficult);
+
     }
 }

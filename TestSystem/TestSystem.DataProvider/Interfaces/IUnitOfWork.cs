@@ -1,8 +1,7 @@
 ﻿using System;
 using TestSystem.Model.Models;
-using TestSystem.DataProvider.IdentityManager;
+using TestSystem.DataProvider.IdentityManagers;
 using System.Threading.Tasks;
-using TestSystem.DataProvider.Context;
 
 namespace TestSystem.DataProvider.Interfaces
 {

@@ -13,20 +13,5 @@ namespace TestSystem.DataProvider.Repositories
     {
         public TestRepository(ApplicationContext context) : base(context)
         { }
-
-        public new void Add(Test test)
-        {
-            foreach (Question question in test.Questions)
-            {
-                testContext.Entry(question).State = System.Data.Entity.EntityState.Unchanged;
-            }
-
-            testContext.Entry(test.Theme).State = System.Data.Entity.EntityState.Unchanged;
-        }
-
-        public ApplicationContext testContext
-        {
-            get => context as ApplicationContext;
-        }
     }
 }

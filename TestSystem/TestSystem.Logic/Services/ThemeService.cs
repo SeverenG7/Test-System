@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace TestSystem.Logic.Services
 {
-    public class ThemeService : MapClass<Theme,ThemeDTO> , IThemeService
+    public class ThemeService : MapClass<Theme,ThemeDto> , IThemeService
     {
         IUnitOfWork Database { get; set; }
 
@@ -17,19 +17,19 @@ namespace TestSystem.Logic.Services
             Database = unitOfWork;
         }
 
-        public IEnumerable<ThemeDTO> GetAll()
+        public IEnumerable<ThemeDto> GetAll()
         {
-            return MapperFromDB.Map<IEnumerable<Theme>, List<ThemeDTO>>(Database.Themes.GetAll());
+            return MapperFromDB.Map<IEnumerable<Theme>, List<ThemeDto>>(Database.Themes.GetAll());
         }
 
-        public ThemeDTO Get(int? id)
+        public ThemeDto Get(int? id)
         {
             Theme theme = Database.Themes.Get(id.Value);
-            ThemeDTO themeDTO = MapperFromDB.Map<ThemeDTO>(theme);
+            ThemeDto themeDTO = MapperFromDB.Map<ThemeDto>(theme);
             return themeDTO;
         }
 
-        public void Create(ThemeDTO themeDTO)
+        public void Create(ThemeDto themeDTO)
         {
             Theme theme = MapperToDB.Map<Theme>(themeDTO);
             Database.Themes.Add(theme);
@@ -51,10 +51,9 @@ namespace TestSystem.Logic.Services
             }
         }
 
-        public void Update(ThemeDTO themeDTO)
+        public void Update(ThemeDto themeDTO)
         {
             Theme theme = Database.Themes.Get(themeDTO.IdTheme);
-            Database.Themes.Updating(theme);
             Theme themeUpdate = MapperToDB.Map<Theme>(themeDTO);
             Database.Themes.Update(themeUpdate);
         }

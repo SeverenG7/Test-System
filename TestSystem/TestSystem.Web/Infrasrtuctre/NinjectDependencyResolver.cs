@@ -4,26 +4,26 @@ using System.Web.Mvc;
 using Ninject;
 using TestSystem.Logic.Infrastructure;
 
-namespace TestSystem.Web.Util
+namespace TestSystem.Web.Infrasrtuctre
 {
     public class NinjectDependencyResolver : IDependencyResolver
     {
-        private IKernel kernel;
+        private readonly IKernel _kernel;
 
         public NinjectDependencyResolver(IKernel kernelParam)
         {
-            kernel = kernelParam;
+            _kernel = kernelParam;
             AddBindings();
         }
 
         public object GetService(Type serviceType)
         {
-            return kernel.TryGet(serviceType);
+            return _kernel.TryGet(serviceType);
         }
 
         public IEnumerable<object> GetServices(Type serviceType)
         {
-            return kernel.GetAll(serviceType);
+            return _kernel.GetAll(serviceType);
         }
 
         private void AddBindings()
@@ -34,10 +34,13 @@ namespace TestSystem.Web.Util
             AnswerServiceModule answerServiceModule = new AnswerServiceModule();
             ThemeServiceModule themeServiceModule = new ThemeServiceModule();
             UserServiceModule userServiceModule = new UserServiceModule();
-            UpdateModule updateModule = new UpdateModule();
+            ResultServiceModule resultServiceModule = new ResultServiceModule();
+            TestPassServiceModule testPassServiceModule = new TestPassServiceModule();
 
-            kernel.Load(unitOfWorkModule, testServiceModule,questionServiceModule,
-                answerServiceModule, themeServiceModule , userServiceModule ,updateModule);
+            _kernel.Load(unitOfWorkModule, testServiceModule,questionServiceModule,
+                answerServiceModule, themeServiceModule , userServiceModule ,
+                resultServiceModule ,
+                testPassServiceModule);
 
         }
 

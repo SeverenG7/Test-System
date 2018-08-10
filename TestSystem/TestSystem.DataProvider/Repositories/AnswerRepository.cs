@@ -17,9 +17,5 @@ namespace TestSystem.DataProvider.Repositories
         public AnswerRepository(ApplicationContext context) : base(context)
         { }
 
-        public ApplicationContext testContext
-        {
-            get => context as ApplicationContext;
-        }
     }
 }

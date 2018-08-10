@@ -35,7 +35,7 @@ namespace TestSystem.Logic.Services
         #endregion
 
         #region Methods
-        public async Task<OperationDetails> CreateAsync(UserDTO userDto)
+        public async Task<OperationDetails> CreateAsync(UserDto userDto)
         {
             ApplicationUser user = await Database.ApplicationUserManagers.FindByEmailAsync(userDto.Email);
             if (user == null)
@@ -46,7 +46,8 @@ namespace TestSystem.Logic.Services
                     return new OperationDetails(false, result.Errors.FirstOrDefault(), "" ,0 ,user.Id);
                 await Database.ApplicationUserManagers.AddToRoleAsync(user.Id, userDto.Role);
 
-                UserInfo userInfo = new UserInfo { IdUserInfo = user.Id, UserFirstName = userDto.UserFirstName, UserLastName = userDto.UserLastName};
+                UserInfo userInfo = new UserInfo { IdUserInfo = user.Id, UserFirstName = userDto.UserFirstName, UserLastName = userDto.UserLastName ,
+                UserRole = userDto.Role};
                 Database.UserInfoes.Add(userInfo);
                 await Database.SaveAsync();
 
@@ -63,18 +64,22 @@ namespace TestSystem.Logic.Services
            
         }
 
-        public async Task<ClaimsIdentity> AuthenticateAsync(UserDTO userDto)
+        public async Task<OperationDetails> AuthenticateAsync(UserDto userDto)
         {
             ClaimsIdentity claim = null;
             ApplicationUser user = await Database.ApplicationUserManagers.FindAsync(userDto.Email, userDto.Password);
+       
 
             if (user != null)
             {
+                string us = user.Id;
                 if (user.EmailConfirmed)
                 {
+                    UserInfo role = Database.UserInfoes.Find(x => x.IdUserInfo == user.Id).FirstOrDefault();
+                    
                     claim = await Database.ApplicationUserManagers.CreateIdentityAsync(user,
                                                DefaultAuthenticationTypes.ApplicationCookie);
-                    return claim;
+                    return new OperationDetails(true, role.UserRole, "", claim, "");
                 }
                 else
                 {
@@ -82,7 +87,7 @@ namespace TestSystem.Logic.Services
                                                 DefaultAuthenticationTypes.ApplicationCookie);
                 }
             }
-            return claim;
+            return new OperationDetails(true, "", "", claim, "");
         }
 
         public async Task SetInitialDataAsync( List<string> roles)
@@ -132,6 +137,13 @@ namespace TestSystem.Logic.Services
                 return new OperationDetails(result.Succeeded, result.Errors.ToString(), "Reset password");
             }
         }
+
+
+        public string FindIdUser(string userName)
+        {
+            var user = Database.ApplicationUserManagers.FindByEmail(userName);
+            return user.Id;
+        }
         public void Dispose()
         {
             Database.Dispose();
@@ -139,6 +151,27 @@ namespace TestSystem.Logic.Services
 
         #endregion
 
+
+        #region Custom methods
+
+        public UserDto GetUserInfo(string userName)
+        {
+            UserDto user = new UserDto();
+            var somebody = Database.UserInfoes.Find(x => x.ApplicationUser.Email == userName).First();
+            if ( somebody != null)
+            {
+                  user = new UserDto
+                {
+                    Id = somebody.ApplicationUser.Id,
+                    Email = userName,
+                    Role = somebody.ApplicationUser.Roles.FirstOrDefault().ToString(),
+                };
+            }
+
+            return user;
+        }
+
+        #endregion
     }
 }
 

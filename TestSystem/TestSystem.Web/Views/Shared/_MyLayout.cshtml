@@ -49,26 +49,13 @@
                         <span class="nav-link-text">About themes</span>
                     </a>
                 </li>
-                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Example Pages">
-                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
-                        <i class="fa fa-fw fa-file"></i>
-                        <span class="nav-link-text">Example Pages</span>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title=" More about themes">
+                    <a class="nav-link" href="@Url.Action("GetInfoResult","Result")">
+                        <i class="fa fa-fw fa-table"></i>
+                        <span class="nav-link-text">Users & Results</span>
                     </a>
-                    <ul class="sidenav-second-level collapse" id="collapseExamplePages">
-                        <li>
-                            <a href="login.html">Login Page</a>
-                        </li>
-                        <li>
-                            <a href="register.html">Registration Page</a>
-                        </li>
-                        <li>
-                            <a href="forgot-password.html">Forgot Password Page</a>
-                        </li>
-                        <li>
-                            <a href="blank.html">Blank Page</a>
-                        </li>
-                    </ul>
                 </li>
+
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Menu Levels">
                     <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMulti" data-parent="#exampleAccordion">
                         <i class="fa fa-fw fa-sitemap"></i>
@@ -210,7 +197,7 @@
                     </form>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
+                    <a class="nav-link" href="@Url.Action("Logout" , "Account")">
                         <i class="fa fa-fw fa-sign-out"></i>Logout
                     </a>
                 </li>
@@ -218,13 +205,13 @@
         </div>
     </nav>
     <div class="content-wrapper">
-       
+
         <!-- /.container-fluid-->
         <!-- /.content-wrapper-->
         <footer class="sticky-footer">
             <div class="container">
                 <div class="text-center">
-                    <small>Copyright © Your Website 2018</small>
+                    <small>Copyright ©  2018</small>
                 </div>
             </div>
         </footer>
@@ -245,26 +232,24 @@
                     <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <a class="btn btn-primary" href="login.html">Logout</a>
+                        <a class="btn btn-primary">Logout</a>
                     </div>
                 </div>
             </div>
         </div>
         <div class="border-light">
             <!-- Bootstrap core JavaScript-->
-            <script src=@Url.Content("Content/vendor/jquery/jquery.min.js")></script>
-            <script src=@Url.Content("Content/vendor/bootstrap/js/bootstrap.bundle.min.js")></script>
+            <script src=@Url.Content("/Content/vendor/jquery/jquery.min.js")></script>
+            <script src=@Url.Content("/Content/vendor/bootstrap/js/bootstrap.bundle.min.js")></script>
             <!-- Core plugin JavaScript-->
-            <script src=@Url.Content("Content/vendor/jquery-easing/jquery.easing.min.js")></script>
+            <script src=@Url.Content("/Content/vendor/jquery-easing/jquery.easing.min.js")></script>
             <!-- Page level plugin JavaScript-->
-            <script src=@Url.Content("Content/vendor/chart.js/Chart.min.js")></script>
-            <script src=@Url.Content("Content/vendor/datatables/jquery.dataTables.js")></script>
-            <script src=@Url.Content("Content/vendor/datatables/dataTables.bootstrap4.js")></script>
+            <script src=@Url.Content("/Content/vendor/chart.js/Chart.min.js")></script>
             <!-- Custom scripts for all pages-->
-            <script src=@Url.Content("Content/js/sb-admin.min.js")></script>
+            <script src=@Url.Content("/Content/js/sb-admin.min.js")></script>
             <!-- Custom scripts for this page-->
-            <script src=@Url.Content("Content/js/sb-admin-datatables.min.js")></script>
-            <script src=@Url.Content("Content/js/sb-admin-charts.min.js")></script>
+            <script src=@Url.Content("/Content/js/sb-admin-datatables.min.js")></script>
+            <script src=@Url.Content("/Content/js/sb-admin-charts.min.js")></script>
             @RenderBody()
         </div>
     </div>

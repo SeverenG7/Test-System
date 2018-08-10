@@ -11,7 +11,7 @@ namespace TestSystem.Web.App_Start
     using Ninject;
     using Ninject.Web.Common;
 
-    using TestSystem.Web.Util;
+    using TestSystem.Web.Infrasrtuctre;
 
     public static class NinjectWebCommon 
     {
