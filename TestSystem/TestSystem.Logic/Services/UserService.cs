@@ -72,6 +72,7 @@ namespace TestSystem.Logic.Services
 
             if (user != null)
             {
+                string us = user.Id;
                 if (user.EmailConfirmed)
                 {
                     UserInfo role = Database.UserInfoes.Find(x => x.IdUserInfo == user.Id).FirstOrDefault();
@@ -135,6 +136,13 @@ namespace TestSystem.Logic.Services
                     (user.Id.ToString(), token, password);
                 return new OperationDetails(result.Succeeded, result.Errors.ToString(), "Reset password");
             }
+        }
+
+
+        public string FindIdUser(string userName)
+        {
+            var user = Database.ApplicationUserManagers.FindByEmail(userName);
+            return user.Id;
         }
         public void Dispose()
         {

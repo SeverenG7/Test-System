@@ -15,6 +15,6 @@ namespace TestSystem.Logic.Interfaces
         Task<IdentityResult> ConfirmEmailAsync(string userId, string token);
         Task<OperationDetails> ForgotPasswordAsync(string email);
         Task<OperationDetails> ResetPassworAsync(string email, string token, string password);
-
+        string FindIdUser(string userName);
     }
 }

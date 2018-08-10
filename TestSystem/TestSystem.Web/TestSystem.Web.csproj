@@ -447,6 +447,7 @@
     <Content Include="Views\Common\GetTableResults.cshtml" />
     <Content Include="Views\Result\GetInfoResult.cshtml" />
     <Content Include="Views\Result\GivePremission.cshtml" />
+    <Content Include="Views\User\StartTest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

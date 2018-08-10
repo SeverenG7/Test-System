@@ -61,12 +61,32 @@
                     </div>
                 </div>
             </div>
+            
+            @if (Model.Test != null)
+            {
+            <div class="col-xl-3 col-sm-6 mb-3">
+                <div class="card bg-light mb-3" style="max-width: 18rem;">
+                    <div class="card-header">Test info:</div>
+                    <div class="card-body">
+                        <div class="card-body">
+                            <p>@Model.Test.TestDescription</p>
+                            <div class="text-md-center">
+                                <button class="btn btn-danger"
+                                        onclick="location.href='@Url.Action("StartTest" , "User",
+                                                               new { IdTest = Model.Test.IdTest })'">
+                                    Start test
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
         </div>
-
 
         <div class="row ">
 
-            <div class="col-md-3">
+            <div class="col-md-6">
 
                 <table class="table table-bordered table-hover table-sm" cellspacing="0">
                     <thead class="show">
@@ -78,50 +98,35 @@
                     </thead>
                     @if (Model.Results != null)
                     {
-                    foreach (var item in Model.Results)
-                    {
-                        string selectedRow = "";
-                        if (item.IdResult == ViewBag.Result)
+                        foreach (var item in Model.Results)
                         {
-                            selectedRow = "bg-light";
+                            string selectedRow = "";
+                            if (item.IdResult == ViewBag.Result)
+                            {
+                                selectedRow = "bg-light";
+                            }
+                            <tr class="@selectedRow">
+                                <td>
+                                    <a class="nav-link text-dark" href="@Url.Action("MainMenu", "User", new { id = item.IdResult })">
+                                        @Html.DisplayFor(modelItem => item.Test.TestName)
+                                    </a>
+                                </td>
+                                <td>
+                                    <a class="nav-link text-dark" href="@Url.Action("MainMenu", "User", new { id = item.IdResult })">
+                                        @Html.DisplayFor(modelItem => item.ResultDescription)
+                                    </a>
+                                </td>
+                                <td>
+                                    <a class="nav-link text-dark" href="@Url.Action("MainMenu", "User", new { id = item.IdResult })">
+                                        @Html.DisplayFor(modelItem => item.Test.Theme.ThemeName)
+                                    </a>
+                                </td>
+                            </tr>
                         }
-                        <tr class="@selectedRow">
-                            <td>
-                                <a class="nav-link text-dark" href="@Url.Action("MainMenu", "User", new { id = item.IdResult })">
-                                    @Html.DisplayFor(modelItem => item.Test.TestName)
-                                </a>
-                            </td>
-                            <td>
-                                <a class="nav-link text-dark" href="@Url.Action("MainMenu", "User", new { id = item.IdResult })">
-                                    @Html.DisplayFor(modelItem => item.ResultDescription)
-                                </a>
-                            </td>
-                            <td>
-                                <a class="nav-link text-dark" href="@Url.Action("MainMenu", "User", new { id = item.IdResult })">
-                                    @Html.DisplayFor(modelItem => item.Test.Theme.ThemeName)
-                                </a>
-                            </td>
-                        </tr>
-                    }
                     }
                 </table>
             </div>
-
-            <div class="col-md-6">
-                @if (Model.Test != null)
-                {
-                    <div class="col-md-6">
-                        <div class="card bg-primary text-white">
-                            <div class="card-header">Test</div>
-                            <div class="card-body">
-                                <h5 class="card-title">More info about @Model.Test.TestName</h5>
-                                <p>@Model.Test.TestDescription</p>
-                            </div>
-                        </div>
-                    </div>
-
-                }
-            </div>
-        </div></div>
+        </div>
+    </div>
 </body>
 </html>

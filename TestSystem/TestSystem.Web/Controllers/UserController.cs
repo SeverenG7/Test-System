@@ -28,9 +28,11 @@ namespace TestSystem.Web.Controllers
 
         public ActionResult MainMenu(int? id)
         {
-            //UserMainViewModel model = new UserMainViewModel();
-            //model.Results = _resultService.GetResults().
-            //    Where(x => x.UserInfo. == HttpContext.User.Identity.Name).ToList();
+            UserMainViewModel model = new UserMainViewModel();
+            
+            model.Results = _resultService.GetResults().
+                Where(x => x.UserInfo.IdUserInfo == _userService.FindIdUser(HttpContext.User.Identity.Name)).
+                ToList();
 
             if (id.HasValue)
             {
@@ -41,77 +43,11 @@ namespace TestSystem.Web.Controllers
             return View(model);
         }
 
-        // GET: User/Details/5
-        public ActionResult StartTest(int? id)
+        public ActionResult StartTest(int? idTest)
         {
+
+            return View();
+        }
      
-            return View();
-        }
-
-        // GET: User/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: User/Create
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: User/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: User/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: User/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: User/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
     }
 }
