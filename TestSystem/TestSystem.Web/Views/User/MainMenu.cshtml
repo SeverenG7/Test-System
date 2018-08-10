@@ -76,8 +76,9 @@
                             <th>Theme</th>
                         </tr>
                     </thead>
-
-                    @foreach (var item in Model.Results)
+                    @if (Model.Results != null)
+                    {
+                    foreach (var item in Model.Results)
                     {
                         string selectedRow = "";
                         if (item.IdResult == ViewBag.Result)
@@ -86,21 +87,22 @@
                         }
                         <tr class="@selectedRow">
                             <td>
-                                <a class="nav-link text-dark" href="@Url.Action("MainMenu", "User",new {id = item.IdResult })">
+                                <a class="nav-link text-dark" href="@Url.Action("MainMenu", "User", new { id = item.IdResult })">
                                     @Html.DisplayFor(modelItem => item.Test.TestName)
                                 </a>
                             </td>
                             <td>
-                                <a class="nav-link text-dark" href="@Url.Action("MainMenu", "User",new {id = item.IdResult })">
+                                <a class="nav-link text-dark" href="@Url.Action("MainMenu", "User", new { id = item.IdResult })">
                                     @Html.DisplayFor(modelItem => item.ResultDescription)
                                 </a>
                             </td>
                             <td>
-                                <a class="nav-link text-dark" href="@Url.Action("MainMenu", "User",new {id = item.IdResult })">
+                                <a class="nav-link text-dark" href="@Url.Action("MainMenu", "User", new { id = item.IdResult })">
                                     @Html.DisplayFor(modelItem => item.Test.Theme.ThemeName)
                                 </a>
                             </td>
                         </tr>
+                    }
                     }
                 </table>
             </div>
@@ -120,6 +122,6 @@
 
                 }
             </div>
-        </div>
+        </div></div>
 </body>
 </html>

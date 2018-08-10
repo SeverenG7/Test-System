@@ -26,12 +26,11 @@ namespace TestSystem.Web.Controllers
             _resultService = resultService;
         }
 
-        // GET: User
         public ActionResult MainMenu(int? id)
         {
-            UserMainViewModel model = new UserMainViewModel();
-            model.Results = _resultService.GetResults().
-                Where(x => x.UserLogin == HttpContext.User.Identity.Name).ToList();
+            //UserMainViewModel model = new UserMainViewModel();
+            //model.Results = _resultService.GetResults().
+            //    Where(x => x.UserInfo. == HttpContext.User.Identity.Name).ToList();
 
             if (id.HasValue)
             {

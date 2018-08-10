@@ -1,0 +1,77 @@
+﻿@model TestSystem.Web.Models.PremissionViewModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Tests info</title>
+</head>
+<body>
+    <div class="container">
+        <h2>More information about questions</h2>
+            @using (Html.BeginForm("GivePremission", "Result", FormMethod.Post))
+            {
+            <div class="form-inline">
+
+                @Html.AntiForgeryToken()
+                @Html.TextAreaFor(model => model.UserResult.ResultDescription)
+                @Html.HiddenFor(model => model.UserResult.IdUserInfo)
+
+            </div>
+            <input type="submit" value="Add premission" class="btn btn-success"/>
+        <table class="table table-bordered table-hover" id="dataTable" width="100"
+               cellspacing="0">
+            <thead class="thead-dark">
+                <tr>
+                    <td></td>
+                    <td>Test</td>
+                    <td>Description</td>
+                    <td>Difficult</td>
+                    <td>Theme</td>
+                    <td>Choose</td>
+                </tr>
+            </thead>
+            <tbody>
+
+                @for (int i = 0; i < Model.Tests.Count; i++)
+                {
+                <tr>
+                    <td>
+                        @Html.HiddenFor(modelItem => modelItem.Tests[i].IdTest)
+                    </td>
+                    <td>
+
+                        @Html.DisplayFor(modelItem => modelItem.Tests[i].TestName)
+
+                    </td>
+                    <td>
+
+                        @Html.DisplayFor(modelItem => modelItem.Tests[i].TestDescription)
+
+                    </td>
+                    <td>
+
+                        @Html.DisplayFor(modelItem => modelItem.Tests[i].Difficult)
+
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.Tests[i].Theme.ThemeName)
+                    </td>
+                    <td>
+
+                        @Html.CheckBoxFor(modelItem => modelItem.Tests[i].Choosen)
+
+                    </td>
+                </tr>
+                }
+
+            </tbody>
+        </table>
+            }
+    </div>
+</body>
+</html>
+@Scripts.Render("~/scripts/jquery-3.3.1.js")
+@Scripts.Render("~/scripts/jquery.unobtrusive-ajax.js")
+
+

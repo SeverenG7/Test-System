@@ -8,13 +8,25 @@ namespace TestSystem.Web.Models
 {
     public class ResultViewModel
     {
-        public string UserLogin { get; set; }
+        public IEnumerable<UserInfoDto> Users { get; set; }
+        public IEnumerable<ResultDto> Results { get; set; }
 
-        public double ResultScore { get; set; }
+        public ResultViewModel()
+        {
+            Users = new List<UserInfoDto>();
+            Results = new List<ResultDto>();
+        }
+    }
 
-        public virtual TestDto Test { get; set; }
+    public class PremissionViewModel
+    {
+        public List<TestPremissionViewModel> Tests { get; set; }
+        public ResultDto UserResult { get; set; }
 
-        public DateTime CreateDate { get; set; }
-
+        public PremissionViewModel()
+        {
+            Tests = new List<TestPremissionViewModel>();
+            UserResult = new ResultDto();
+        }
     }
 }

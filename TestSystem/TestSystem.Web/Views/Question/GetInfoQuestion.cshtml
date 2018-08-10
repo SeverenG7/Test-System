@@ -86,18 +86,12 @@
                                 onclick="location.href='@Url.Action( "GetInfoQuestion","Question" , new { IdQuestion = item.IdQuestion })'">
                             More...
                         </button>
-                        @*@Ajax.ActionLink("Select", "AllTests", new { id = item.IdTest }, new AjaxOptions() { UpdateTargetId = "1" }) |*@
-                        @*@Html.ActionLink("Edit this...", "EditQuestion", "Question" ,new { IdQuestion = item.IdQuestion })*@
                         <button class="btn btn-primary"
-                                onclick="location.href='@Url.Action("EditQuestion", "Question" ,new { id = item.IdQuestion })'">
+                                onclick="location.href='@Url.Action("EditQuestion", "Question" ,new { IdQuestion = item.IdQuestion })'">
                             Edit
                         </button>
-                        <button class="btn btn-primary"
-                                onclick="location.href='@Url.Action("DetailsQuestion", "Question",new {id = item.IdQuestion })'">
-                            Details
-                        </button>
                         <button class="btn btn-danger"
-                                onclick="location.href='@Url.Action("DeleteQuestion", "Question",new {id = item.IdQuestion })'">
+                                onclick="location.href='@Url.Action("DeleteQuestion", "Question",new {IdQuestion = item.IdQuestion })'">
                             Delete
                         </button>
 

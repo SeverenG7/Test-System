@@ -1,4 +1,4 @@
-﻿@model PagedList.IPagedList<TestSystem.Logic.DataTransferObjects.ResultDTO>
+﻿@model PagedList.IPagedList<TestSystem.Logic.DataTransferObjects.ResultDto>
 @using PagedList.Mvc;
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
@@ -26,7 +26,7 @@
                             {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.UserLogin)
+                                    @Html.DisplayFor(modelItem => item.UserInfo.ApplicationUser.Email)
                                 </td>
                                 <td>
                                         @Html.DisplayFor(modelItem => item.Test.TestName)                  
@@ -49,7 +49,7 @@
                     </div>
                 </div>
                 <div class="container">
-                    <form action="@Url.Action("GetInfoResults", "Result")">
+                    <form action="@Url.Action("GetInfoResult", "Result")">
                         <button class="btn btn-primary" type="submit">More about results...</button>
                     </form>
                 </div>

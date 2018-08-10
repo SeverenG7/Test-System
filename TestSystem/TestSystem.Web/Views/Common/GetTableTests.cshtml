@@ -1,4 +1,4 @@
-﻿@model PagedList.IPagedList<TestSystem.Logic.DataTransferObjects.TestDTO>
+﻿@model PagedList.IPagedList<TestSystem.Logic.DataTransferObjects.TestDto>
 @using PagedList.Mvc;
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
@@ -24,13 +24,19 @@
                             {
                                 <tr>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.TestName)
+                                        <a class="nav-link text-dark" href="@Url.Action("GetInfoTest", "Test",new {IdTest = item.IdTest })">
+                                            @Html.DisplayFor(modelItem => item.TestName)
+                                            </a>
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.QuestionsNumber)
+                                        <a class="nav-link text-dark" href="@Url.Action("GetInfoTest", "Test",new {IdTest = item.IdTest })">
+                                            @Html.DisplayFor(modelItem => item.QuestionsNumber)
+                                            </a>
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.TestDescription)
+                                        <a class="nav-link text-dark" href="@Url.Action("GetInfoTest", "Test",new {IdTest = item.IdTest })">
+                                            @Html.DisplayFor(modelItem => item.TestDescription)
+                                            </a>
                                     </td>
                                 </tr>
                             }

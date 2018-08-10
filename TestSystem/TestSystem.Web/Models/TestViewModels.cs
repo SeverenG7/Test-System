@@ -82,5 +82,15 @@ namespace TestSystem.Web.Models
 
         }
     }
-    
+
+    public class TestPremissionViewModel
+    {
+        public int IdTest { get; set; }
+        public string TestName { get; set; }
+        public int QuestionsNumber { get; set; }
+        public string TestDescription { get; set; }
+        public string Difficult { get; set; }
+        public ThemeDto Theme { get; set; }
+        public bool Choosen { get; set; }
+    }
 }

@@ -46,7 +46,8 @@ namespace TestSystem.Logic.Services
                     return new OperationDetails(false, result.Errors.FirstOrDefault(), "" ,0 ,user.Id);
                 await Database.ApplicationUserManagers.AddToRoleAsync(user.Id, userDto.Role);
 
-                UserInfo userInfo = new UserInfo { IdUserInfo = user.Id, UserFirstName = userDto.UserFirstName, UserLastName = userDto.UserLastName};
+                UserInfo userInfo = new UserInfo { IdUserInfo = user.Id, UserFirstName = userDto.UserFirstName, UserLastName = userDto.UserLastName ,
+                UserRole = userDto.Role};
                 Database.UserInfoes.Add(userInfo);
                 await Database.SaveAsync();
 
@@ -77,7 +78,7 @@ namespace TestSystem.Logic.Services
                     
                     claim = await Database.ApplicationUserManagers.CreateIdentityAsync(user,
                                                DefaultAuthenticationTypes.ApplicationCookie);
-                    return new OperationDetails(true, role.UserFirstName, "", claim, "");
+                    return new OperationDetails(true, role.UserRole, "", claim, "");
                 }
                 else
                 {

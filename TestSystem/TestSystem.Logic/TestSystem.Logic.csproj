@@ -124,6 +124,7 @@
     <Compile Include="DataTransferObjects\TestDto.cs" />
     <Compile Include="DataTransferObjects\ThemeDto.cs" />
     <Compile Include="DataTransferObjects\UserDto.cs" />
+    <Compile Include="DataTransferObjects\UserInfoDto.cs" />
     <Compile Include="Infrastructure\AnswerServiceModule.cs" />
     <Compile Include="Infrastructure\EmailService.cs" />
     <Compile Include="Infrastructure\OperationDetails.cs" />

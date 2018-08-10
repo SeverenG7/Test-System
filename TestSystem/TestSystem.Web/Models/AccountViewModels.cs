@@ -64,6 +64,15 @@ namespace TestSystem.Web.Models
 
     public class RegisterViewModel
     {
+        [Required(ErrorMessage = "Please, fill field with your name")]
+        [Display(Name = "Name")]
+        [StringLength(4,ErrorMessage ="Please, put your full name. Pretty hope, that your name much more than 4 chars.")]
+        public string FirstName { get; set; }
+
+        [Required(ErrorMessage = "Please, fill field with your name")]
+        [Display(Name = "Lastname")]
+        public string LastName { get; set; }
+
         [Required(ErrorMessage = "Please, put your email adress. It will help you, if you forgot yor password.")]
         [EmailAddress(ErrorMessage = "Please, put email in full, correct style.")]
         [Display(Name = "Email")]

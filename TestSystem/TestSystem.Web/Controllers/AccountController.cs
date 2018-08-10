@@ -193,8 +193,8 @@ namespace UserStore.Controllers
                 {
                     Email = model.Email,
                     Password = model.Password,
-                    UserFirstName = "name",
-                    UserLastName = "lastname",
+                    UserFirstName = model.FirstName,
+                    UserLastName = model.LastName,
                     Role = "user"
                 };
                 try

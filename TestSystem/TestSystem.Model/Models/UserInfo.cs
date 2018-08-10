@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace TestSystem.Model.Models
 {
     using System.ComponentModel.DataAnnotations;
@@ -6,6 +8,12 @@ namespace TestSystem.Model.Models
     [Table("UserInfo")]
     public  class UserInfo
     {
+
+        public UserInfo()
+        {
+            Result = new HashSet<Result>();
+        }
+
         [Key]
         [ForeignKey("ApplicationUser")]
         public string IdUserInfo { get; set; }
@@ -17,6 +25,12 @@ namespace TestSystem.Model.Models
         [Required]
         [StringLength(50)]
         public string UserLastName { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string UserRole { get; set; }
+
+        public virtual ICollection<Result> Result { get; set; }
 
         public virtual ApplicationUser ApplicationUser { get; set; }
     }
