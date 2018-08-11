@@ -50,6 +50,11 @@ namespace TestSystem.DataProvider.BaseClasses
             Context.Entry(entity).State = EntityState.Modified;
         }
 
+        public void Detached(TEntity entity)
+        {
+            Context.Entry(entity).State = EntityState.Detached;
+        }
+
 
         public void Dispose()
         {

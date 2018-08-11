@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Logic.Interfaces;
 using TestSystem.Web.Models;
-using PagedList;
-using System.Net;
 using TestSystem.Logic.Infrastructure;
 using TestSystem.Logic.Services;
-using System.Threading;
-using System.Runtime.Remoting.Lifetime;
 
 namespace TestSystem.Web.Controllers
 {
@@ -21,13 +16,15 @@ namespace TestSystem.Web.Controllers
         private readonly IUserService _userService;
         private readonly ITestPassService _testPassService;
         private readonly IResultService _resultService;
+        private readonly IQuestionService _questionService;
 
         public UserController(IUserService userService , ITestPassService testPassService,
-            IResultService resultService)
+            IResultService resultService , IQuestionService questionService)
         {
             _userService = userService;
             _testPassService = testPassService;
             _resultService = resultService;
+            _questionService = questionService;
         }
 
         public ActionResult MainMenu(int? id)
@@ -57,23 +54,37 @@ namespace TestSystem.Web.Controllers
             }
         }
 
+
         public ActionResult StartTest(int IdResult)
         {
-            QuestionDto question = _testPassService.StartTest(IdResult);
-            OperationDetails details = _testPassService.UserPassingTest(HttpContext.User.Identity.Name);
-            TestPassService.TimerModule timer = (TestPassService.TimerModule)HttpContext.Application["Timer" + details.Value.ToString()];
-            TimeSpan time = timer.CurrentInterval();
-            ViewBag.Time = time.Seconds;
-            return View(question);
+            return Redirect("TestPassing?idQuestion="+ _testPassService.StartTest(IdResult).IdQuestion.ToString());
         }
 
-        public ActionResult TestPassing(int IdResult)
+        public ActionResult TestPassing(int IdQuestion)
         {
-            //_testPassService.TestPassing(IdResult);
-            TestPassService.TimerModule timer =(TestPassService.TimerModule)HttpContext.Application["Timer" + IdResult.ToString()];
-            string so = "str";
+            TestPassService.TimerModule timer = (TestPassService.TimerModule) HttpContext.Application["Timer" + HttpContext.User.Identity.Name];
+            ViewBag.Time = (int)Math.Round(timer.CurrentInterval().TotalSeconds);
+            return View(_questionService.GetQuestion(IdQuestion));
+        }
+
+        [HttpPost]
+        public ActionResult TestPassingPost(QuestionDto question)
+        {
+            QuestionDto questionDto = _testPassService.TestPassing(question);
+            if (questionDto != null)
+            {
+                return Redirect("TestPassing?idQuestion=" + questionDto.IdQuestion.ToString());
+            }
+            else
+            {
+                return RedirectToAction("EndTest" ,"User");
+            }
+        }
+
+        public ActionResult EndTest()
+        {
             return View();
         }
-     
+
     }
 }

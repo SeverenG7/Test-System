@@ -130,6 +130,7 @@
     <Compile Include="Infrastructure\OperationDetails.cs" />
     <Compile Include="Infrastructure\QuestionServiceModule.cs" />
     <Compile Include="Infrastructure\ResultServiceModule.cs" />
+    <Compile Include="Infrastructure\StringStirrer.cs" />
     <Compile Include="Infrastructure\TestPassServiceModule.cs" />
     <Compile Include="Infrastructure\TestServiceModule.cs" />
     <Compile Include="Infrastructure\ThemeServiceModule.cs" />

@@ -9,13 +9,14 @@ using System;
 using System.Threading;
 using System.Web;
 using System.Diagnostics;
+using System.Collections.Generic;
+using AutoMapper;
 
 namespace TestSystem.Logic.Services
 {
     public class TestPassService : MapClass<Question, QuestionDto>, ITestPassService
     {
         static IUnitOfWork Database { get; set; }
-        public TimerModule Timer { get; set; }
 
         public TestPassService(IUnitOfWork unitOfWork)
         {
@@ -24,9 +25,6 @@ namespace TestSystem.Logic.Services
 
         public QuestionDto StartTest(int IdResult)
         {
-            if (Database.TempResults.Get(IdResult) == null)
-            {
-
                 char delimetr = ',';
                 TempResult tempResult = new TempResult
                 {
@@ -42,20 +40,48 @@ namespace TestSystem.Logic.Services
                 Database.TempResults.Add(tempResult);
                 Database.Complete();
 
-                TimerModule timer = new TimerModule(IdResult);
-                timer.StartTimer();
-                timer.StopWatch.Start();
-                HttpContext.Current.Application["Timer" + IdResult.ToString()] = timer;
+            //TimerModule timer = new TimerModule(IdResult, Database.Results.Get(IdResult).Test.Time);
+            TimerModule timer = new TimerModule(IdResult , new TimeSpan(0,5,0));
+            HttpContext.Current.Application["Timer" + HttpContext.Current.User.Identity.Name] = timer;
 
-                Int32.Parse(tempResult.QuestionPassing.Split(delimetr)[0]);
-                return MapperFromDB.Map<Question, QuestionDto>(Database.Questions.
-                    Get(Int32.Parse(tempResult.QuestionPassing.Split(delimetr)[0])));
-            }
-            else
-            {
-                return MapperFromDB.Map<Question, QuestionDto>(Database.Questions.
-                    GetAll().FirstOrDefault());
-            }
+
+
+
+
+            //Question questionW = Database.Questions.
+            //        Get(Int32.Parse(tempResult.QuestionPassing.Split(delimetr)[0]));
+
+
+
+
+            //QuestionDto questionDto = new QuestionDto()
+            //{
+            //    IdQuestion = questionW.IdQuestion,
+            //    QuestionText = questionW.QuestionText
+            //};
+
+            //questionDto.Answers = new List<AnswerDto>();
+
+            //foreach (Answer answer in questionW.Answers)
+            //{
+            //    questionDto.Answers.Add(new AnswerDto
+            //    {
+            //        AnswerText = answer.AnswerText,
+            //        IdAnswer = answer.IdAnswer,
+            //        Correct = answer.Correct
+            //    });
+            //}
+
+            //return questionDto;
+
+            Question questiondb = Database.Questions.
+                Get(Int32.Parse(tempResult.QuestionPassing.Split(delimetr)[0]));
+
+
+            var mapper = new MapperConfiguration(mcf => mcf.CreateMap<Question, QuestionDto>()).CreateMapper();
+            QuestionDto questionDto = mapper.Map<Question, QuestionDto>(questiondb);
+            return questionDto;
+
         }
 
 
@@ -74,35 +100,70 @@ namespace TestSystem.Logic.Services
             }
         }
 
-        public QuestionDto TestPassing(int IdResult)
+        public QuestionDto TestPassing( QuestionDto question)
         {
-            Database.TempResults.Get(IdResult);
-            return MapperFromDB.Map<Question,QuestionDto>( Database.Questions.GetAll().FirstOrDefault());
+            TimerModule currentTimer = (TimerModule)HttpContext.Current.Application["Timer" + HttpContext.Current.User.Identity.Name];
+            TempResult tempResult = Database.TempResults.GetAll().
+                Where(x => x.UserName == HttpContext.Current.User.Identity.Name).
+                SingleOrDefault();
+            PassedQuestion(question, ref tempResult);
+            if (currentTimer.StopWatch.IsRunning && !String.IsNullOrWhiteSpace(tempResult.QuestionPassing))
+            {
+                return MapperFromDB.Map<Question, QuestionDto>
+                    (Database.Questions.Get(tempResult.QuestionPassing.StringStirrer().FirstOrDefault()));
+            }
+
+            else
+            {
+                EndTestPassing(tempResult);
+                return null;
+            }
+        }
+
+        private void PassedQuestion(QuestionDto question, ref TempResult tempResult)
+        {
+            double questionScore = 0;
+            Question questionDB = Database.Questions.Get(question.IdQuestion);
+            double answerWeight = (questionDB.Score / question.Answers.Count);
+            foreach (Answer answer in questionDB.Answers)
+            {
+                AnswerDto answerUser = question.Answers.Where(x => x.IdAnswer == answer.IdAnswer).SingleOrDefault();
+                if (answerUser.Correct == answer.Correct)
+                {
+                    questionScore += answerWeight;
+                }
+            }
+            tempResult.TotalScore += questionScore;
+            tempResult.QuestionPassing = tempResult.QuestionPassing.StringStirrer(question.IdQuestion);
+            Database.TempResults.Update(tempResult);
+        }
+
+        private void EndTestPassing(TempResult tempResult)
+        {
+            TimerModule currentTimer = (TimerModule)HttpContext.Current.Application["Timer" + HttpContext.Current.User.Identity.Name];
+            object obj = new  object();
+            currentTimer.EndTimer(obj);
         }
 
 
         #region Timer custom class
 
-        public class TimerModule
+        public class TimerModule 
         {
-            public Stopwatch StopWatch { get; set; }
-            public Timer Timer { get; set; }
-            int IdResult { get; set; }
-            long interval = 60000;
-            static object synclock = new object();
-            static bool testEnd = false;
-            TimeSpan testTime;
+            private static object _synclock = new object();
+            private static bool _testEnd = false;
+            private readonly Timer _timer;
 
-            public TimerModule(int IdResult)
+            public Stopwatch StopWatch = new Stopwatch();
+            public int IdResult { get; set; }
+            public TimeSpan testTime;
+
+            public TimerModule(int IdResult , TimeSpan span)
             {
                 this.IdResult = IdResult;
-            }
-
-            public void StartTimer()
-            {
-                Timer = new Timer(new TimerCallback(EndTimer), null, interval, 0);
-                StopWatch = new Stopwatch();
-                testTime = new TimeSpan(0, 1, 0);
+                this.testTime = span;
+                _timer = new Timer(new TimerCallback(EndTimer), null, testTime.Minutes * 60000, 0);
+                StopWatch.Start();
             }
 
             public TimeSpan CurrentInterval()
@@ -110,9 +171,15 @@ namespace TestSystem.Logic.Services
                 return (testTime.Subtract(StopWatch.Elapsed));
             }
 
+            public void StopTimer()
+            {
+                _timer.Dispose();
+                StopWatch.Stop();
+            }
+
             public void EndTimer(object obj)
             {
-                if (testEnd == false)
+                if (_testEnd == false)
                 {
                     Result result = Database.Results.Get(IdResult);
                     TempResult tempResult = Database.TempResults.Get(IdResult);
@@ -121,8 +188,8 @@ namespace TestSystem.Logic.Services
                     Database.TempResults.Remove(tempResult);
                     Database.Results.Update(result);
                     Database.Complete();
+                    StopTimer();
                 }
-
             }
         }
 

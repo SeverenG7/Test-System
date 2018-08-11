@@ -1,7 +1,109 @@
 ﻿
+@model TestSystem.Logic.DataTransferObjects.QuestionDto
+
 @{
-    ViewBag.Title = "TestPassing";
+    ViewBag.Title = "StartTest";
+}
+@Html.Hidden("myVar", (int)ViewBag.Time);
+<h2>StartTest</h2>
+
+<div id="counter"></div>
+
+
+@using (Html.BeginForm("TestPassingPost", "User", FormMethod.Post))
+{
+
+
+    <h4 class="text-info alert-info">Add new question here...</h4>
+    <hr />
+
+    <div class="row float-lg-left col-md-5">
+        <div class="container">
+
+            <div class="form-group">
+                @Html.HiddenFor(model => model.IdQuestion)
+                @Html.LabelFor(model => model.QuestionText, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.DisplayFor(model => model.QuestionText, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row col-md-5">
+        <label class=""> Put answers : </label>
+        <div class="card-group ">
+            @for (int i = 0; i < Model.Answers.Count; i++)
+            {
+                @Html.HiddenFor(model => model.Answers[i].IdAnswer)
+
+                <div class="form-group">
+                    <div class="col-md-12">
+                        @Html.DisplayFor(model => model.Answers[i].AnswerText,
+             new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.CheckBoxFor(model => model.Answers[i].Correct,
+            htmlAttributes: new { @class = "control" })
+                </div>
+            }
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Next" class="btn btn-default" />
+        </div>
+    </div>
+
 }
 
-<h2>TestPassing</h2>
+
+<script type="text/javascript">
+    $(function () {
+        var defaultTimer = @ViewBag.Time, // Default amount of seconds if url variable is not found
+            callback = function () {
+                // Will be executed when the timer finishes
+                alert("Time is up!");
+            };
+
+        var counter = 1, timer,
+            match = document.location.href.match(/[\?|&]timer=(\d+)/i),
+            totalTime = match ? match[1] : defaultTimer;
+        var s;
+        timer = setInterval(function () {
+            if (totalTime != -1 && !isNaN(totalTime)) {
+                val = 'Time left: ' + (function () {
+                    var m = Math.floor(totalTime / 60);
+                    if (m < 10) {
+                        return '0'.concat(m);
+                    }
+                    else {
+                        return m;
+                    }
+                })() + ':' + (function () {
+                    s = totalTime % 60;
+                    if (s < 10) {
+                        return '0'.concat(s);
+                    }
+                    else {
+                        return s;
+                    }
+                })();
+
+                $('#counter').html(val);
+                totalTime--;
+            }
+            else {
+                window.clearInterval(timer);
+                timer = null;
+                callback();
+            }
+        }, 1000);
+    });
+</script>
+
+
 

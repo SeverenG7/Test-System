@@ -15,5 +15,6 @@ namespace TestSystem.Logic.DataTransferObjects
         public ThemeDto Theme { get; set; }
         public virtual ICollection<QuestionDto> Questions { get; set; }
         public virtual ICollection<ResultDto> Result { get; set; }
+        public TimeSpan Time { get; set; }
     }
 }

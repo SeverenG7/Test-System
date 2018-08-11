@@ -32,6 +32,7 @@ namespace TestSystem.DataProvider.Interfaces
         void RemoveRange(IEnumerable<TEntity> entities);
 
         void Update(TEntity entity);
+        void Detached(TEntity entity);
 
     }
 }
