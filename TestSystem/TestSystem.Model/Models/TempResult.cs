@@ -18,5 +18,7 @@
         public string QuestionPassing { get; set; }
 
         public double TotalScore { get; set; }
+
+        public string UserName { get; set; }
     }
 }

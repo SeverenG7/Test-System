@@ -29,5 +29,7 @@ namespace TestSystem.Model.Models
         public virtual UserInfo UserInfo { get; set; }
 
         public DateTime CreateDate { get; set; }
+
+        public bool TestPassed { get; set; }
     }
 }

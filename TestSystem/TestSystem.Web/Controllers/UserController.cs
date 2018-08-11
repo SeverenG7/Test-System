@@ -7,6 +7,10 @@ using TestSystem.Logic.Interfaces;
 using TestSystem.Web.Models;
 using PagedList;
 using System.Net;
+using TestSystem.Logic.Infrastructure;
+using TestSystem.Logic.Services;
+using System.Threading;
+using System.Runtime.Remoting.Lifetime;
 
 namespace TestSystem.Web.Controllers
 {
@@ -28,24 +32,47 @@ namespace TestSystem.Web.Controllers
 
         public ActionResult MainMenu(int? id)
         {
-            UserMainViewModel model = new UserMainViewModel();
-            
-            model.Results = _resultService.GetResults().
-                Where(x => x.UserInfo.IdUserInfo == _userService.FindIdUser(HttpContext.User.Identity.Name)).
-                ToList();
-
-            if (id.HasValue)
+            OperationDetails details = _testPassService.UserPassingTest(HttpContext.User.Identity.Name);
+            if (!details.Succedeed)
             {
-                model.Test = _resultService.GetResult(id.Value).Test;
-                ViewBag.Result = id.Value;
+                UserMainViewModel model = new UserMainViewModel();
+                model.Results = _resultService.GetResults().
+                    Where(x => x.UserInfo.IdUserInfo == _userService.FindIdUser(HttpContext.User.Identity.Name)).
+                    ToList();
+
+                if (id.HasValue)
+                {
+                    model.Test = _resultService.GetResult(id.Value).Test;
+                    ViewBag.Result = id.Value;
+                }
+
+                ViewBag.Name = HttpContext.User.Identity.Name;
+                return View(model);
             }
-           ViewBag.Name = HttpContext.User.Identity.Name;
-            return View(model);
+            else
+            {
+                TestPassService.TimerModule timer =(TestPassService.TimerModule) HttpContext.Application["Timer" + details.Value.ToString()];
+                TimeSpan time =  timer.CurrentInterval();
+                return View();
+            }
         }
 
         public ActionResult StartTest(int IdResult)
         {
-            return View(_testPassService.StartTest(IdResult));
+            QuestionDto question = _testPassService.StartTest(IdResult);
+            OperationDetails details = _testPassService.UserPassingTest(HttpContext.User.Identity.Name);
+            TestPassService.TimerModule timer = (TestPassService.TimerModule)HttpContext.Application["Timer" + details.Value.ToString()];
+            TimeSpan time = timer.CurrentInterval();
+            ViewBag.Time = time.Seconds;
+            return View(question);
+        }
+
+        public ActionResult TestPassing(int IdResult)
+        {
+            //_testPassService.TestPassing(IdResult);
+            TestPassService.TimerModule timer =(TestPassService.TimerModule)HttpContext.Application["Timer" + IdResult.ToString()];
+            string so = "str";
+            return View();
         }
      
     }

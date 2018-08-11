@@ -12,6 +12,6 @@ namespace TestSystem.Logic.DataTransferObjects
         public virtual TestDto Test { get; set; }
         public virtual UserInfoDto UserInfo { get; set; }
         public DateTime CreateDate { get; set; }
-
+        public bool TestPassed { get; set; }
     }
 }
