@@ -63,15 +63,13 @@
 
 <script type="text/javascript">
     $(function () {
-        var defaultTimer = @ViewBag.Time, // Default amount of seconds if url variable is not found
+        var defaultTimer = @ViewBag.Time, 
             callback = function () {
-                // Will be executed when the timer finishes
                 alert("Time is up!");
             };
 
         var counter = 1, timer,
-            match = document.location.href.match(/[\?|&]timer=(\d+)/i),
-            totalTime = match ? match[1] : defaultTimer;
+            totalTime = defaultTimer;
         var s;
         timer = setInterval(function () {
             if (totalTime != -1 && !isNaN(totalTime)) {

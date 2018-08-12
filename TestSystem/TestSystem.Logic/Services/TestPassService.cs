@@ -44,6 +44,7 @@ namespace TestSystem.Logic.Services
             HttpContext.Current.Application["Timer" + HttpContext.Current.User.Identity.Name] = timer;
             Question questiondb = Database.Questions.
                 Get(Int32.Parse(tempResult.QuestionPassing.Split(delimetr)[0]));
+            HttpContext.Current.Application["Test" + HttpContext.Current.User.Identity.Name] = questiondb.IdQuestion;
 
 
             var mapper = new MapperConfiguration(mcf => mcf.CreateMap<Question, QuestionDto>()).CreateMapper();
@@ -52,21 +53,6 @@ namespace TestSystem.Logic.Services
 
         }
 
-
-        public OperationDetails UserPassingTest(string userName)
-        {
-            TempResult tempResult = Database.TempResults.GetAll().
-                Where(x => x.UserName == userName).FirstOrDefault();
-            if (tempResult != null)
-            {
-                return new OperationDetails(true, tempResult.IdResult);
-            }
-
-            else
-            {
-                return new OperationDetails(false, "");
-            }
-        }
 
         public OperationDetails TestPassing( QuestionDto question)
         {
@@ -77,8 +63,10 @@ namespace TestSystem.Logic.Services
             PassedQuestion(question, ref tempResult);
             if (currentTimer.StopWatch.IsRunning && !String.IsNullOrWhiteSpace(tempResult.QuestionPassing))
             {
-                return new OperationDetails(true , MapperFromDB.Map<Question, QuestionDto>
-                    (Database.Questions.Get(tempResult.QuestionPassing.StringStirrer().FirstOrDefault())));
+                QuestionDto nextQuestion = MapperFromDB.Map<Question, QuestionDto>
+                    (Database.Questions.Get(tempResult.QuestionPassing.StringStirrer().FirstOrDefault()));
+                HttpContext.Current.Application["Test" + HttpContext.Current.User.Identity.Name] = nextQuestion.IdQuestion;
+                return new OperationDetails(true , nextQuestion);
             }
 
             else

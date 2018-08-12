@@ -1,22 +1,9 @@
 ﻿using System.Web.Mvc;
-using TestSystem.Logic.Interfaces;
-
 
 namespace TestSystem.Web.Controllers
 {
     public class EnterController : Controller
     {
-        #region InitService
-
-        private readonly IUserService _userService;
-
-        public EnterController(IUserService userService)
-        {
-            _userService = userService;
-        }
-
-        #endregion
-
 
         public ActionResult EnterToSystem()
         {
