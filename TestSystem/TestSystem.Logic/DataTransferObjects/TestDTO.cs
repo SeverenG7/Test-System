@@ -16,5 +16,6 @@ namespace TestSystem.Logic.DataTransferObjects
         public virtual ICollection<QuestionDto> Questions { get; set; }
         public virtual ICollection<ResultDto> Result { get; set; }
         public TimeSpan Time { get; set; }
+        public int TotalScore { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using TestSystem.Logic.Interfaces;
 using TestSystem.Web.Models;
 using TestSystem.Logic.Infrastructure;
 using TestSystem.Logic.Services;
+using TestSystem.Web.Infrasrtuctre;
 
 namespace TestSystem.Web.Controllers
 {
@@ -27,6 +28,7 @@ namespace TestSystem.Web.Controllers
             _questionService = questionService;
         }
 
+        [TestPassing]
         public ActionResult MainMenu(int? id)
         {
             OperationDetails details = _testPassService.UserPassingTest(HttpContext.User.Identity.Name);
@@ -64,23 +66,30 @@ namespace TestSystem.Web.Controllers
         {
             TestPassService.TimerModule timer = (TestPassService.TimerModule) HttpContext.Application["Timer" + HttpContext.User.Identity.Name];
             ViewBag.Time = (int)Math.Round(timer.CurrentInterval().TotalSeconds);
-            return View(_questionService.GetQuestion(IdQuestion));
+
+            QuestionDto question = _questionService.GetQuestion(IdQuestion);
+            foreach (AnswerDto answer in question.Answers)
+            {
+                answer.Correct = false;
+            }
+            return View(question);
         }
 
         [HttpPost]
         public ActionResult TestPassingPost(QuestionDto question)
         {
-            QuestionDto questionDto = _testPassService.TestPassing(question);
+            QuestionDto questionDto = _testPassService.TestPassing(question).Value;
             if (questionDto != null)
             {
                 return Redirect("TestPassing?idQuestion=" + questionDto.IdQuestion.ToString());
             }
             else
             {
-                return RedirectToAction("EndTest" ,"User");
+                return Redirect("EndTest");
             }
         }
 
+        [TestPassing]
         public ActionResult EndTest()
         {
             return View();

@@ -38,5 +38,6 @@ namespace TestSystem.Model.Models
         [Required]
         public string Difficult { get; set; }
         public TimeSpan Time { get; set; }
+        public int TotalScore { get; set; }
     }
 }

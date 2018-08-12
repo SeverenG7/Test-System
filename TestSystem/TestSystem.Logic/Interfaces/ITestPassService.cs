@@ -8,6 +8,6 @@ namespace TestSystem.Logic.Interfaces
     {
         QuestionDto StartTest(int IdResult);
         OperationDetails UserPassingTest(string nameUser);
-        QuestionDto TestPassing( QuestionDto question);
+        OperationDetails TestPassing( QuestionDto question);
     }
 }

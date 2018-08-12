@@ -70,8 +70,10 @@ namespace TestSystem.Logic.Services
             foreach (QuestionDto q in testDTO.Questions)
             {
                 test.Questions.Add(Database.Questions.Get(q.IdQuestion));
+                test.TotalScore += q.Score;
             }
 
+           
             Database.Tests.Add(test);
             Database.Complete();
         }
