@@ -212,6 +212,7 @@
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\ResultController.cs" />
+    <Compile Include="Controllers\EndingController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\ThemeController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -450,6 +451,8 @@
     <Content Include="Views\Result\GivePremission.cshtml" />
     <Content Include="Views\User\TestPassing.cshtml" />
     <Content Include="Views\User\EndTest.cshtml" />
+    <Content Include="Views\Ending\EndTest.cshtml" />
+    <Content Include="Views\User\Some.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -80,11 +80,12 @@
                 <div class="card-group ">
                     @for (int i = 0; i < Model.Answers.Count; i++)
                     {
-
+                    <div class="form-row">
                         <div class="form-group">
                             <div class="col-md-12">
-                                @Html.TextBoxFor(model => model.Answers[i].AnswerText,
-                               htmlAttributes: new { @class= "form-control"})
+                                @Html.TextAreaFor(model => model.Answers[i].AnswerText,
+                               htmlAttributes: new { @class= "form-control" , @placeholder = "Put answer text..." ,
+                                   style = "width:300px  "})
                             </div>
                         </div>
 
@@ -93,6 +94,7 @@
                             @Html.CheckBoxFor(model => model.Answers[i].Correct,
                            htmlAttributes: new { @class = "control" })
                         </div>
+                    </div>
                     }
                 </div>
             </div>
@@ -100,16 +102,12 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </div>
       
     }
            </div>
         </div>
-    <div>
-        @Html.ActionLink("Back to List", "Index")
-    </div>
-   
 </body>
 </html>

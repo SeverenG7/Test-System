@@ -24,23 +24,23 @@ namespace TestSystem.Logic.Services
 
         public QuestionDto StartTest(int IdResult)
         {
-                char delimetr = ',';
-                TempResult tempResult = new TempResult
-                {
-                    IdResult = IdResult,
-                    UserName = HttpContext.Current.User.Identity.Name
-                };
+            char delimetr = ',';
+            TempResult tempResult = new TempResult
+            {
+                IdResult = IdResult,
+                UserName = HttpContext.Current.User.Identity.Name
+            };
 
-                foreach (Question question in Database.Results.Get(IdResult).Test.Questions)
-                {
-                    tempResult.QuestionPassing += "" + question.IdQuestion + ",";
-                }
+            foreach (Question question in Database.Results.Get(IdResult).Test.Questions)
+            {
+                tempResult.QuestionPassing += "" + question.IdQuestion + ",";
+            }
 
-                Database.TempResults.Add(tempResult);
-                Database.Complete();
+            Database.TempResults.Add(tempResult);
+            Database.Complete();
 
             //TimerModule timer = new TimerModule(IdResult, Database.Results.Get(IdResult).Test.Time);
-            TimerModule timer = new TimerModule(IdResult , new TimeSpan(0,5,0));
+            TimerModule timer = new TimerModule(IdResult, new TimeSpan(0, 5, 0));
             HttpContext.Current.Application["Timer" + HttpContext.Current.User.Identity.Name] = timer;
             Question questiondb = Database.Questions.
                 Get(Int32.Parse(tempResult.QuestionPassing.Split(delimetr)[0]));
@@ -53,8 +53,7 @@ namespace TestSystem.Logic.Services
 
         }
 
-
-        public OperationDetails TestPassing( QuestionDto question)
+        public OperationDetails TestPassing(QuestionDto question)
         {
             TimerModule currentTimer = (TimerModule)HttpContext.Current.Application["Timer" + HttpContext.Current.User.Identity.Name];
             TempResult tempResult = Database.TempResults.GetAll().
@@ -66,7 +65,7 @@ namespace TestSystem.Logic.Services
                 QuestionDto nextQuestion = MapperFromDB.Map<Question, QuestionDto>
                     (Database.Questions.Get(tempResult.QuestionPassing.StringStirrer().FirstOrDefault()));
                 HttpContext.Current.Application["Test" + HttpContext.Current.User.Identity.Name] = nextQuestion.IdQuestion;
-                return new OperationDetails(true , nextQuestion);
+                return new OperationDetails(true, nextQuestion);
             }
 
             else
@@ -76,8 +75,99 @@ namespace TestSystem.Logic.Services
             }
         }
 
+        public OperationDetails GetCurrentTestState(int IdQuestion)
+        {
+            TempResult tempResult = Database.TempResults.
+                 Find(x => x.UserName == HttpContext.Current.User.Identity.Name).
+                 SingleOrDefault();
+
+            int currentId = Int32.Parse(
+                HttpContext.Current.Application["Test" + HttpContext.Current.User.Identity.Name].ToString());
+
+            TimerModule timer = (TimerModule)
+              HttpContext.Current.Application["Timer" + HttpContext.Current.User.Identity.Name];
+
+            if (tempResult!=null)
+            {
+
+                if (String.IsNullOrWhiteSpace(tempResult.QuestionsPassed))
+                {
+                    QuestionDto question = MapperFromDB.Map<Question, QuestionDto>
+                    (Database.Questions.Get(currentId));
+                    foreach (AnswerDto answer in question.Answers)
+                    {
+                        answer.Correct = false;
+                    }
+
+                    return new OperationDetails(Math.Round(timer.CurrentInterval().TotalSeconds).ToString(),
+                        question);
+                }
+                if (tempResult.QuestionsPassed.StringStirrer().
+                   Contains(currentId))
+                {
+                    QuestionDto question = MapperFromDB.Map<Question, QuestionDto>
+                  (Database.Questions.Get(currentId));
+                    foreach (AnswerDto answer in question.Answers)
+                    {
+                        answer.Correct = false;
+                    }
+
+                    return new OperationDetails(Math.Round(timer.CurrentInterval().TotalSeconds).ToString(),
+                       question);
+                }
+                else
+                {
+                    QuestionDto question = MapperFromDB.Map<Question, QuestionDto>
+                (Database.Questions.Get(IdQuestion));
+                    foreach (AnswerDto answer in question.Answers)
+                    {
+                        answer.Correct = false;
+                    }
+
+                    return new OperationDetails(
+                        Math.Round(timer.CurrentInterval().TotalSeconds).ToString(),
+                            question);
+                }
+            }
+            else
+            {
+                return new OperationDetails(false , "");
+            }
+
+        }
+
+        public OperationDetails Results()
+        {
+            HttpContext.Current.Application["Timer" + HttpContext.Current.User.Identity.Name] = null;
+            Result lastResult = Database.Results.GetAll().
+                OrderBy(x => x.CreateDate).
+                FirstOrDefault();
+
+            string resultDesrciption;
+
+            if (lastResult.ResultScore < 60)
+            {
+                resultDesrciption = "Sorry , but you didn't get a norm " +
+                    "to pass this test :( Actually, you always can study some more and try again!";
+            }
+            if (lastResult.ResultScore > 60 && lastResult.ResultScore < 80)
+            {
+                resultDesrciption = "Congratulation, you score actually good result!" +
+                    "Test was passed, but here were a lot of moments where you could try better!";
+            }
+            else
+            {
+                resultDesrciption = "Wow,you really easily passed this test, congratulations! ";
+            }
+            lastResult.ResultScore = Math.Round(lastResult.ResultScore.Value);
+            return new OperationDetails(true, resultDesrciption , lastResult.Test.TestName , lastResult.ResultScore.ToString(),
+                lastResult.UserInfo.UserFirstName);
+        }
+
+
         private void PassedQuestion(QuestionDto question, ref TempResult tempResult)
         {
+            question.IdQuestion = (int)HttpContext.Current.Application["Test" + HttpContext.Current.User.Identity.Name];
             double questionScore = 0;
             Question questionDB = Database.Questions.Get(question.IdQuestion);
             double answerWeight = (questionDB.Score / question.Answers.Count);
@@ -91,21 +181,24 @@ namespace TestSystem.Logic.Services
             }
             tempResult.TotalScore += questionScore;
             tempResult.QuestionPassing = tempResult.QuestionPassing.StringStirrer(question.IdQuestion);
+            tempResult.QuestionsPassed += question.IdQuestion.ToString() + ",";
             Database.TempResults.Update(tempResult);
+
+
         }
 
         private void EndTestPassing(TempResult tempResult)
         {
             TimerModule currentTimer = (TimerModule)HttpContext.Current.Application["Timer" + HttpContext.Current.User.Identity.Name];
             HttpContext.Current.Application["Timer" + HttpContext.Current.User.Identity.Name] = null;
-            object obj = new  object();
+            object obj = new object();
             currentTimer.EndTimer(obj);
         }
 
 
         #region Timer custom class
 
-        public class TimerModule 
+        public class TimerModule
         {
             private static object _synclock = new object();
             private static bool _testEnd = false;
@@ -115,7 +208,7 @@ namespace TestSystem.Logic.Services
             public int IdResult { get; set; }
             public TimeSpan testTime;
 
-            public TimerModule(int IdResult , TimeSpan span)
+            public TimerModule(int IdResult, TimeSpan span)
             {
                 this.IdResult = IdResult;
                 this.testTime = span;
@@ -142,6 +235,7 @@ namespace TestSystem.Logic.Services
                     TempResult tempResult = Database.TempResults.Get(IdResult);
                     result.ResultScore = (tempResult.TotalScore * 100) / Database.Results.Get(IdResult).Test.TotalScore;
                     result.TestPassed = true;
+                    result.CreateDate = DateTime.Now;
                     Database.TempResults.Remove(tempResult);
                     Database.Results.Update(result);
                     Database.Complete();

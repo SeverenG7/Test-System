@@ -11,32 +11,32 @@
             <div class="table-responsive">
                 <div class="panel panel-primary">
                     <div class="panel-heading">Last added 5 test...</div>
-                    <table class="table table-bordered table-hover"  width="100" cellspacing="10">
+                    <table class="table table-bordered table-hover" height="100">
                         <thead class="bg-primary text-white">
                             <tr class="bg-primary text-white">
                                 <td>Test name</td>
                                 <td>Questions number</td>
-                                <td>Description</td>
+                                <td>Results</td>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td>
+                                    <td width="200">
                                         <a class="nav-link text-dark" href="@Url.Action("GetInfoTest", "Test",new {IdTest = item.IdTest })">
                                             @Html.DisplayFor(modelItem => item.TestName)
-                                            </a>
+                                        </a>
                                     </td>
                                     <td>
                                         <a class="nav-link text-dark" href="@Url.Action("GetInfoTest", "Test",new {IdTest = item.IdTest })">
                                             @Html.DisplayFor(modelItem => item.QuestionsNumber)
-                                            </a>
+                                        </a>
                                     </td>
                                     <td>
                                         <a class="nav-link text-dark" href="@Url.Action("GetInfoTest", "Test",new {IdTest = item.IdTest })">
-                                            @Html.DisplayFor(modelItem => item.TestDescription)
-                                            </a>
+                                            @Html.DisplayFor(modelItem => item.Result.Count)
+                                        </a>
                                     </td>
                                 </tr>
                             }
@@ -55,7 +55,7 @@
                     </div>
                 </div>
             </div>
+        </div>
     </div>
 </div>
-    </div>
 

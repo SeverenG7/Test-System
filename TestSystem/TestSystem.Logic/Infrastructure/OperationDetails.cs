@@ -26,9 +26,14 @@ namespace TestSystem.Logic.Infrastructure
             Property = property;
         }
 
-        public OperationDetails(bool succededd, dynamic value)
+        public OperationDetails(bool succeded, dynamic value)
         {
-            Succedeed = succededd;
+            Succedeed = succeded;
+            Value = value;
+        }
+        public OperationDetails(string id, dynamic value)
+        {
+            Id = id;
             Value = value;
         }
     }

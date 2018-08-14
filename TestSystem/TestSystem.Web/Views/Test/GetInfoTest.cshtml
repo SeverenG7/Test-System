@@ -135,7 +135,7 @@
                         @item.Score
                     </td>
                     <td class="text-center">
-                        <div >
+                        <div class="form-row" >
                             <button class="btn btn-primary text-right"
                                     onclick="
                                 location.href='@Url.Action("GetInfoTest" , "Test" ,new {IdQuestion = item.IdQuestion ,
@@ -146,7 +146,7 @@
                                     onclick="
                                 location.href='@Url.Action("DeleteFromTest" , "Question" ,new {IdQuestion = item.IdQuestion ,
                                           idTest = ViewBag.IdTest})'">
-                                Delete from test
+                                Delete
                             </button>
                             <button class="btn btn-success"
                                     onclick="

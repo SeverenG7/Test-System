@@ -5,22 +5,20 @@ using TestSystem.Web.Controllers;
 
 namespace TestSystem.Web.Infrasrtuctre
 {
-    //public class TestPassingRulesAttribute : AuthorizeAttribute
-    //{
+    public class TestNoPassingAttribute : AuthorizeAttribute
+    {
+        public TestNoPassingAttribute()
+        {
+        }
 
-    //    public TestPassingRulesAttribute()
-    //    {
-    //    }
-
-    //    protected override bool AuthorizeCore(HttpContextBase httpContext)
-    //    {
-    //        return (httpContext.Application["Timer" + httpContext.User.Identity.Name] == null);
-    //    }
-
-    //}
+        protected override bool AuthorizeCore(HttpContextBase httpContext)
+        {
+            return (httpContext.Application["Timer" + httpContext.User.Identity.Name] != null);
+        }
+    }
 
 
-    public class TestPassing : FilterAttribute, IActionFilter
+    public class TestPassingAttribute : FilterAttribute, IActionFilter
     {
 
         public void OnActionExecuting(ActionExecutingContext filterContext)

@@ -2,70 +2,72 @@
 @model TestSystem.Logic.DataTransferObjects.QuestionDto
 
 @{
+    Layout = null;
     ViewBag.Title = "StartTest";
 }
-@Html.Hidden("myVar", (int)ViewBag.Time);
-<h2>StartTest</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Register</title>
+    <link href=@Url.Content("/Content/vendor/bootstrap/css/bootstrap.min.css") rel="stylesheet">
+    <link href=@Url.Content("/Content/vendor/font-awesome/css/font-awesome.min.css") rel="stylesheet" type="text/css">
+    <link href=@Url.Content("/Content/css/sb-admin.css") rel="stylesheet">
+</head>
+<body class="bg-dark">
+    <div class="container">
+        <div class="card card-login mx-auto mt-5">
+            <div class="card-header">Test passing </div>
+             <div id="counter"></div>
+            <div class="card-body">
+                @using (Html.BeginForm("TestPassingPost", "User", FormMethod.Post))
+                {
+                    <div class="form-group border border-dark border-left-0 border-right-0 border-top-0" >
+                        <div class="col-md-auto">
+                            @Html.DisplayFor(m => m.QuestionText,
+                           new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @for (int i = 0; i < Model.Answers.Count; i++)
+                        {
+                            @Html.HiddenFor(model => model.Answers[i].IdAnswer)
 
-<div id="counter"></div>
-
-
-@using (Html.BeginForm("TestPassingPost", "User", FormMethod.Post))
-{
-
-
-    <h4 class="text-info alert-info">Add new question here...</h4>
-    <hr />
-
-    <div class="row float-lg-left col-md-5">
-        <div class="container">
-
-            <div class="form-group">
-                @Html.HiddenFor(model => model.IdQuestion)
-                @Html.LabelFor(model => model.QuestionText, htmlAttributes: new { @class = "control-label col-md-12" })
-                <div class="col-md-12">
-                    @Html.DisplayFor(model => model.QuestionText, new { htmlAttributes = new { @class = "form-control" } })
-                </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @Html.DisplayFor(model => model.Answers[i].AnswerText,
+                         new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.CheckBoxFor(model => model.Answers[i].Correct,
+htmlAttributes: new { @class = "control" })
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div>
+                        <input autofocus class="btn btn-primary btn-block" type="submit" value="Next" />
+                    </div>
+                }
             </div>
         </div>
     </div>
-    <div class="row col-md-5">
-        <label class=""> Put answers : </label>
-        <div class="card-group ">
-            @for (int i = 0; i < Model.Answers.Count; i++)
-            {
-                @Html.HiddenFor(model => model.Answers[i].IdAnswer)
+    <div class="border-light">
+        <script src=@Url.Content("/Content/vendor/jquery/jquery.min.js")></script>
+        <script src=@Url.Content("/Content/vendor/bootstrap/js/bootstrap.bundle.min.js")></script>
+        <script src=@Url.Content("/Content/vendor/jquery-easing/jquery.easing.min.js")></script>
+        <script src=@Url.Content("/Content/js/sb-admin.min.js")></script>
 
-                <div class="form-group">
-                    <div class="col-md-12">
-                        @Html.DisplayFor(model => model.Answers[i].AnswerText,
-             new { htmlAttributes = new { @class = "form-control" } })
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    @Html.CheckBoxFor(model => model.Answers[i].Correct,
-            htmlAttributes: new { @class = "control" })
-                </div>
-            }
-        </div>
     </div>
 
-
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Next" class="btn btn-default" />
-        </div>
-    </div>
-
-}
-
-
-<script type="text/javascript">
+    <script type="text/javascript">
     $(function () {
-        var defaultTimer = @ViewBag.Time, 
+        var defaultTimer = @ViewBag.Time,
             callback = function () {
-                alert("Time is up!");
+                EndTest();
             };
 
         var counter = 1, timer,
@@ -100,8 +102,11 @@
                 callback();
             }
         }, 1000);
-    });
-</script>
+        });
 
-
-
+        function EndTest() {
+            window.location.href = '/Ending/EndTest/' ;
+        }
+    </script>
+</body>
+</html>

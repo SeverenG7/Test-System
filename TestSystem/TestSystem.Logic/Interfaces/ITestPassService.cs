@@ -1,5 +1,4 @@
-﻿using TestSystem.Logic.Services;
-using TestSystem.Logic.DataTransferObjects;
+﻿using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Logic.Infrastructure;
 
 namespace TestSystem.Logic.Interfaces
@@ -8,5 +7,7 @@ namespace TestSystem.Logic.Interfaces
     {
         QuestionDto StartTest(int IdResult);
         OperationDetails TestPassing( QuestionDto question);
+        OperationDetails GetCurrentTestState(int IdQuestion);
+        OperationDetails Results();
     }
 }

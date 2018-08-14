@@ -4,8 +4,8 @@ using System.Web.Mvc;
 using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Logic.Interfaces;
 using TestSystem.Web.Models;
-using TestSystem.Logic.Services;
 using TestSystem.Web.Infrasrtuctre;
+using TestSystem.Logic.Infrastructure;
 
 namespace TestSystem.Web.Controllers
 {
@@ -50,45 +50,47 @@ namespace TestSystem.Web.Controllers
         [TestPassing]
         public ActionResult StartTest(int IdResult)
         {
+            ViewBag.TestName = _resultService.GetResult(IdResult).Test.TestName;
             return Redirect("TestPassing?idQuestion=" + _testPassService.StartTest(IdResult).IdQuestion.ToString());
         }
 
+        [TestNoPassing]
         public ActionResult TestPassing(int IdQuestion)
         {
-            TestPassService.TimerModule timer = (TestPassService.TimerModule)HttpContext.Application["Timer" + HttpContext.User.Identity.Name];
-            ViewBag.Time = (int)Math.Round(timer.CurrentInterval().TotalSeconds);
-            QuestionDto question = _questionService.GetQuestion(IdQuestion);
-            foreach (AnswerDto answer in question.Answers)
+            OperationDetails details = _testPassService.GetCurrentTestState(IdQuestion);
+            if (details.Value.ToString().Equals(""))
             {
-                answer.Correct = false;
+                return Redirect("EndTest");
             }
-            return View(question);
+            else
+            {
+                ViewBag.Time = Int32.Parse(details.Id);
+                return View(details.Value);
+            }
         }
 
         [HttpPost]
+        [TestNoPassing]
         public ActionResult TestPassingPost(QuestionDto question)
         {
             QuestionDto questionDto = _testPassService.TestPassing(question).Value;
             if (questionDto != null)
             {
-                return Redirect("TestPassing?idQuestion=" + questionDto.IdQuestion.ToString());
+                return RedirectToAction("TestPassing", "User", new
+                { questionDto.IdQuestion });
             }
             else
             {
-                return Redirect("EndTest");
+                return RedirectToAction("EndTest", "Ending");
             }
         }
 
-        [TestPassing]
-        public ActionResult EndTest()
+
+        public new RedirectToRouteResult RedirectToAction(string action, string controller, object routeValues)
         {
-            return View();
+            return base.RedirectToAction(action, controller, routeValues);
         }
 
-        public new RedirectToRouteResult RedirectToAction(string action, string controller , object routeValues)
-        {
-            return base.RedirectToAction(action, controller ,routeValues);
-        }
 
     }
 }
