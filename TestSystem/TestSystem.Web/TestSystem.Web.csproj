@@ -240,6 +240,7 @@
     <Content Include="Content\charts.html" />
     <Content Include="Content\css\sb-admin.css" />
     <Content Include="Content\css\sb-admin.min.css" />
+    <Content Include="Content\css\Tables.css" />
     <Content Include="Content\forgot-password.html" />
     <Content Include="Content\gulpfile.js" />
     <Content Include="Content\index.html" />
@@ -453,6 +454,7 @@
     <Content Include="Views\User\EndTest.cshtml" />
     <Content Include="Views\Ending\EndTest.cshtml" />
     <Content Include="Views\User\Some.cshtml" />
+    <Content Include="Views\Test\NewTestGenerate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

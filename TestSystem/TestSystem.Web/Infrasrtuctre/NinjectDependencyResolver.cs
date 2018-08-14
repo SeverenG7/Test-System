@@ -29,6 +29,7 @@ namespace TestSystem.Web.Infrasrtuctre
         private void AddBindings()
         {
             TestServiceModule testServiceModule = new TestServiceModule();
+            CommonServiceModule commonServiceModule = new CommonServiceModule();
             UnitOfWorkModule unitOfWorkModule = new UnitOfWorkModule();
             QuestionServiceModule questionServiceModule = new QuestionServiceModule();
             AnswerServiceModule answerServiceModule = new AnswerServiceModule();
@@ -40,7 +41,7 @@ namespace TestSystem.Web.Infrasrtuctre
             _kernel.Load(unitOfWorkModule, testServiceModule,questionServiceModule,
                 answerServiceModule, themeServiceModule , userServiceModule ,
                 resultServiceModule ,
-                testPassServiceModule);
+                testPassServiceModule, commonServiceModule);
 
         }
 

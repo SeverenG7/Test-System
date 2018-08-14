@@ -1,4 +1,5 @@
-﻿@model TestSystem.Web.Models.FiltrationViewModel
+﻿@model TestSystem.Logic.LogicView.FiltrationViewModel
+@using PagedList.Mvc
 
 
 
@@ -6,6 +7,8 @@
 
 <html>
 <head>
+    <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/css/Tables.css" rel="stylesheet" type="text/css" />
     <meta name="viewport" content="width=device-width" />
     <title>Tests info</title>
 </head>
@@ -75,9 +78,9 @@
             @foreach (var item in Model.Tests)
             {
                 string selectedRow = "";
-                if (item.IdTest == ViewBag.IdTest)
+                if (item.IdTest == Model.IdTest)
                 {
-                    selectedRow = "bg-light";
+                    selectedRow = "bg-warning";
                 }
                 <tr class="@selectedRow">
                     <td>
@@ -105,85 +108,71 @@
                 </tr>
             }
         </table>
+        <div class="form-row">
+            <div class="col-md-3">
+                Page @(Model.Tests.PageCount < Model.Tests.PageNumber ? 0 : Model.Tests.PageNumber)
+                from @Model.Tests.PageCount
+            </div>
+        </div>
+        <div class="btn-group" id="contentPager">
+            @Html.PagedListPager(Model.Tests, page => Url.Action("GetInfoTest", new { page }))
+        </div>
 
         @if (Model.Questions != null)
         {
             <h3>Questions by Selected Test</h3>
-            <table class="table table-bordered table-hover">
-                <tr>
-                    <th>Question</th>
-                    <th>Answers</th>
-                    <th>Score</th>
-                    <th>Tools</th>
-                </tr>
+            <div class="scroll-table_1">
+                <table class="table table-bordered table-hover">
+                    <tr>
+                        <th>Question</th>
+                        <th>Answers</th>
+                        <th>Score</th>
+                        <th>Tools</th>
+                    </tr>
 
-                @foreach (var item in Model.Questions)
-                {
-                    string selectedRow = "";
-                    if (item.IdQuestion == ViewBag.IdQuestion)
+                    @foreach (var item in Model.Questions)
                     {
-                        selectedRow = "success";
-                    }
-                <tr class="@selectedRow">
-                    <td>
-                        @item.QuestionText
-                    </td>
-                    <td>
-                        @item.AnswerNumber
-                    </td>
-                    <td>
-                        @item.Score
-                    </td>
-                    <td class="text-center">
-                        <div class="form-row" >
-                            <button class="btn btn-primary text-right"
-                                    onclick="
-                                location.href='@Url.Action("GetInfoTest" , "Test" ,new {IdQuestion = item.IdQuestion ,
-                                          idTest = ViewBag.IdTest})'">
-                                Select
-                            </button>
-                            <button class="btn btn-warning"
-                                    onclick="
+                        string selectedRow = "";
+                        if (item.IdQuestion == ViewBag.IdQuestion)
+                        {
+                            selectedRow = "success";
+                        }
+                        <tr class="@selectedRow">
+                            <td width="300">
+                                @item.QuestionText
+                            </td>
+                            <td>
+                                @item.AnswerNumber
+                            </td>
+                            <td>
+                                @item.Score
+                            </td>
+                            <td class="text-center">
+                                <div class="form-row">
+                                    <button class="btn btn-primary text-right"
+                                            onclick="
+                                location.href='@Url.Action("GetInfoQuestion" , "Question" ,new {IdQuestion = item.IdQuestion ,
+                                          idTest = ViewBag.IdTest})#More'">
+                                        Select
+                                    </button>
+                                    <button class="btn btn-danger"
+                                            onclick="
                                 location.href='@Url.Action("DeleteFromTest" , "Question" ,new {IdQuestion = item.IdQuestion ,
                                           idTest = ViewBag.IdTest})'">
-                                Delete
-                            </button>
-                            <button class="btn btn-success"
-                                    onclick="
+                                        Delete
+                                    </button>
+                                    <button class="btn btn-success"
+                                            onclick="
                                 location.href='@Url.Action("Question" , "EditQuestion" ,new {id = item.IdQuestion ,
                                           idTest = ViewBag.IdTest})'">
-                                Edit 
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                }
-
-            </table>
-        }
-
-        @if (Model.Answers != null)
-        {
-            <h3>
-                Answers in Selected Question
-            </h3>
-            <table class="table table-bordered table-hover">
-                <tr>
-                    <th>Answer</th>
-                    <th>Correct</th>
-                </tr>
-                @foreach (var item in Model.Answers)
-                {
-                    <tr>
-                        <td>
-                            @item.AnswerText
-                        </td>
-                        <td>
-                            @item.Correct
-                        </td>
-                    </tr>
-                }
-            </table>
+                                        Edit
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
         }
     </div>
 </body>

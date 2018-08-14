@@ -1,0 +1,10 @@
+﻿div.scroll-table_1 {
+    width: 100%;
+    overflow: auto;
+    height: 300px;
+}
+div.scroll-table_2{
+    width: 100%;
+    overflow: auto;
+    height: 500px;
+}

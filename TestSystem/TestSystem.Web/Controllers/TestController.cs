@@ -5,7 +5,6 @@ using TestSystem.Logic.Interfaces;
 using TestSystem.Web.Models;
 using System;
 using System.Net;
-using System.Linq;
 
 namespace TestSystem.Web.Controllers
 {
@@ -17,14 +16,16 @@ namespace TestSystem.Web.Controllers
         private readonly ITestService _testService;
         private readonly IThemeService _themeService;
         private readonly IQuestionService _questionService;
+        private readonly ICommonService _commonService;
 
         public TestController
-            (ITestService testService, IThemeService themeService, IQuestionService questionService)
+            (ITestService testService, IThemeService themeService, IQuestionService questionService,
+            ICommonService commonService)
         {
             _testService = testService;
             _themeService = themeService;
             _questionService = questionService;
-
+            _commonService = commonService;
         }
 
         #endregion
@@ -32,57 +33,11 @@ namespace TestSystem.Web.Controllers
 
         [HttpGet]
         public ActionResult GetInfoTest
-          (int? IdTheme, string difficult, int? IdTest, int? IdQuestion, string search)
-        {
-            FiltrationViewModel viewTests = new FiltrationViewModel();
-
-            IEnumerable<TestDto> tests = _testService.GetTests().
-                OrderBy(x => x.CreateDate);
-
-            if (IdTheme.HasValue && IdTheme != 0)
-            {
-                tests = tests.Where(x => x.IdTheme == IdTheme);
-            }
-
-            if (!String.IsNullOrEmpty(difficult) && !difficult.Equals("All"))
-            {
-                tests = tests.Where(x => x.Difficult == difficult);
-            }
-
-            if (!String.IsNullOrEmpty(search))
-            {
-                tests = tests.Where(x => x.TestName.Contains(search));
-            }
-
-            List<ThemeDto> themes = _themeService.GetAll().ToList();
-            themes.Insert(0, new ThemeDto() { IdTheme = 0, ThemeName = "All" });
-            viewTests.Tests = tests.ToList();
-
-            if (IdTest.HasValue)
-            {
-                ViewBag.IdTest = IdTest.Value;
-                viewTests.Questions = viewTests.Tests.
-                    Where(x => x.IdTest == IdTest).
-                    SingleOrDefault().
-                    Questions.ToList();
-            }
-
-            if (IdQuestion.HasValue)
-            {
-                if (viewTests.Questions == null)
-                    ViewBag.IdQuestion = IdQuestion.Value;
-                viewTests.Answers = _questionService.GetQuestions().
-                    Where(x => x.IdQuestion == IdQuestion).
-                    SingleOrDefault().
-                    Answers;
-            }
-
-
-            viewTests.Themes = new SelectList(themes, "IdTheme", "ThemeName");
-
-
-
-            return View(viewTests);
+          (int? IdTheme, string difficult, int? IdQuestion, int? IdTest, string search,
+            int? page)
+        {            
+            return View(_commonService.FilterTests(IdTheme, difficult, IdQuestion, IdTest, search,
+            page));
         }
 
 
@@ -168,7 +123,7 @@ namespace TestSystem.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult GenerateTest(TestGenerateViewModel model)
+        public ActionResult GenerateNewTest(TestGenerateViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -203,6 +158,11 @@ namespace TestSystem.Web.Controllers
 
             return View(model);
 
+        }
+
+        public ActionResult NewTestGenerate()
+        {
+            return View();
         }
     }
 }

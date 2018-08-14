@@ -25,37 +25,54 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
-                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
-                    <a class="nav-link" href="@Url.Action("CommonTables", "Common")">
-                        <i class="fa fa-fw fa-dashboard"></i>
-                        <span class="nav-link-text">Dashboard</span>
-                    </a>
-                </li>
-                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Adding new questions">
-                    <a class="nav-link" href="@Url.Action("CreateNewQuestion", "Question")">
-                        <i class="fa fa-fw fa-area-chart"></i>
-                        <span class="nav-link-text">+ new Questions</span>
-                    </a>
-                </li>
-                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Adding new tests">
-                    <a class="nav-link" href="@Url.Action("CreateNewTest","Test")">
-                        <i class="fa fa-fw fa-table"></i>
-                        <span class="nav-link-text">+ new Tests</span>
-                    </a>
-                </li>
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title=" More about themes">
                     <a class="nav-link" href="@Url.Action("AboutThemes","Theme")">
                         <i class="fa fa-fw fa-table"></i>
                         <span class="nav-link-text">About themes</span>
                     </a>
                 </li>
-                <li class="nav-item" data-toggle="tooltip" data-placement="right" title=" More about themes">
-                    <a class="nav-link" href="@Url.Action("GetInfoResult","Result")">
-                        <i class="fa fa-fw fa-table"></i>
-                        <span class="nav-link-text">Users & Results</span>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Example Pages">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#Test" data-parent="#exampleAccordion">
+                        <i class="fa fa-fw fa-file-text"></i>
+                        <span class="nav-link-text">Tests...</span>
                     </a>
-                </li>
+                    <ul class="sidenav-second-level collapse" id="Test">
+                        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Adding new questions">
+                            <a class="nav-link" href="@Url.Action("CreateNewTest", "Test")">
+                                <i class="fa fa-fw fa-plus-circle"></i>
+                                <span class="nav-link-text"> new Test</span>
+                            </a>
+                        </li>
+                        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Adding new questions">
+                            <a class="nav-link" href="@Url.Action("GetInfoTest", "Test")">
+                                <i class="fa fa-fw fa-info-circle"></i>
+                                <span class="nav-link-text">Tests Dashboard</span>
+                            </a>
+                        </li>
 
+                    </ul>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Example Pages">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
+                        <i class="fa fa-fw fa-question-circle"></i>
+                        <span class="nav-link-text">Questions...</span>
+                    </a>
+                    <ul class="sidenav-second-level collapse" id="collapseExamplePages">
+                        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Adding new questions">
+                            <a class="nav-link" href="@Url.Action("CreateNewQuestion", "Question")">
+                                <i class="fa fa-fw fa-plus-circle"></i>
+                                <span class="nav-link-text"> new Questions</span>
+                            </a>
+                        </li>
+                        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Adding new questions">
+                            <a class="nav-link" href="@Url.Action("GetInfoQuestion", "Question")">
+                                <i class="fa fa-fw fa-info-circle"></i>
+                                <span class="nav-link-text">Questions Dashboard</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Menu Levels">
                     <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMulti" data-parent="#exampleAccordion">
                         <i class="fa fa-fw fa-sitemap"></i>

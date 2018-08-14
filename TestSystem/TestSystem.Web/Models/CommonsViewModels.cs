@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using TestSystem.Logic.DataTransferObjects;
 using System.Web.Mvc;
+using PagedList;
 
 namespace TestSystem.Web.Models
 {
@@ -10,7 +11,7 @@ namespace TestSystem.Web.Models
         public IEnumerable<TestDto> Tests { get; set; }
         public SelectList Themes { get; set; }
         public SelectList Difficult { get; set; }
-        public IEnumerable<QuestionDto> Questions { get; set; }
+        public IPagedList<QuestionDto> Questions { get; set; }
         public IEnumerable<AnswerDto> Answers { get; set; }
 
         public FiltrationViewModel()
