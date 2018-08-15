@@ -1,6 +1,5 @@
-﻿@model PagedList.IPagedList<TestSystem.Logic.DataTransferObjects.TestDto>
-@using PagedList.Mvc;
-<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+﻿@model IEnumerable<TestSystem.Logic.DataTransferObjects.TestDto>
+
 
 <div class="row">
     <div class="card mb-3">
@@ -42,12 +41,6 @@
                             }
                         </tbody>
                     </table>
-                    <div class="form-row">
-                        <div class="col-md-3"> Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) from @Model.PageCount</div>
-                    </div>
-                    <div class="btn-group" id="contentPager">
-                        @Html.PagedListPager(Model, pageTests => Url.Action("CommonTables", new { pageTests }))
-                    </div>
                     <div class="container">
                         <form action="@Url.Action("GetInfoTest", "Test")">
                             <button class="btn btn-primary" type="submit">More about tests...</button>

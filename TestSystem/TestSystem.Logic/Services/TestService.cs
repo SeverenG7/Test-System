@@ -126,6 +126,14 @@ namespace TestSystem.Logic.Services
             return generateTest;
         }
 
+        public IEnumerable<TestDto> GetLastTests()
+        {
+            return MapperFromDB.Map< IEnumerable<Test>, IEnumerable < TestDto >>
+                (Database.Tests.GetAll().
+                 OrderBy(x => x.CreateDate).
+                 Take(5));
+        }
+
     }
 
 }

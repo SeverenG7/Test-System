@@ -93,5 +93,13 @@ namespace TestSystem.Logic.Services
                 return MapperFromDB.Map<IEnumerable<UserInfo>, List<UserInfoDto>>(users.AsEnumerable());
             }
         }
+
+        public IEnumerable<ResultDto> GetLastResults()
+        {
+            return MapperFromDB.Map<IEnumerable<Result>, IEnumerable<ResultDto>>
+                (Database.Results.GetAll().
+                OrderBy(x => x.CreateDate).
+                Take(5));
+        }
     }
 }

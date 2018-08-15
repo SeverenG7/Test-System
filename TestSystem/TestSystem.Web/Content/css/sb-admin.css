@@ -4,7 +4,8 @@ html {
 }
 
 body {
-  overflow-x: hidden;
+    overflow-x: hidden;
+    background-image: url(/Content/actionImages/testBack.jpg) !important;
 }
 
 body.sticky-footer {
@@ -341,7 +342,6 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
 #mainNav.navbar-dark .navbar-collapse .navbar-sidenav > .nav-item > .nav-link:hover {
   color: #adb5bd;
 }
-
 #mainNav.navbar-dark .navbar-collapse .navbar-sidenav > .nav-item .sidenav-second-level > li > a,
 #mainNav.navbar-dark .navbar-collapse .navbar-sidenav > .nav-item .sidenav-third-level > li > a {
   color: #868e96;

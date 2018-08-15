@@ -9,9 +9,15 @@
             <h2 class="display-4">Latest changes since you gone...</h2>
         </div>
         <div class="row">
-            @Html.Action("GetTableTests")
-            @Html.Action("GetTableQuestions")
-            @Html.Action("GetTableResults")
+            <div class="col-md-4">
+                @Html.Action("GetTableResults")
+            </div>
+            <div class="col-md-4">
+                @Html.Action("GetTableTests")
+            </div>
+            <div class="col-md-4">
+                @Html.Action("GetTableQuestions")
+            </div>
         </div>
     </div>
 </body>

@@ -12,5 +12,6 @@ namespace TestSystem.Logic.Interfaces
         void RemoveQuestion(int id);
         void UpdateQuestion(QuestionDto questionDto);
         void DeleteQuestionFromTest(int? idQuestion, int? idTest);
+        IEnumerable<QuestionDto> GetLastQuestions();
     }
 }

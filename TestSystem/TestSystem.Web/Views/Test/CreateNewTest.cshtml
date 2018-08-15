@@ -10,7 +10,6 @@
     <meta name="viewport" content="width=device-width" />
     <title>CreateNewTest</title>
 </head>
-
 <body>
     @using (Html.BeginForm("CreateNewTest", "Test", FormMethod.Post))
     {
@@ -18,7 +17,7 @@
             <div class="card-header-tabs">
 
                 @Html.AntiForgeryToken()
-                <h4 class="text-info alert-info">Add new test here...</h4>
+                <h4 class="text-info display-3">Add new test here...</h4>
                 <hr />
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 

@@ -10,6 +10,7 @@ namespace TestSystem.Logic.Interfaces
         void CreateTest(TestDto testDto);
         void RemoveTest(int id);
         TestDto GenerateTest(int questionNumbers , int idTheme , string difficult);
+        IEnumerable<TestDto> GetLastTests();
 
     }
 }

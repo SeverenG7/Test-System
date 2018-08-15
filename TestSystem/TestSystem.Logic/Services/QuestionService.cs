@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TestSystem.DataProvider.Interfaces;
 using TestSystem.Logic.Interfaces;
 using TestSystem.Logic.DataTransferObjects;
@@ -86,7 +87,15 @@ namespace TestSystem.Logic.Services
             }
         }
 
-        public static int ComputeScore(QuestionDto question)
+        public IEnumerable<QuestionDto> GetLastQuestions()
+        {
+            return MapperFromDB.Map<IEnumerable<Question>, IEnumerable<QuestionDto>>
+                (Database.Questions.GetAll().
+                OrderBy(x => x.CreateDate).
+                Take(5));
+        }
+
+        public  int ComputeScore(QuestionDto question)
         {
             int koeff = 0;
             switch (question.Difficult)

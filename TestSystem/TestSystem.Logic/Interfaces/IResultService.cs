@@ -13,6 +13,7 @@ namespace TestSystem.Logic.Interfaces
         void UpdateResult(ResultDto resultDTO);
         UserInfoDto GetUser(int id);
         IEnumerable<UserInfoDto> GetUsers(string search);
+        IEnumerable<ResultDto> GetLastResults();
         void Dispose();
     }
 }

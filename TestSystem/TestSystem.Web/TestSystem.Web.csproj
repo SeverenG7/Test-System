@@ -231,6 +231,8 @@
     <Compile Include="Infrasrtuctre\NinjectDependencyResolver.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\actionImages\testBack.jpg" />
+    <Content Include="Content\actionImages\testBackground.jpg" />
     <Content Include="Content\actionImages\iconInfo.png" />
     <Content Include="Content\actionImages\iconPlus.png" />
     <Content Include="Content\actionImages\iconEdit.png" />
