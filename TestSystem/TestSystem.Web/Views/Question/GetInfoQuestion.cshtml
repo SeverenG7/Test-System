@@ -121,12 +121,18 @@
             {
                 foreach (var item in Model.Questions)
                 {
-                    if (item.IdQuestion == Model.IdQuestion)
+                    if (item.IdQuestion == ViewBag.IdQuestion)
                     {
-            <div class="text-center">
-                <p style="font-size:x-large">@Html.DisplayFor(itemModel => item.QuestionText)</p>
-            </div>
+                        <div class="text-center">
+                            <p style="font-size:x-large">@Html.DisplayFor(itemModel => item.QuestionText)</p>
+                        </div>
                     }
+                }
+                if (ViewBag.QuestionText != null)
+                {
+                    <div class="text-center">
+                        <p style="font-size:x-large">@ViewBag.QuestionText</p>
+                    </div>
                 }
 
                 <h3>

@@ -98,7 +98,7 @@ namespace TestSystem.Logic.Services
         {
             return MapperFromDB.Map<IEnumerable<Result>, IEnumerable<ResultDto>>
                 (Database.Results.GetAll().
-                OrderBy(x => x.CreateDate).
+                OrderByDescending(x => x.CreateDate).
                 Take(5));
         }
     }

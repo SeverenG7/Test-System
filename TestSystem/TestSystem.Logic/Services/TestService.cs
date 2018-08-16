@@ -64,7 +64,9 @@ namespace TestSystem.Logic.Services
                 IdTheme = testDTO.IdTheme,
                 TestDescription = testDTO.TestDescription,
                 TestName = testDTO.TestName,
-                QuestionsNumber = testDTO.QuestionsNumber
+                QuestionsNumber = testDTO.QuestionsNumber,
+                Time = testDTO.Time
+                
             };
 
             foreach (QuestionDto q in testDTO.Questions)
@@ -130,7 +132,7 @@ namespace TestSystem.Logic.Services
         {
             return MapperFromDB.Map< IEnumerable<Test>, IEnumerable < TestDto >>
                 (Database.Tests.GetAll().
-                 OrderBy(x => x.CreateDate).
+                 OrderByDescending(x => x.CreateDate).
                  Take(5));
         }
 

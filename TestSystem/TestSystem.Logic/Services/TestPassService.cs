@@ -10,6 +10,7 @@ using System.Threading;
 using System.Web;
 using System.Diagnostics;
 using AutoMapper;
+using System.Collections.Generic;
 
 namespace TestSystem.Logic.Services
 {
@@ -25,27 +26,33 @@ namespace TestSystem.Logic.Services
         public QuestionDto StartTest(int IdResult)
         {
             char delimetr = ',';
+            List<UserQuestion> userQuestions = new List<UserQuestion>();
             TempResult tempResult = new TempResult
             {
                 IdResult = IdResult,
-                UserName = HttpContext.Current.User.Identity.Name
+                UserName = HttpContext.Current.User.Identity.Name,
             };
-
+  
             foreach (Question question in Database.Results.Get(IdResult).Test.Questions)
             {
                 tempResult.QuestionPassing += "" + question.IdQuestion + ",";
+                userQuestions.Add(new UserQuestion()
+                {
+                    IdResult = IdResult,
+                    IdQuestion = question.IdQuestion,
+                    MaxScore = question.Score,
+                    UserAnswers = new List<UserAnswer>()
+                });
             }
-
+            Database.UserQuestions.AddRange(userQuestions);
             Database.TempResults.Add(tempResult);
             Database.Complete();
 
-            //TimerModule timer = new TimerModule(IdResult, Database.Results.Get(IdResult).Test.Time);
-            TimerModule timer = new TimerModule(IdResult, new TimeSpan(0, 5, 0));
+            TimerModule timer = new TimerModule(IdResult, Database.Results.Get(IdResult).Test.Time);
             HttpContext.Current.Application["Timer" + HttpContext.Current.User.Identity.Name] = timer;
             Question questiondb = Database.Questions.
                 Get(Int32.Parse(tempResult.QuestionPassing.Split(delimetr)[0]));
             HttpContext.Current.Application["Test" + HttpContext.Current.User.Identity.Name] = questiondb.IdQuestion;
-
 
             var mapper = new MapperConfiguration(mcf => mcf.CreateMap<Question, QuestionDto>()).CreateMapper();
             QuestionDto questionDto = mapper.Map<Question, QuestionDto>(questiondb);
@@ -87,7 +94,7 @@ namespace TestSystem.Logic.Services
             TimerModule timer = (TimerModule)
               HttpContext.Current.Application["Timer" + HttpContext.Current.User.Identity.Name];
 
-            if (tempResult!=null)
+            if (tempResult != null)
             {
 
                 if (String.IsNullOrWhiteSpace(tempResult.QuestionsPassed))
@@ -131,7 +138,7 @@ namespace TestSystem.Logic.Services
             }
             else
             {
-                return new OperationDetails(false , "");
+                return new OperationDetails(false, "");
             }
 
         }
@@ -160,14 +167,17 @@ namespace TestSystem.Logic.Services
                 resultDesrciption = "Wow,you really easily passed this test, congratulations! ";
             }
             lastResult.ResultScore = Math.Round(lastResult.ResultScore.Value);
-            return new OperationDetails(true, resultDesrciption , lastResult.Test.TestName , lastResult.ResultScore.ToString(),
+            return new OperationDetails(true, resultDesrciption, lastResult.Test.TestName, lastResult.ResultScore.ToString(),
                 lastResult.UserInfo.UserFirstName);
         }
 
-
         private void PassedQuestion(QuestionDto question, ref TempResult tempResult)
         {
+            int IdResult = tempResult.IdResult;
             question.IdQuestion = (int)HttpContext.Current.Application["Test" + HttpContext.Current.User.Identity.Name];
+            UserQuestion userQuestion = Database.UserQuestions.Find(x => x.IdResult == IdResult
+              && x.IdQuestion == question.IdQuestion).
+              SingleOrDefault();
             double questionScore = 0;
             Question questionDB = Database.Questions.Get(question.IdQuestion);
             double answerWeight = (questionDB.Score / question.Answers.Count);
@@ -177,11 +187,21 @@ namespace TestSystem.Logic.Services
                 if (answerUser.Correct == answer.Correct)
                 {
                     questionScore += answerWeight;
+                    userQuestion.UserScore += answerWeight;
+                    userQuestion.UserAnswers.Add(new UserAnswer()
+                    {
+                        IdUserQuestion = userQuestion.IdUserQuestion,
+                        IdAnswer = answer.IdAnswer,
+                        Correct = answerUser.Correct
+                    });
                 }
             }
             tempResult.TotalScore += questionScore;
             tempResult.QuestionPassing = tempResult.QuestionPassing.StringStirrer(question.IdQuestion);
             tempResult.QuestionsPassed += question.IdQuestion.ToString() + ",";
+            Database.UserAnswers.AddRange(userQuestion.UserAnswers);
+            Database.Complete();
+            Database.UserQuestions.Update(userQuestion);
             Database.TempResults.Update(tempResult);
 
 
@@ -194,7 +214,6 @@ namespace TestSystem.Logic.Services
             object obj = new object();
             currentTimer.EndTimer(obj);
         }
-
 
         #region Timer custom class
 

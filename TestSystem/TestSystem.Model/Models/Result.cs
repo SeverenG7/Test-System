@@ -3,9 +3,10 @@ namespace TestSystem.Model.Models
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System;
+    using System.Collections.Generic;
 
     [Table("Result")]
-    public  class Result
+    public class Result
     {
         [Key]
         public int IdResult { get; set; }
@@ -31,5 +32,12 @@ namespace TestSystem.Model.Models
         public DateTime CreateDate { get; set; }
 
         public bool TestPassed { get; set; }
+
+        public virtual ICollection<UserQuestion> UserQuestions { get; set; }
+
+        public Result()
+        {
+            UserQuestions = new HashSet<UserQuestion>();
+        }
     }
 }

@@ -456,7 +456,6 @@
     <Content Include="Views\User\EndTest.cshtml" />
     <Content Include="Views\Ending\EndTest.cshtml" />
     <Content Include="Views\User\Some.cshtml" />
-    <Content Include="Views\Test\NewTestGenerate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

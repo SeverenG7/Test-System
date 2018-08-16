@@ -21,6 +21,8 @@ namespace TestSystem.DataProvider.Interfaces
         IRepository<UserInfo> UserInfoes { get; }
         IRepository<Theme> Themes { get; }
         IRepository<TempResult> TempResults { get; }
+        IRepository<UserQuestion> UserQuestions { get; }
+        IRepository<UserAnswer> UserAnswers { get; }
 
         ApplicationUserManager ApplicationUserManagers { get; }
         ApplicationRoleManager ApplicationRoleManagers { get; }

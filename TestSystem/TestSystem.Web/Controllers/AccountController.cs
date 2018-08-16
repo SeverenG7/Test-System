@@ -195,7 +195,7 @@ namespace UserStore.Controllers
                     Password = model.Password,
                     UserFirstName = model.FirstName,
                     UserLastName = model.LastName,
-                    Role = "user"
+                    Role = "admin"
                 };
                 try
                 {

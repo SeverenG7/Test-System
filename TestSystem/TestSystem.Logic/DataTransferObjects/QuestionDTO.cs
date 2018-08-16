@@ -8,6 +8,7 @@ namespace TestSystem.Logic.DataTransferObjects
         public int IdQuestion { get; set; }
         public string QuestionText { get; set; }
         public byte[] QuestionImage { get; set; }
+        public string ImageMimeType { get; set; }
         public int AnswerNumber { get; set; }
         public int Score { get; set; }
         public string Difficult { get; set; }

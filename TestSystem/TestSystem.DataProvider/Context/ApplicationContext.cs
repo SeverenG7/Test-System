@@ -16,5 +16,7 @@ namespace TestSystem.DataProvider.Context
         public virtual DbSet<Theme> Themes { get; set; }
         public virtual DbSet<UserInfo> UserInfos { get; set; }
         public virtual DbSet<TempResult> TempResults { get; set; }
+        public virtual DbSet<UserQuestion> UserQuestions { get; set; }
+        public virtual DbSet<UserAnswer> UserAnswers { get; set; }
     }
 }

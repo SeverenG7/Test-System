@@ -49,36 +49,43 @@ namespace TestSystem.Web.Controllers
         public ActionResult CreateNewQuestion(QuestionCreateViewModel model,
             HttpPostedFileBase image = null)
         {
-
-            QuestionDto question = new QuestionDto
-            {
-                QuestionText = model.QuestionText,
-                Difficult = model.selectedDifficult,
-                IdTheme = Int32.Parse(model.selectedTheme)
-            };
-
-            question.Answers = new List<AnswerDto>();
-
-            foreach (AnswerDto ans in model.Answers)
-            {
-                if (!String.IsNullOrEmpty(ans.AnswerText))
+           
+                QuestionDto question = new QuestionDto
                 {
-                    question.Answers.Add(ans);
+                    QuestionText = model.QuestionText,
+                    Difficult = model.selectedDifficult,
+                    IdTheme = Int32.Parse(model.selectedTheme)
+                };
+
+                question.Answers = new List<AnswerDto>();
+
+                foreach (AnswerDto ans in model.Answers)
+                {
+                    if (!String.IsNullOrEmpty(ans.AnswerText))
+                    {
+                        question.Answers.Add(ans);
+                    }
                 }
-            }
 
-            question.AnswerNumber = question.Answers.Count;
-            question.CreateDate = DateTime.Now;
+                question.AnswerNumber = question.Answers.Count;
+                question.CreateDate = DateTime.Now;
 
-            if (image != null)
-            {
-                question.QuestionImage = new byte[image.ContentLength];
-                image.InputStream.Read(question.QuestionImage, 0, image.ContentLength);
-            }
+                if (image != null)
+                {
+                    question.ImageMimeType = image.ContentType;
+                    question.QuestionImage = new byte[image.ContentLength];
+                    image.InputStream.Read(question.QuestionImage, 0, image.ContentLength);
+                }
 
-            _questionService.CreateQuestion(question);
+                _questionService.CreateQuestion(question);
 
-            return RedirectToAction("GetInfoQuestion", "Question");
+                return RedirectToAction("GetInfoQuestion", "Question");
+            
+            //else
+            //{
+            //    model.Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName");
+            //    return View(model);
+            //}
 
         }
 
@@ -125,8 +132,10 @@ namespace TestSystem.Web.Controllers
         [HttpGet]
         public ActionResult GetInfoQuestion
             (int? IdTheme, string difficult, int? IdQuestion, int? IdTest, string search,
-            int? page)
+            int? page , string QuestionText)
         {
+            ViewBag.QuestionText = QuestionText;
+            ViewBag.IdQuestion = IdQuestion;
             return View(_commonService.FilterQuestions( IdTheme, difficult, IdQuestion,  IdTest, search,
             page ));
         }
@@ -151,19 +160,17 @@ namespace TestSystem.Web.Controllers
 
         #endregion
 
-        //public FileContentResult GetImage(int gameId)
-        //{
-        //    Game game = repository.Games
-        //        .FirstOrDefault(g => g.GameId == gameId);
-
-        //    if (game != null)
-        //    {
-        //        return File(game.ImageData, game.ImageMimeType);
-        //    }
-        //    else
-        //    {
-        //        return null;
-        //    }
-        //}
+        public FileContentResult GetImage(int idQuestion)
+        {
+             QuestionDto question =  _questionService.GetQuestion(idQuestion);
+            if (question != null)
+            {
+                return File(question.QuestionImage , question.ImageMimeType);
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

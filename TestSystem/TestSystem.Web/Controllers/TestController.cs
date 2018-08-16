@@ -5,6 +5,7 @@ using TestSystem.Logic.Interfaces;
 using TestSystem.Web.Models;
 using System;
 using System.Net;
+using System.Web;
 
 namespace TestSystem.Web.Controllers
 {
@@ -59,42 +60,76 @@ namespace TestSystem.Web.Controllers
                     IdQuestion = question.IdQuestion,
                     QuestionText = question.QuestionText,
                     Difficult = question.Difficult,
+                    Theme = question.Theme.ThemeName,
                     Chosen = false
                 });
 
             }
-
             return View(model);
         }
 
-        // POST: Test/Create
         [HttpPost]
-        public ActionResult CreateNewTest(TestCreateViewModel model)
+        public ActionResult CreateNewTest(TestCreateViewModel model,
+             HttpPostedFileBase image = null)
         {
-            List<QuestionDto> questions = new List<QuestionDto>();
-
-            foreach (QuestionForTestViewModel question in model.Questions)
+            if (ModelState.IsValid)
             {
-                if (question.Chosen)
+                List<QuestionDto> questions = new List<QuestionDto>();
+
+                foreach (QuestionForTestViewModel question in model.Questions)
                 {
-                    questions.Add(_questionService.GetQuestion(question.IdQuestion));
+                    if (question.Chosen)
+                    {
+                        questions.Add(_questionService.GetQuestion(question.IdQuestion));
+                    }
                 }
+
+                TestDto test = new TestDto
+                {
+                    TestName = model.TestName,
+                    TestDescription = model.TestDescription,
+                    IdTheme = Int32.Parse(model.selectedTheme),
+                    Difficult = model.selectedDifficult,
+                    CreateDate = DateTime.Now,
+                    Questions = questions,
+                    QuestionsNumber = questions.Count,
+                    Time = new TimeSpan(0, model.selectedTime, 0)
+                };
+
+                if (image != null)
+                {
+                    test.ImageMimeType = image.ContentType;
+                    test.TestImage = new byte[image.ContentLength];
+                    image.InputStream.Read(test.TestImage, 0, image.ContentLength);
+                }
+                _testService.CreateTest(test);
+
+                return RedirectToAction("GetInfoTest", "Test");
             }
-
-            TestDto test = new TestDto
+            else
             {
-                TestName = model.TestName,
-                TestDescription = model.TestDescription,
-                IdTheme = Int32.Parse(model.selectedTheme),
-                Difficult = model.selectedDifficult,
-                CreateDate = DateTime.Now,
-                Questions = questions,
-                QuestionsNumber = questions.Count
-            };
 
-            _testService.CreateTest(test);
+                model.Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName");
+               
 
-            return RedirectToAction("GetInfoTest", "Test");
+                IEnumerable<QuestionDto> questionDTOs = _questionService.GetQuestions();
+                model.Questions = new List<QuestionForTestViewModel>();
+
+                foreach (QuestionDto question in questionDTOs)
+                {
+                    model.Questions.Add(new QuestionForTestViewModel
+                    {
+                        IdQuestion = question.IdQuestion,
+                        QuestionText = question.QuestionText,
+                        Difficult = question.Difficult,
+                        Theme = question.Theme.ThemeName,
+                        Chosen = false
+                    });
+
+                }
+
+                return View(model);
+            }
 
         }
 
@@ -123,7 +158,7 @@ namespace TestSystem.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult GenerateNewTest(TestGenerateViewModel model)
+        public ActionResult GenerateTest(TestGenerateViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -160,9 +195,18 @@ namespace TestSystem.Web.Controllers
 
         }
 
-        public ActionResult NewTestGenerate()
+
+        public FileContentResult GetImage(int idTest)
         {
-            return View();
+            TestDto test= _testService.GetTest(idTest);
+            if (test != null)
+            {
+                return File(test.TestImage, test.ImageMimeType);
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }
