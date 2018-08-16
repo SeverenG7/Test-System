@@ -152,6 +152,7 @@
     <Compile Include="Interfaces\IThemeService.cs" />
     <Compile Include="Interfaces\IUserService.cs" />
     <Compile Include="LogicView\FiltrationViewModel.cs" />
+    <Compile Include="LogicView\ResultViewModel.cs" />
     <Compile Include="MapGeneric\IMapGeneric.cs" />
     <Compile Include="MapGeneric\MapClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

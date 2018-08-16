@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using TestSystem.Logic.DataTransferObjects;
+using TestSystem.Logic.LogicView;
 
 namespace TestSystem.Logic.Interfaces
 {
@@ -14,6 +15,7 @@ namespace TestSystem.Logic.Interfaces
         UserInfoDto GetUser(int id);
         IEnumerable<UserInfoDto> GetUsers(string search);
         IEnumerable<ResultDto> GetLastResults();
+        ResultInfoViewModel GetResultInfo(int IdResult);
         void Dispose();
     }
 }

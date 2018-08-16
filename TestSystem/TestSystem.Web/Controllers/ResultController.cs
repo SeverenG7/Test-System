@@ -5,9 +5,6 @@ using System.Web.Mvc;
 using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Logic.Interfaces;
 using TestSystem.Web.Models;
-using PagedList;
-using AutoMapper;
-
 
 namespace TestSystem.Web.Controllers
 {
@@ -59,7 +56,12 @@ namespace TestSystem.Web.Controllers
                 Where(x => x.Choosen == true).
                 FirstOrDefault().IdTest , model.UserResult.IdUserInfo,
                 model.UserResult.ResultDescription);
-            return RedirectToAction("GetInfoResult" , model.UserResult.IdUserInfo);
+            return RedirectToAction("GetInfoResult" ,"Result", model.UserResult.IdUserInfo);
+        }
+
+        public ActionResult ResultInfo(int IdResult)
+        {
+            return View(_resultService.GetResultInfo(IdResult));
         }
     }
 }

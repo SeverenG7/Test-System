@@ -5,7 +5,9 @@ using TestSystem.Logic.Interfaces;
 using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Model.Models;
 using TestSystem.Logic.MapGeneric;
+using TestSystem.Logic.LogicView;
 using System.Linq;
+
 
 namespace TestSystem.Logic.Services
 {
@@ -100,6 +102,25 @@ namespace TestSystem.Logic.Services
                 (Database.Results.GetAll().
                 OrderByDescending(x => x.CreateDate).
                 Take(5));
+        }
+
+        public ResultInfoViewModel GetResultInfo(int IdResult)
+        {
+            List<QuestionResultViewModel> resultQuestions = new List<QuestionResultViewModel>();
+            Result result = Database.Results.Get(IdResult);
+            foreach (Question question in result.Test.Questions)
+            {
+                UserQuestion userQuestion = Database.UserQuestions.Find(x=>x.IdQuestion == question.IdQuestion).
+                    SingleOrDefault();
+                resultQuestions.Add(new QuestionResultViewModel(question, userQuestion));
+                foreach (Answer answer in question.Answers)
+                {
+                    resultQuestions.LastOrDefault().Answers.Add( new AnswerResultViewModel( answer, userQuestion.UserAnswers.
+                        Where(x => x.IdAnswer == answer.IdAnswer).
+                        SingleOrDefault()));
+                }
+            }
+            return new ResultInfoViewModel(result, resultQuestions);
         }
     }
 }

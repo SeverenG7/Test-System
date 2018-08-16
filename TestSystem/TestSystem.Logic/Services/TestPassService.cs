@@ -184,16 +184,16 @@ namespace TestSystem.Logic.Services
             foreach (Answer answer in questionDB.Answers)
             {
                 AnswerDto answerUser = question.Answers.Where(x => x.IdAnswer == answer.IdAnswer).SingleOrDefault();
+                userQuestion.UserAnswers.Add(new UserAnswer()
+                {
+                    IdUserQuestion = userQuestion.IdUserQuestion,
+                    IdAnswer = answer.IdAnswer,
+                    Correct = answerUser.Correct
+                });
                 if (answerUser.Correct == answer.Correct)
                 {
                     questionScore += answerWeight;
                     userQuestion.UserScore += answerWeight;
-                    userQuestion.UserAnswers.Add(new UserAnswer()
-                    {
-                        IdUserQuestion = userQuestion.IdUserQuestion,
-                        IdAnswer = answer.IdAnswer,
-                        Correct = answerUser.Correct
-                    });
                 }
             }
             tempResult.TotalScore += questionScore;

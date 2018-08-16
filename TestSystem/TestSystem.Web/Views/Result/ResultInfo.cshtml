@@ -1,0 +1,86 @@
+﻿@model TestSystem.Logic.LogicView.ResultInfoViewModel
+
+@{
+    int counter = 0;
+    string Answer = "";
+    string Icon = "";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #info {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-size: large;
+        }
+    </style>
+    <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/css/Lists.css" rel="stylesheet" type="text/css" />
+    <title>Result info </title>
+</head>
+<body>
+    <div class="container">
+        <h2 class="display-3 text-info">Result information @Model.Result.Test.TestName </h2>
+        <h3 class="display-4 text-info">User info: </h3>
+        <ul class="list-group col-md-5">
+            <li class="list-group-item">
+                <span id="info" class="text-info">  User name: </span> @Model.Result.UserInfo.UserFirstName  @Model.Result.UserInfo.UserLastName
+                <span id="info" class="text-info">Email: </span>@Model.Result.UserInfo.ApplicationUser.UserName
+            </li>
+            <li class="list-group-item">
+                <span id="info" class="text-info">Test:</span> @Model.Result.Test.TestName
+                <span id="info" class="text-info">Difficult: </span> @Model.Result.Test.Difficult
+            </li>
+            <li class="list-group-item">
+                <span id="info" class="text-info">User score: </span>
+                @Model.Result.ResultScore % <span id="info" class="text-info"> Date: </span>@Model.Result.CreateDate
+            </li>
+        </ul>
+        @foreach (var item in Model.Questions)
+        {
+            counter++;
+            <p style="font-size:x-large">@counter . @item.QuestionText</p>
+            <p>
+                <span id="info" class="text-info">Max score: @item.Score  </span>
+                <span id="info" class="text-info"> User scsore: @item.UserScore </span>
+                </p>
+            <ol class="list-counter-circle">
+                @foreach (var answer in item.Answers)
+                {
+                    if (answer.Correct == true)
+                    {
+                        Icon = "fa fa-fw fa-check";
+                        if (answer.UserAnswer == true)
+                        {
+                            Answer = "mediumseagreen";
+                        }
+                        else
+                        {
+                            Answer = "lightgray";
+                        }
+                    }
+                    if (answer.Correct == false )
+                    {
+                        if (answer.UserAnswer == true)
+                        {
+                            Answer = "red";
+                            Icon = "fa fa-fw fa-close";
+                        }
+                    }
+                    if (answer.Correct == false && answer.UserAnswer == false)
+                    {
+                        Icon = "";
+                        Answer = "lightgrey";
+                    }
+                <li style="background-color:@Answer">
+                    @answer.AnswerText
+                    <i class="@Icon"></i>
+                </li>
+                }
+            </ol>
+        }
+    </div>
+</body>
+</html>
