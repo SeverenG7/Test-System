@@ -108,19 +108,27 @@ namespace TestSystem.Logic.Services
         {
             List<QuestionResultViewModel> resultQuestions = new List<QuestionResultViewModel>();
             Result result = Database.Results.Get(IdResult);
-            foreach (Question question in result.Test.Questions)
+            if (result.TestPassed != false)
             {
-                UserQuestion userQuestion = Database.UserQuestions.Find(x=>x.IdQuestion == question.IdQuestion).
-                    SingleOrDefault();
-                resultQuestions.Add(new QuestionResultViewModel(question, userQuestion));
-                foreach (Answer answer in question.Answers)
+                foreach (Question question in result.Test.Questions)
                 {
-                    resultQuestions.LastOrDefault().Answers.Add( new AnswerResultViewModel( answer, userQuestion.UserAnswers.
-                        Where(x => x.IdAnswer == answer.IdAnswer).
-                        SingleOrDefault()));
+                    UserQuestion userQuestion = Database.UserQuestions.Find(x => x.IdQuestion == question.IdQuestion &&
+                    x.IdResult == IdResult).
+                        SingleOrDefault();
+                    resultQuestions.Add(new QuestionResultViewModel(question, userQuestion));
+                    foreach (Answer answer in question.Answers)
+                    {
+                        resultQuestions.LastOrDefault().Answers.Add(new AnswerResultViewModel(answer, userQuestion.UserAnswers.
+                            Where(x => x.IdAnswer == answer.IdAnswer).
+                            SingleOrDefault()));
+                    }
                 }
+                return new ResultInfoViewModel(result, resultQuestions);
             }
-            return new ResultInfoViewModel(result, resultQuestions);
+            else
+            {
+                return null;
+            }
         }
     }
 }

@@ -1,5 +1,9 @@
 ﻿@model TestSystem.Web.Models.ResultViewModel
 
+@{ 
+ string notPassed = "Test not passed yet";
+
+}
 
 <!DOCTYPE html>
 <html>
@@ -72,6 +76,10 @@
                     </tr>
                 }
             </table>
+        @if (TempData["Warning"] != null)
+        {
+            <h4 class="text-danger"> @TempData["Warning"]</h4>
+        }
 
             @if (Model.Results != null)
             {
@@ -91,7 +99,14 @@
                                 @item.Test.TestName
                             </td>
                             <td>
-                                @item.ResultScore %
+                                @if (item.TestPassed)
+                                {
+                               <p>@Math.Round(@item.ResultScore) %</p>
+                                }
+                                else
+                                {
+                                    @notPassed;
+                                }
                             </td>
                             <td>
                                 @item.CreateDate

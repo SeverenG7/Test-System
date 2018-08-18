@@ -21,21 +21,23 @@
     <!-- Custom styles for this template-->
     <link href=@Url.Content("/Content/css/sb-admin.css") rel="stylesheet">
 </head>
-<body>
+<body style="background-image:url(../../Content/actionImages/userBack.jpg)">
 
     <div class="container">
         <div class="form-horizontal">
             <div class=" text-center">
-                <h2 class="display-4">
-                    The page you were looking for can't be found
+                <h2 class="display-4 text-info">
+                    The page you were looking for can't be found 404
                 </h2>
             </div>
             <div class="text-center">
-                @*<img src="~/Content/img/2GlHXz9aM2U.jpg" width="450" height="450" alt="image1" class="img-responsive" />*@
-                <img src="~/Content/img/IlV44CfodWQ.jpg" width="300" height="300" alt="image1" class="img-responsive" />
+                @if (ViewBag.Image != null)
+                {
+                <img src="@ViewBag.Image" width="300" height="300"  class="img-responsive" />
+                }
             </div>
             <div class="text-center mt-5">
-                @if (ViewBag.Layout == null)
+                @if (ViewBag.Reference == null)
                 {
                     <div class="text-center">
                         <label class="text-center">
@@ -52,9 +54,15 @@
                         Register
                     </button>
                 }
-                else
+                @if (User.IsInRole("user"))
                 {
-                    <button class="btn btn-primary" onclick="location.href='@ViewBag.Reference'">
+                    <button class="btn btn-primary" onclick="location.href='@Url.Action("MainMenu", "User")'">
+                        Return to main menu
+                    </button>
+                }
+                @if (User.IsInRole("admin"))
+                {
+                    <button class="btn btn-primary" onclick="location.href='@Url.Action("CommonTables", "Common")'">
                         Return to main menu
                     </button>
                 }

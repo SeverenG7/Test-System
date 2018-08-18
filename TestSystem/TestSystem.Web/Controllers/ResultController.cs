@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
 using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Logic.Interfaces;
+using TestSystem.Logic.LogicView;
 using TestSystem.Web.Models;
 
 namespace TestSystem.Web.Controllers
@@ -61,7 +60,16 @@ namespace TestSystem.Web.Controllers
 
         public ActionResult ResultInfo(int IdResult)
         {
-            return View(_resultService.GetResultInfo(IdResult));
+            ResultInfoViewModel result = _resultService.GetResultInfo(IdResult);
+            if (result != null)
+            {
+                return View(_resultService.GetResultInfo(IdResult));
+            }
+            else
+            {
+                TempData["Warning"] = "User not pass test - nothing see here";
+                return RedirectToAction("GetInfoResult", "Result");            
+            }
         }
     }
 }

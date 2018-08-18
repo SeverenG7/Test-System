@@ -147,7 +147,7 @@ namespace TestSystem.Logic.Services
         {
             HttpContext.Current.Application["Timer" + HttpContext.Current.User.Identity.Name] = null;
             Result lastResult = Database.Results.GetAll().
-                OrderBy(x => x.CreateDate).
+                OrderByDescending(x => x.CreateDate).
                 FirstOrDefault();
 
             string resultDesrciption;
@@ -203,8 +203,6 @@ namespace TestSystem.Logic.Services
             Database.Complete();
             Database.UserQuestions.Update(userQuestion);
             Database.TempResults.Update(tempResult);
-
-
         }
 
         private void EndTestPassing(TempResult tempResult)

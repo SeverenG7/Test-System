@@ -16,14 +16,15 @@
     </style>
 </head>
 <body>
-    @using (Html.BeginForm("CreateNewTest", "Test", FormMethod.Post))
+    @using (Html.BeginForm("CreateNewTest", "Test", FormMethod.Post,
+        new { enctype = "multipart/form-data" }))
     {
         <div class="container">
             <div class="card-header-tabs">
 
                 @Html.AntiForgeryToken()
-                <input type="file" id="files" name="files[]"
-                       style="visibility:hidden" multiple value="Choose" />
+                <input type="file" id="files" name="file"
+                       style="visibility:hidden"  value="Choose" />
                 <h4 class="text-info display-3">Add new test here...</h4>
                 <hr />
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })

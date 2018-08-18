@@ -12,12 +12,13 @@ namespace TestSystem.Web.Controllers
                 if (HttpContext.User.IsInRole("user"))
                 {
                     ViewBag.Reference ="User/MainMenu";
-                    ViewBag.Layout = "~/Views/Shared/_UserLayout.cshtml";
+                    ViewBag.Layout = null;
                 }
                 if (HttpContext.User.IsInRole("admin"))
                 {
                     ViewBag.Reference = "Common/CommonTables";
                     ViewBag.Layout = "~/Views/Shared/_MyLayout.cshtml";
+                    ViewBag.Image = "~/Content/img/IlV44CfodWQ.jpg";
                 }
             }
             else

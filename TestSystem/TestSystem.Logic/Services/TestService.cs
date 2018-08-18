@@ -65,8 +65,9 @@ namespace TestSystem.Logic.Services
                 TestDescription = testDTO.TestDescription,
                 TestName = testDTO.TestName,
                 QuestionsNumber = testDTO.QuestionsNumber,
-                Time = testDTO.Time
-                
+                Time = testDTO.Time,
+                TestImage = testDTO.TestImage,
+                ImageMimeType = testDTO.ImageMimeType
             };
 
             foreach (QuestionDto q in testDTO.Questions)

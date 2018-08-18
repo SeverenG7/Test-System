@@ -31,7 +31,7 @@ namespace TestSystem.Web.Controllers
 
         #endregion
 
-
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public ActionResult GetInfoTest
           (int? IdTheme, string difficult, int? IdQuestion, int? IdTest, string search,
@@ -41,7 +41,7 @@ namespace TestSystem.Web.Controllers
             page));
         }
 
-
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public ActionResult CreateNewTest()
         {
@@ -67,10 +67,10 @@ namespace TestSystem.Web.Controllers
             }
             return View(model);
         }
-
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public ActionResult CreateNewTest(TestCreateViewModel model,
-             HttpPostedFileBase image = null)
+             HttpPostedFileBase file)
         {
             if (ModelState.IsValid)
             {
@@ -96,11 +96,11 @@ namespace TestSystem.Web.Controllers
                     Time = new TimeSpan(0, model.selectedTime, 0)
                 };
 
-                if (image != null)
+                if (file != null)
                 {
-                    test.ImageMimeType = image.ContentType;
-                    test.TestImage = new byte[image.ContentLength];
-                    image.InputStream.Read(test.TestImage, 0, image.ContentLength);
+                    test.ImageMimeType = file.ContentType;
+                    test.TestImage = new byte[file.ContentLength];
+                    file.InputStream.Read(test.TestImage, 0, file.ContentLength);
                 }
                 _testService.CreateTest(test);
 
@@ -132,7 +132,7 @@ namespace TestSystem.Web.Controllers
             }
 
         }
-
+        [Authorize(Roles = "admin")]
         public ActionResult DeleteTest(int? id)
         {
             if (!id.HasValue)
@@ -146,7 +146,7 @@ namespace TestSystem.Web.Controllers
             _testService.RemoveTest(id.Value);
             return RedirectToAction("GetInfoTest", "Test");
         }
-
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public ActionResult GenerateTest()
         {
@@ -157,6 +157,7 @@ namespace TestSystem.Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public ActionResult GenerateTest(TestGenerateViewModel model)
         {
@@ -165,7 +166,7 @@ namespace TestSystem.Web.Controllers
                 if (!model.Create)
                 {
                     model.Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName");
-
+                    model.Questions.Clear();
                     TestDto test = _testService.GenerateTest(model.selectedNumber, Int32.Parse(model.selectedTheme), model.selectedDifficult);
                     foreach (QuestionDto question in test.Questions)
                     {
@@ -195,11 +196,11 @@ namespace TestSystem.Web.Controllers
 
         }
 
-
+        [AllowAnonymous]
         public FileContentResult GetImage(int idTest)
         {
             TestDto test= _testService.GetTest(idTest);
-            if (test != null)
+            if (test.ImageMimeType != null)
             {
                 return File(test.TestImage, test.ImageMimeType);
             }

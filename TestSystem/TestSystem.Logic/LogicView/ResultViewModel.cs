@@ -51,6 +51,9 @@ namespace TestSystem.Logic.LogicView
             Result = result;
             Questions = questions;
         }
+
+        public ResultInfoViewModel()
+        { }
             
     }
         

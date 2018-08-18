@@ -19,9 +19,10 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td >
-                                        <a class="nav-link text-dark" 
-                                           href="@Url.Action("GetInfoQuestion", "Question",new {IdQuestion  = item.IdQuestion })#More">
+                                    <td>
+                                        <a class="nav-link text-dark"
+                                           href="@Url.Action("GetInfoQuestion", "Question",new {IdQuestion  = item.IdQuestion ,
+                                             QuestionText = item.QuestionText})#More">
                                             @Html.DisplayFor(modelItem => item.QuestionText)
                                         </a>
                                     </td>

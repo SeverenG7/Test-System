@@ -151,8 +151,15 @@
     <Compile Include="Interfaces\ITestService.cs" />
     <Compile Include="Interfaces\IThemeService.cs" />
     <Compile Include="Interfaces\IUserService.cs" />
+    <Compile Include="LogicView\AccountViewModels.cs" />
+    <Compile Include="LogicView\CommonsViewModels.cs" />
     <Compile Include="LogicView\FiltrationViewModel.cs" />
+    <Compile Include="LogicView\QuestionViewModels.cs" />
+    <Compile Include="LogicView\ResultsViewModel.cs" />
     <Compile Include="LogicView\ResultViewModel.cs" />
+    <Compile Include="LogicView\TestViewModels.cs" />
+    <Compile Include="LogicView\ThemeViewModels.cs" />
+    <Compile Include="LogicView\UsersViewModels.cs" />
     <Compile Include="MapGeneric\IMapGeneric.cs" />
     <Compile Include="MapGeneric\MapClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
