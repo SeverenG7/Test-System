@@ -32,7 +32,7 @@ namespace TestSystem.Logic.Services
                 IdResult = IdResult,
                 UserName = HttpContext.Current.User.Identity.Name,
             };
-  
+
             foreach (Question question in Database.Results.Get(IdResult).Test.Questions)
             {
                 tempResult.QuestionPassing += "" + question.IdQuestion + ",";
@@ -63,6 +63,7 @@ namespace TestSystem.Logic.Services
         public OperationDetails TestPassing(QuestionViewModel question)
         {
             TimerModule currentTimer = (TimerModule)HttpContext.Current.Application["Timer" + HttpContext.Current.User.Identity.Name];
+
             TempResult tempResult = Database.TempResults.GetAll().
                 Where(x => x.UserName == HttpContext.Current.User.Identity.Name).
                 SingleOrDefault();
@@ -80,6 +81,7 @@ namespace TestSystem.Logic.Services
                 EndTestPassing(tempResult);
                 return new OperationDetails(false, null);
             }
+
         }
 
         public OperationDetails GetCurrentTestState(int IdQuestion)
@@ -96,12 +98,11 @@ namespace TestSystem.Logic.Services
 
             if (tempResult != null)
             {
-
                 if (String.IsNullOrWhiteSpace(tempResult.QuestionsPassed))
                 {
                     QuestionViewModel question = MapperFromDB.Map<Question, QuestionViewModel>
                     (Database.Questions.Get(currentId));
-                    foreach(Answer answer in question.Answers)
+                    foreach (AnswerViewModel answer in question.Answers)
                     {
                         answer.Correct = false;
                     }
@@ -109,12 +110,12 @@ namespace TestSystem.Logic.Services
                     return new OperationDetails(Math.Round(timer.CurrentInterval().TotalSeconds).ToString(),
                         question);
                 }
-                if (tempResult.QuestionsPassed.StringStirrer().
+                if (tempResult.QuestionPassing.StringStirrer().
                    Contains(currentId))
                 {
                     QuestionViewModel question = MapperFromDB.Map<Question, QuestionViewModel>
                   (Database.Questions.Get(currentId));
-                    foreach (Answer answer in question.Answers)
+                    foreach (AnswerViewModel answer in question.Answers)
                     {
                         answer.Correct = false;
                     }
@@ -126,7 +127,7 @@ namespace TestSystem.Logic.Services
                 {
                     QuestionViewModel question = MapperFromDB.Map<Question, QuestionViewModel>
                 (Database.Questions.Get(IdQuestion));
-                    foreach (Answer answer in question.Answers)
+                    foreach (AnswerViewModel answer in question.Answers)
                     {
                         answer.Correct = false;
                     }
@@ -183,7 +184,7 @@ namespace TestSystem.Logic.Services
             double answerWeight = (questionDB.Score / question.Answers.Count);
             foreach (Answer answer in questionDB.Answers)
             {
-                Answer answerUser = question.Answers.Where(x => x.IdAnswer == answer.IdAnswer).SingleOrDefault();
+                AnswerViewModel answerUser = question.Answers.Where(x => x.IdAnswer == answer.IdAnswer).SingleOrDefault();
                 userQuestion.UserAnswers.Add(new UserAnswer()
                 {
                     IdUserQuestion = userQuestion.IdUserQuestion,
@@ -203,6 +204,7 @@ namespace TestSystem.Logic.Services
             Database.Complete();
             Database.UserQuestions.Update(userQuestion);
             Database.TempResults.Update(tempResult);
+            Database.Complete();
         }
 
         private void EndTestPassing(TempResult tempResult)
@@ -228,7 +230,7 @@ namespace TestSystem.Logic.Services
             public TimerModule(int IdResult, TimeSpan span)
             {
                 this.IdResult = IdResult;
-                this.testTime = span;
+                testTime = span;
                 _timer = new Timer(new TimerCallback(EndTimer), null, testTime.Minutes * 60000, 0);
                 StopWatch.Start();
             }
@@ -250,7 +252,7 @@ namespace TestSystem.Logic.Services
                 {
                     Result result = Database.Results.Get(IdResult);
                     TempResult tempResult = Database.TempResults.Get(IdResult);
-                    result.ResultScore = (tempResult.TotalScore * 100) / Database.Results.Get(IdResult).Test.TotalScore;
+                    result.ResultScore = ((tempResult.TotalScore * 100) / Database.Results.Get(IdResult).Test.TotalScore);
                     result.TestPassed = true;
                     result.CreateDate = DateTime.Now;
                     Database.TempResults.Remove(tempResult);

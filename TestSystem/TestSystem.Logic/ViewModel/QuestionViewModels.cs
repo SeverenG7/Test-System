@@ -69,7 +69,7 @@ namespace TestSystem.Logic.ViewModel
         public DateTime CreateDate { get; set; }
         public int? IdTheme { get; set; }
         public Theme Theme { get; set; }
-        public virtual List<Answer> Answers { get; set; }
+        public virtual List<AnswerViewModel> Answers { get; set; }
         public virtual ICollection<Test> Tests { get; set; }
     }
 

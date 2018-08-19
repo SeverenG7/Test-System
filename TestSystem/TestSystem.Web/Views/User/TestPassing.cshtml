@@ -27,7 +27,7 @@
         </div>
         </div>
         <div class="container">
-            <div class="card card-register mx-auto mt-5" style="width:50%">
+            <div class="card mx-auto mt-5" style="width:50%">
                 <div class="card-header">Test passing </div>
 
                 <div class="card-body">
@@ -37,14 +37,13 @@
                             <div class="col-md-auto">
                                 @Html.DisplayFor(m => m.QuestionText,
                                new { @class = "form-control" })
+                                @Html.HiddenFor(m => m.IdQuestion)
                             </div>
                         </div>
                         <div class="form-group">
-                            <ol class="list-group">
                             @for (int i = 0; i < Model.Answers.Count; i++)
                             {
-                                <li class="list-group-item">
-                                    <div class="form-group">
+                               
                                         <div class="col-md-12">
                                             <div class="form-control-plaintext">
                                                 <div style=" width:100%">
@@ -53,14 +52,12 @@
                                                 <div class="ml-1">
                                                     @Html.CheckBoxFor(model => model.Answers[i].Correct,
                                              htmlAttributes: new { @class = "control" }) 
+                                                    @Html.HiddenFor(model => model.Answers[i].IdAnswer)
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </li>
-
                             }
-                                </ol>
+                   
                         </div>
                         <div>
                             <input autofocus class="btn btn-primary btn-block" type="submit" value="Next" />
@@ -74,8 +71,6 @@
             <script src=@Url.Content("/Content/vendor/bootstrap/js/bootstrap.bundle.min.js")></script>
             <script src=@Url.Content("/Content/vendor/jquery-easing/jquery.easing.min.js")></script>
             <script src=@Url.Content("/Content/js/sb-admin.min.js")></script>
-
-
         </div>
 
         <script type="text/javascript">

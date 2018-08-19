@@ -68,10 +68,10 @@ namespace TestSystem.Logic.Services
                 if (question.Chosen == true)
                 {
                     test.Questions.Add(Database.Questions.Get(question.IdQuestion));
-                    test.TotalScore += question.Score;
+                    test.TotalScore += Database.Questions.Get(question.IdQuestion).Score;
                 }
             }
-
+            test.QuestionsNumber = test.Questions.Count;
             if (image != null)
             {
                 test.ImageMimeType = image.ContentType;

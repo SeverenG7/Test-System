@@ -43,7 +43,10 @@ namespace TestSystem.Web.Controllers
         public ActionResult StartTest(int IdResult)
         {
             ViewBag.TestName = _resultService.GetResult(IdResult).Test.TestName;
-            return Redirect("TestPassing?idQuestion=" + _testPassService.StartTest(IdResult).IdQuestion.ToString());
+            return RedirectToAction("TestPassing","User", new
+            {
+                _testPassService.StartTest(IdResult).IdQuestion
+            });
         }
 
         [TestNoPassing]
@@ -56,7 +59,6 @@ namespace TestSystem.Web.Controllers
             }
             else
             {
-
                 ViewBag.Time = Int32.Parse(details.Id);
                 return View(details.Value);
 

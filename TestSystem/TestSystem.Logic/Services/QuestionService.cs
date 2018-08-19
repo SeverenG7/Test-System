@@ -100,23 +100,26 @@ namespace TestSystem.Logic.Services
 
         public QuestionViewModel GetQuestion(int? id)
         {
-            Question question = Database.Questions.Get(id.Value);
-            QuestionViewModel questionView = new QuestionViewModel
-            {
-                QuestionImage = question.QuestionImage,
-                QuestionText = question.QuestionText,
-                IdQuestion = question.IdQuestion,
-                Answers = question.Answers.ToList(),
-                Score = question.Score,
-                AnswerNumber = question.AnswerNumber,
-                CreateDate = question.CreateDate,
-                Difficult = question.Difficult,
-                IdTheme = question.IdTheme,
-                ImageMimeType = question.ImageMimeType,
-                Tests = question.Tests,
-                Theme = question.Theme
-            };
-            return questionView;
+
+
+            //Question question = Database.Questions.Get(id.Value);
+            //QuestionViewModel questionView = new QuestionViewModel
+            //{
+            //    QuestionImage = question.QuestionImage,
+            //    QuestionText = question.QuestionText,
+            //    IdQuestion = question.IdQuestion,
+            //    Score = question.Score,
+            //    AnswerNumber = question.AnswerNumber,
+            //    CreateDate = question.CreateDate,
+            //    Difficult = question.Difficult,
+            //    IdTheme = question.IdTheme,
+            //    ImageMimeType = question.ImageMimeType,
+            //    Tests = question.Tests,
+            //    Theme = question.Theme
+            //};
+
+            return MapperFromDB.Map<Question, QuestionViewModel>(Database.Questions.Get(id.Value));
+
         }
 
         public void RemoveQuestion(int id)
