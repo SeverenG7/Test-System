@@ -10,7 +10,7 @@
             <div class="table-responsive">
                 <div class="panel panel-primary">
                     <div class="panel-heading">Last 5 results...</div>
-                    <table class="table table-bordered  table-hover  " width="100" cellspacing="10">
+                    <table class="table table-bordered  table-hover  " >
                         <thead class="bg-primary text-white">
                             <tr class="thead-dark">
                                 <td>User</td>
@@ -22,10 +22,16 @@
                             {
                                 <tr>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.UserInfo.ApplicationUser.Email)
+                                        <a class="nav-link text-dark" href="@Url.Action("ResultInfo" ,
+                                                                           "Result" , new { item.IdResult})">
+                                        @Html.DisplayFor(modelItem => item.UserInfo.UserFirstName )
+                                          </a>
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Test.TestName)
+                                        <a class="nav-link text-dark" href="@Url.Action("ResultInfo" ,
+                                                                           "Result" , new { item.IdResult})">
+                                            @Html.DisplayFor(modelItem => item.Test.TestName)
+                                            </a>
                                     </td>
                                 </tr>
                             }

@@ -16,7 +16,7 @@
 </head>
 <body>
     <div class="container">
-        <h2>More information about questions</h2>
+        <h2 class="display-3 text-info">Questions dashboard</h2>
         <form method="get">
             <div class="form-inline">
                 @using (Html.BeginForm())
@@ -52,12 +52,12 @@
 
                     </div>
                 </div>
-                <input type="submit" value="Sort" class="btn btn-default" />
+                <input type="submit" value="Sort" class="btn btn-primary" style="width:100px" />
 
             </div>
         </form>
         <div id="tables">
-            <table class="table table-bordered table-hover" width="100" cellspacing="0">
+            <table class="table  table-hover" width="100" cellspacing="0">
                 <thead class="show">
                     <tr>
                         <th>Question </th>
@@ -97,7 +97,7 @@
                                 More...
                             </button>
                             <button class="btn btn-primary"
-                                    onclick="location.href='@Url.Action("EditQuestion", "Question" ,new { IdQuestion = item.IdQuestion })'">
+                                    onclick="location.href='@Url.Action("EditQuestion", "Question",new {IdQuestion = item.IdQuestion })'">
                                 Edit
                             </button>
                             <button class="btn btn-danger"
@@ -137,12 +137,10 @@
                         <p style="font-size:x-large">@ViewBag.QuestionText</p>
                     </div>
                 }
-
                 <h3 class="display-4">
                     Answers in Selected Question
                 </h3>
-
-                <ol class="list-counter-circle">
+                <ol class="list-counter-circle text-dark">
                     @foreach (var answer in Model.Answers)
                     {
                         if (answer.Correct == true)
@@ -159,23 +157,21 @@
                         </li>
                     }
                 </ol>
-
+           
             }
 
             @if (Model.Tests != null)
             {
                 <h3 class="display-4">Tests in which u can find this question:</h3>
-                <ol class="list-counter-circle">
+                <ol class="list-counter-circle mb-5">
                     @foreach (var test in Model.Tests)
                     {
-    
-                    <li style="background-color:lightgrey">
-
-                    <a class="nav-link text-dark"  href="@Url.Action("GetInfoTest","Test" , new {IdTest = test.IdTest })" >
-                        @test.TestName  <span class="text-info"> Theme:</span>  @test.Theme.ThemeName
-                                        <span class="text-info">Difficult: </span>    @test.Difficult
-                        </a>
-                    </li>
+                        <li style="background-color:lightgrey">
+                            <a class=" text-dark" href="@Url.Action("GetInfoTest","Test" , new {IdTest = test.IdTest })">
+                                @test.TestName <span class="text-info"> Theme:</span>  @test.Theme.ThemeName
+                                <span class="text-info">Difficult: </span>    @test.Difficult
+                            </a>
+                        </li>
                     }
                 </ol>
             }

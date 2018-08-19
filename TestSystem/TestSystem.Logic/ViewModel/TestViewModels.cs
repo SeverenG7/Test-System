@@ -8,6 +8,7 @@ namespace TestSystem.Logic.ViewModel
 {
     public class TestCreateViewModel
     {
+        public int IdTest { get; set; }
         [Required(ErrorMessage = "Add name to test")]
         public string TestName { get; set; }
         [Display(Name = "Difficult")]
@@ -25,8 +26,10 @@ namespace TestSystem.Logic.ViewModel
         public IEnumerable<SelectListItem> Time { get; set; }
         [Required(ErrorMessage = "Add time for passing test")]
         [Range(1, 35,
-        ErrorMessage = "Time for {0} must be between {1} and {2}.")]
+        ErrorMessage = "Time for test must be between {1} and {2} minutes.")]
         public int selectedTime { get; set; }
+        public byte[] TestImage { get; set; }
+        public string ImageMimeType { get; set; }
         public TestCreateViewModel()
         {
             Difficult = new SelectList(new List<string>()
@@ -66,12 +69,17 @@ namespace TestSystem.Logic.ViewModel
         [DataType(DataType.MultilineText)]
         public string TestDescription { get; set; }
 
-        public List<Question> Questions { get; set; }
+        public List<QuestionViewModel> Questions { get; set; }
 
         public IEnumerable<SelectListItem> NumberQuestions { get; set; }
         public int selectedNumber { get; set; }
         public bool Create { get; set; }
 
+        [Required(ErrorMessage = "Add time for passing test")]
+        [Range(1, 35,
+       ErrorMessage = "Time for test must be between {1} and {2} minutes.")]
+        public int selectedTime { get; set; }
+        public IEnumerable<SelectListItem> Time { get; set; }
         public TestGenerateViewModel()
         {
             Difficult = new SelectList(new List<string>()
@@ -89,7 +97,15 @@ namespace TestSystem.Logic.ViewModel
             }
             NumberQuestions = new SelectList(list);
             Theme = new SelectList(new List<Theme>());
-            Questions = new List<Question>();
+            Questions = new List<QuestionViewModel>();
+            List<int> list_time = new List<int>();
+            for (int i = 1; i < 31; i++)
+            {
+                list_time.Add(i);
+            }
+            Time = new SelectList(list_time);
+            Theme = new SelectList(new List<Theme>());
+            selectedTime = 10;
 
         }
     }

@@ -56,7 +56,7 @@
                 <div class="col-md-2 ml-5">
                     <div class="row">
                         <div class="text-left">
-                            Choose theme
+                            Choose difficult
                         </div>
                         <div class="form-inline mb-3 mr-4">
 
@@ -71,7 +71,7 @@
             </div>
         </form>
 
-        <table class="table table-bordered table-hover" width="100" cellspacing="0">
+        <table class="table  table-hover" width="100" cellspacing="0">
             <thead class="show">
                 <tr> 
                     <th>Test</th>
@@ -104,8 +104,12 @@
                     </td>
                     <td class="text-center">
                         <button class="btn btn-primary"
-                                onclick="location.href='@Url.Action("GetInfoTest" , "Test" ,new { idTest = item.IdTest })'">
+                                onclick="location.href='@Url.Action("GetInfoTest" , "Test" ,new { idTest = item.IdTest })#contentPager'">
                             Select
+                        </button>
+                        <button class="btn btn-primary"
+                                onclick="location.href='@Url.Action("EditTest" , "Test" ,new { id = item.IdTest })'">
+                           Edit
                         </button>
                         <button class="btn btn-danger"
                                 onclick="location.href='@Url.Action("DeleteTest" , "Test" ,new { id = item.IdTest })'">
@@ -126,10 +130,10 @@
         </div>
         @if (Model.Questions != null)
         {
-            <h3>Questions by Selected Test</h3>
+            <h3 class="display-3 text-info">Questions by Selected Test</h3>
             <div class="scroll-table_2">
                 <div class="card-body">
-                    <table class="table table-bordered table-hover" id="Questions">
+                    <table class="table  table-hover text-center" id="Questions">
                         <tr>
                             <th>Question</th>
                             <th>Answers</th>
@@ -174,13 +178,11 @@
                                         <button class="btn btn-danger"
                                                 onclick="
                                 location.href='@Url.Action("DeleteFromTest" , "Question" ,new {IdQuestion = item.IdQuestion ,
-                                          idTest = ViewBag.IdTest})'">
+                                          idTest = Model.IdTest})'">
                                             Delete from test
                                         </button>
-                                        <button class="btn btn-success"
-                                                onclick="
-                                location.href='@Url.Action("EditQuestion","Question"  ,new {id = item.IdQuestion ,
-                                          idTest = ViewBag.IdTest})'">
+                                        <button class="btn btn-primary"
+                                                onclick="location.href='@Url.Action("EditQuestion", "Question",new {IdQuestion = item.IdQuestion })'">
                                             Edit
                                         </button>
                                     </div>

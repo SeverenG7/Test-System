@@ -7,10 +7,11 @@ using TestSystem.Logic.ViewModel;
 using System.Web.Mvc;
 using System.Web;
 using TestSystem.Logic.Interfaces;
+using TestSystem.Logic.MapGeneric;
 
 namespace TestSystem.Logic.Services
 {
-    public class QuestionService : IQuestionService
+    public class QuestionService : MapClass<Answer,AnswerViewModel>, IQuestionService
     {
         #region Infrastructure
         private  IUnitOfWork Database { get;}
@@ -27,10 +28,10 @@ namespace TestSystem.Logic.Services
             {
                 QuestionCreateViewModel newQuestion = new QuestionCreateViewModel();
                 newQuestion.Theme = new SelectList(Database.Themes.GetAll(), "IdTheme", "ThemeName");
-                newQuestion.Answers = new List<Answer>();
+                newQuestion.Answers = new List<AnswerViewModel>();
                 for (int i = 0; i < 5; i++)
                 {
-                    newQuestion.Answers.Add(new Answer());
+                    newQuestion.Answers.Add(new AnswerViewModel());
                 }
                 return newQuestion;
             }
@@ -42,11 +43,20 @@ namespace TestSystem.Logic.Services
                     QuestionCreateViewModel updateQuestion = new QuestionCreateViewModel
                     {
                         selectedDifficult = question.Difficult,
-                        selectedTheme = question.Theme.ThemeName,
                         QuestionText = question.QuestionText,
-                        Answers = question.Answers.ToList(),
-                        IdQuestion = question.IdQuestion
+                        Answers = MapperFromDB.Map<IEnumerable<Answer>,List<AnswerViewModel>>(question.Answers),
+                        IdQuestion = question.IdQuestion,
+                        ImageMimeType = question.ImageMimeType,
+                        QuestionImage = question.QuestionImage
                     };
+                    if (question.Theme == null)
+                    {
+                        updateQuestion.selectedTheme = "no theme";
+                    }
+                    else
+                    {
+                        updateQuestion.selectedTheme = question.Theme.ThemeName;
+                    }
                     updateQuestion.Theme = new SelectList(Database.Themes.GetAll(), "IdTheme", "ThemeName");
                     return updateQuestion;
                 }
@@ -67,11 +77,12 @@ namespace TestSystem.Logic.Services
                 CreateDate = DateTime.Now
             };
 
-            foreach (Answer ans in model.Answers)
+            foreach(AnswerViewModel ans in model.Answers)
             {
                 if (!String.IsNullOrEmpty(ans.AnswerText))
                 {
-                    question.Answers.Add(ans);
+                    question.Answers.Add(MapperToDB.Map<AnswerViewModel, Answer>
+                        (ans));
                 }
             }
             if (image != null)
@@ -81,7 +92,7 @@ namespace TestSystem.Logic.Services
                 image.InputStream.Read(question.QuestionImage, 0, image.ContentLength);
             }
             question.AnswerNumber = question.Answers.Count;
-
+            question.Score = ComputeScore(question);
             Database.Questions.Add(question);
             Database.Answers.AddRange(question.Answers);
             Database.Complete();
@@ -118,18 +129,29 @@ namespace TestSystem.Logic.Services
             }
         }
 
-        public void UpdateQuestion(QuestionCreateViewModel questionDTO)
+        public void UpdateQuestion(QuestionCreateViewModel questionDTO , HttpPostedFileBase image)
         {
             Question question = Database.Questions.Get(questionDTO.IdQuestion);
-
-            foreach (Answer ans in questionDTO.Answers)
+            question.Difficult = questionDTO.selectedDifficult;
+            question.QuestionText = questionDTO.QuestionText;
+            question.Theme = Database.Themes.Get(Int32.Parse(questionDTO.selectedTheme));
+            foreach(AnswerViewModel ans in questionDTO.Answers)
             {
                 Answer answer = Database.Answers.Get(ans.IdAnswer);
                 answer.AnswerText = ans.AnswerText;
                 answer.Correct = ans.Correct;
                 Database.Answers.Update(answer);
             }
-            Database.Questions.Update(Database.Questions.Get(questionDTO.IdQuestion));
+            if (image != null)
+            {
+                question.ImageMimeType = image.ContentType;
+                question.QuestionImage = new byte[image.ContentLength];
+                image.InputStream.Read(question.QuestionImage, 0, image.ContentLength);
+            }
+
+            question.AnswerNumber = question.Answers.Count;
+            question.Score = ComputeScore(question);
+            Database.Questions.Update(question);
             Database.Complete();
         }
 
@@ -170,7 +192,7 @@ namespace TestSystem.Logic.Services
             return lastQuestions;
         }
 
-        public  int ComputeScore(QuestionViewModel question)
+        public  int ComputeScore(Question question)
         {
             int koeff = 0;
             switch (question.Difficult)

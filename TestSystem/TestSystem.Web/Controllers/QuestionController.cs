@@ -33,15 +33,16 @@ namespace TestSystem.Web.Controllers
 
         [HttpPost]
         public ActionResult CreateNewQuestion(QuestionCreateViewModel model,
-            HttpPostedFileBase image = null)
+            HttpPostedFileBase image)
         {
-            if (ModelState.IsValid)
+            if (model.QuestionText != null && model.Answers.Find(x=>x.AnswerText != null) != null)
             {
                 _questionService.CreateQuestion(model, image);
                 return RedirectToAction("GetInfoQuestion", "Question");
             }
             else
             {
+                ModelState.AddModelError("", "You must give answer for question!");
                 model = _questionService.GetCreationModel(null);
                 return View(model);
             }
@@ -62,15 +63,16 @@ namespace TestSystem.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditQuestion(QuestionCreateViewModel model)
+        public ActionResult EditQuestion(QuestionCreateViewModel model , HttpPostedFileBase image)
         {
             if (ModelState.IsValid)
             {
-                _questionService.UpdateQuestion(model);
+                _questionService.UpdateQuestion(model,image);
                 return RedirectToAction("GetInfoQuestion", "Question", model.IdQuestion);
             }
             else
             {
+                model = _questionService.GetCreationModel(null);
                 return View(model);
             }
         }
@@ -81,7 +83,7 @@ namespace TestSystem.Web.Controllers
             if (idTest.HasValue && idQuestion.HasValue)
             {
                 _questionService.DeleteQuestionFromTest(idQuestion.Value, idTest.Value);
-                return RedirectToAction("GetInfoTest", "Test");
+                return RedirectToAction("GetInfoTest", "Test" ,new { IdTest = idTest.Value });
             }
             else
             {

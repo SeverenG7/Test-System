@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using TestSystem.Logic.Interfaces;
 using TestSystem.Logic.ViewModel;
 
@@ -25,9 +26,12 @@ namespace TestSystem.Web.Controllers
         }
 
         [HttpGet]
-        public ActionResult GivePremission(string IdUser)
+        public ActionResult GivePremission(string IdUser,string sortOrder)
         {
-            return View(_resultService.CreatePremissionModel(IdUser));
+            ViewBag.NameSortParm =  sortOrder == "Name" ? "name_desc" : "Name";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewBag.DateSortParm = sortOrder == "Difficult" ? "difficult_desc" : "Difficult";
+            return View(_resultService.CreatePremissionModel(IdUser , sortOrder));
         }
 
         [HttpPost]

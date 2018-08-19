@@ -1,76 +1,150 @@
-﻿@model TestSystem.Logic.ViewModel.QuestionCreateViewModel
+﻿
+@model TestSystem.Logic.ViewModel.QuestionCreateViewModel
 
-@{
-    ViewBag.Title = "EditQuestion";
-}
 
-<h2>EditQuestion</h2>
+<!DOCTYPE html>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
-<div class="form-horizontal">
-    <h4>QuestionDTO</h4>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-    @Html.HiddenFor(model => model.IdQuestion)
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.QuestionText, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.QuestionText, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.QuestionText, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div style="position:relative;">
-            <label>Картинка</label>
-            <a class='btn' href='javascript:;'>
-                Выберите файл...
-                <input type="file" name="Image" size="40"
-                       style="position:absolute;z-index:2;top:0;
-                                left:0;filter: alpha(opacity=0); opacity:0;
-                                background-color:transparent;color:transparent;"
-                       onchange='$("#upload-file-info").html($(this).val());'>
-            </a>
-            <span class='label label-info' id="upload-file-info"></span>
-        </div>
-        @if (Model.QuestionImage == null)
-        {
-            <div class="form-control-static">Нет картинки</div>
+<html>
+<head>
+    <style>
+        .thumb {
+            height: 150px;
+            border: 1px solid #000;
+            margin: 10px 5px 0 0;
         }
-        else
-        {
-            <img class="img-thumbnail" width="150" height="150"
-                 src="@Url.Action("GetImage", "Question",
+    </style>
+    <meta name="viewport" content="width=device-width" />
+    <title>Edit question</title>
+</head>
+<body>
+    <div class="container">
+        <div class="card-header-tabs">
+            @using (Html.BeginForm("EditQuestion", "Question", FormMethod.Post,
+                new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                <input type="file" id="files" name="files[]"
+                       style="visibility:hidden" multiple value="Choose" />
+
+                <h4 class="text-info display-3">Edit question...</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="row float-lg-left col-md-5">
+                    <div class="container">
+                        <div class="row">
+                            <div class=" form-group">
+                                <div class="col-md-12">
+                                    <label class="text-center col-md-12"> Choose theme... </label>
+                                    @Html.DropDownListFor(model => model.selectedTheme , Model.Theme,
+                                                htmlAttributes: new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class=" form-group">
+                                <div class="col-md-12">
+                                    <label class="text-center col-md-12">Choose difficult...</label>
+                                    @Html.DropDownListFor(model => model.selectedDifficult  , Model.Difficult,
+                                            htmlAttributes: new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.QuestionText, htmlAttributes: new { @class = "control-label col-md-12" })
+                            <div class="col-md-12">
+                                @Html.EditorFor(model => model.QuestionText, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.QuestionText, "", new { @class = "text-danger" })
+                                @Html.HiddenFor(model => model.IdQuestion)
+                            </div>
+                        </div>
+                        @if (Model.ImageMimeType != null)
+                        {
+                            <img class="img-thumbnail" width="150" height="150"
+                                 src="@Url.Action("GetImage", "Question",
                         new { Model.IdQuestion })" />
+                        }
+                        <label for="files" class="btn btn-primary ml-3">Select Image</label>
+                        <div class="form-inline">
+                            <div>
+                            </div>
+                            <div>
+                                <output id="list"></output>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10 mt-5">
+                                <input type="submit" value="Edit" class="btn btn-primary" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row col-md-5">
+                    <label class=""> Put answers : </label>
+                    <div class="card-group ">
+                        <ol class="list-group">
+                            @for (int i = 0; i < Model.Answers.Count; i++)
+                            {
+                                <li class="list-group-item">
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="card">
+                                                    @Html.TextAreaFor(model => model.Answers[i].AnswerText,
+                                                   htmlAttributes: new { @class= "form-control" , @placeholder = "Put answer text..." ,
+                                                       style = "width:300px  "})
+                                                </div>
+                                                <div class="ml-2">
+                                                    @Html.CheckBoxFor(model => model.Answers[i].Correct,
+                                             htmlAttributes: new { @class = "control" }) True/False
+                                                    @Html.HiddenFor(model => model.Answers[i].IdAnswer)
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        </ol>
+
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <script>
+        function handleFileSelect(evt) {
+            var files = evt.target.files; // FileList object
+
+            // Loop through the FileList and render image files as thumbnails.
+            for (var i = 0, f; f = files[i]; i++) {
+
+                // Only process image files.
+                if (!f.type.match('image.*')) {
+                    continue;
+                }
+
+                var reader = new FileReader();
+
+                // Closure to capture the file information.
+                reader.onload = (function (theFile) {
+                    return function (e) {
+                        // Render thumbnail.
+                        var span = document.createElement('span');
+                        span.innerHTML = ['<img class="thumb" src="', e.target.result,
+                            '" title="', escape(theFile.name), '"/>'].join('');
+                        document.getElementById('list').insertBefore(span, null);
+                    };
+                })(f);
+
+                // Read in the image file as a data URL.
+                reader.readAsDataURL(f);
+            }
         }
-    </div>
-    @for (int i = 0; i < Model.AnswerNumber; i++)
-    {
-        @Html.HiddenFor(model => model.Answers[i].IdAnswer)
-        <div class="form-group">
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Answers[i].AnswerText, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.QuestionText, "", new { @class = "text-danger" })
-            </div>
-        </div>
 
-        <div class="form-group">
-            <div class="col-md-10">
-                @Html.CheckBoxFor(model => model.Answers[i].Correct, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.QuestionText, "", new { @class = "text-danger" })
-            </div>
-        </div>
-    }
+        document.getElementById('files').addEventListener('change', handleFileSelect, false);
+    </script>
 
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Save" class="btn btn-default" />
-        </div>
-    </div>
-</div>
-}
+
+</body>
+</html>

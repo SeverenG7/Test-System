@@ -8,12 +8,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link href="~/Content/css/Tables.css" rel="stylesheet" type="text/css" />
     <meta name="viewport" content="width=device-width" />
     <title>Tests info</title>
 </head>
 <body>
     <div class="container">
-        <h2>More information about questions</h2>
+        <h2 class="display-3 text-info"> Results dashboard </h2>
         <form method="get">
             <div class="form-inline">
                 @using (Html.BeginForm())
@@ -34,59 +35,61 @@
                 }
 
             </div>
-            </form>
+        </form>
 
 
-            <table class="table table-bordered table-hover" id="dataTable" width="100" cellspacing="0">
-                <thead class="show">
-                    <tr>
-                        <th>Name </th>
-                        <th>Lastname</th>
-                        <th>Email</th>
-                    </tr>
-                </thead>
+        <table class="table table-hover  " width="100" cellspacing="0">
+            <thead class="show">
+                <tr>
+                    <th>Name </th>
+                    <th>Lastname</th>
+                    <th>Email</th>
+                    <th>Tools</th>
+                </tr>
+            </thead>
 
-                @foreach (var item in Model.Users)
+            @foreach (var item in Model.Users)
+            {
+                string selectedRow = "";
                 {
-                    string selectedRow = "";
-                    {
-                        selectedRow = "bg-light";
-                    }
-                    <tr class="@selectedRow">
-                        <td>
-                            @Html.DisplayFor(modelItem => item.UserFirstName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.UserLastName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ApplicationUser.Email)
-                        </td>
-                        <td>
-                            <button class="btn btn-primary"
-                                    onclick="location.href='@Url.Action( "GetInfoResult","Result" , new { IdUser = item.ApplicationUser.Id })'">
-                                More...
-                            </button>
-                            <button class="btn btn-warning"
-                                    onclick="location.href='@Url.Action("GivePremission", "Result" ,new { IdUser = item.ApplicationUser.Id })'">
-                                Give premission
-                            </button>
 
-                        </td>
-                    </tr>
                 }
-            </table>
+                <tr class="@selectedRow">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserFirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserLastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ApplicationUser.Email)
+                    </td>
+                    <td>
+                        <button class="btn btn-primary"
+                                onclick="location.href='@Url.Action( "GetInfoResult","Result" , new { IdUser = item.ApplicationUser.Id })'">
+                            More...
+                        </button>
+                        <button class="btn btn-warning"
+                                onclick="location.href='@Url.Action("GivePremission", "Result" ,new { IdUser = item.ApplicationUser.Id })'">
+                            Give premission
+                        </button>
+
+                    </td>
+                </tr>
+            }
+        </table>
         @if (TempData["Warning"] != null)
         {
             <h4 class="text-danger"> @TempData["Warning"]</h4>
         }
 
-            @if (Model.Results != null)
-            {
-                <h3>
-                    Results of selected user
-                </h3>
-                <table class="table table-bordered table-hover">
+        @if (Model.Results != null)
+        {
+            <h3>
+                Results of selected user
+            </h3>
+            <div class="scroll-table_2">
+                <table class="table  table-hover">
                     <tr>
                         <th>Test</th>
                         <th>Score</th>
@@ -101,7 +104,7 @@
                             <td>
                                 @if (item.TestPassed)
                                 {
-                               <p>@Math.Round(@item.ResultScore.Value) %</p>
+                                    <p>@Math.Round(@item.ResultScore.Value) %</p>
                                 }
                                 else
                                 {
@@ -120,8 +123,9 @@
                         </tr>
                     }
                 </table>
-            }
-    </div>
+                </div>
+                }
+            </div>
 </body>
 </html>
 

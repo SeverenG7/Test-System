@@ -10,7 +10,7 @@ namespace TestSystem.Logic.Interfaces
         List<ResultFullViewModel> GetLastResults();
         ResultInfoViewModel GetResultInfo(int IdResult);
         ResultViewModel GetAllResults(string search, string id);
-        PremissionViewModel CreatePremissionModel(string IdUser);
+        PremissionViewModel CreatePremissionModel(string IdUser, string sortOrder);
         void Dispose();
     }
 }

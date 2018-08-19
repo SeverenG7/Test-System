@@ -14,29 +14,18 @@
                         <thead class="bg-primary text-white">
                             <tr class="bg-primary text-white">
                                 <td>Test name</td>
-                                <td>Questions number</td>
-                                <td>Results</td>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td width="200">
+                                    <td width="350">
                                         <a class="nav-link text-dark" href="@Url.Action("GetInfoTest", "Test",new {IdTest = item.IdTest })">
                                             @Html.DisplayFor(modelItem => item.TestName)
                                         </a>
                                     </td>
-                                    <td>
-                                        <a class="nav-link text-dark" href="@Url.Action("GetInfoTest", "Test",new {IdTest = item.IdTest })">
-                                            @Html.DisplayFor(modelItem => item.QuestionsNumber)
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a class="nav-link text-dark" href="@Url.Action("GetInfoTest", "Test",new {IdTest = item.IdTest })">
-                                            @Html.DisplayFor(modelItem => item.Result.Count)
-                                        </a>
-                                    </td>
+ 
                                 </tr>
                             }
                         </tbody>

@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace TestSystem.Logic.Services
 {
-    public class ResultService : MapClass<Result,ResultFullViewModel> ,IResultService
+    public class ResultService : MapClass<Result, ResultFullViewModel>, IResultService
     {
         #region Infrastructure
         IUnitOfWork Database { get; }
@@ -110,10 +110,11 @@ namespace TestSystem.Logic.Services
             return model;
         }
 
-        public PremissionViewModel CreatePremissionModel(string IdUser)
+        public PremissionViewModel CreatePremissionModel(string IdUser, string sortOrder)
         {
             PremissionViewModel model = new PremissionViewModel();
             model.UserResult.IdUserInfo = IdUser;
+
             foreach (Test test in Database.Tests.GetAll())
             {
                 model.Tests.Add(new TestPremissionViewModel
@@ -125,6 +126,27 @@ namespace TestSystem.Logic.Services
                     Theme = test.Theme
                 });
             }
+
+            if (sortOrder != null)
+            {
+                switch (sortOrder)
+                {
+                    case "difficult_desc":
+                       model.Tests  = model.Tests.OrderByDescending(x=> x.Difficult).ToList();
+                        break;
+                    case "Difficult":
+                        model.Tests = model.Tests.OrderBy(x => x.Difficult).ToList();
+                        break;
+                    case "Name":
+                        model.Tests = model.Tests.OrderBy(x => x.TestName).ToList();
+                        break;
+                    case "name_desc":
+                        model.Tests = model.Tests.OrderByDescending(x => x.TestName).ToList();
+                        break;
+                }
+            }
+
+
             return model;
         }
 
@@ -137,8 +159,8 @@ namespace TestSystem.Logic.Services
     }
 }
 
-            
 
 
-       
+
+
 

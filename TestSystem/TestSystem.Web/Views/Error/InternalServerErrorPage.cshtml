@@ -1,7 +1,7 @@
 ﻿
 @{
     Layout = ViewBag.Layout;
-    ViewBag.Title = "Error 403";
+    ViewBag.Title = "Error 505";
 
 }
 
@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Error 403</title>
+    <title>Error 505</title>
     <!-- Bootstrap core CSS-->
     <link href=@Url.Content("/Content/vendor/bootstrap/css/bootstrap.min.css") rel="stylesheet">
     <!-- Custom fonts for this template-->
@@ -27,13 +27,13 @@
         <div class="form-horizontal">
             <div class=" text-center">
                 <h2 class="display-4 text-info">
-                   Sorry, but you do not have premission to access / on this server
+                    The page you were looking for can't be found 404
                 </h2>
             </div>
             <div class="text-center">
                 @if (ViewBag.Image != null)
                 {
-                    <img src="~/Content/actionImages/error-403.jpg"  class="img-responsive" />
+                    <img src="~/Content/actionImages/notFoundError.jpg" width="300" height="300" class="img-responsive" />
                 }
             </div>
             <div class="text-center mt-5">
@@ -71,7 +71,6 @@
     </div>
 </body>
 </html>
-
 
 
 

@@ -11,7 +11,7 @@ namespace TestSystem.Logic.Interfaces
         QuestionCreateViewModel GetCreationModel(int? id);
         void CreateQuestion(QuestionCreateViewModel questionDto, HttpPostedFileBase image);
         void RemoveQuestion(int id);
-        void UpdateQuestion(QuestionCreateViewModel questionDto);
+        void UpdateQuestion(QuestionCreateViewModel questionDto, HttpPostedFileBase image);
         void DeleteQuestionFromTest(int? idQuestion, int? idTest);
         IEnumerable<QuestionViewModel> GetLastQuestions();
     }

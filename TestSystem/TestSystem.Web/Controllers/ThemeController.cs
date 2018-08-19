@@ -47,7 +47,7 @@ namespace TestSystem.Web.Controllers
         #endregion
 
         #region Delete/Details Themes
-        [HttpPost]
+        [HttpGet]
         public ActionResult DeleteTheme(int? id)
         {
             if (!id.HasValue)

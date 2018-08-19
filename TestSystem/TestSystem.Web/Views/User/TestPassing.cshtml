@@ -27,35 +27,40 @@
         </div>
         </div>
         <div class="container">
-            <div class="card card-login mx-auto mt-5">
+            <div class="card card-register mx-auto mt-5" style="width:50%">
                 <div class="card-header">Test passing </div>
 
                 <div class="card-body">
                     @using (Html.BeginForm("TestPassingPost", "User", FormMethod.Post))
                     {
-                        <div class="form-group border border-dark border-left-0 border-right-0 border-top-0">
+                        <div class="form-group border border-dark border-left-0 border-right-0 border-top-0 ">
                             <div class="col-md-auto">
                                 @Html.DisplayFor(m => m.QuestionText,
                                new { @class = "form-control" })
                             </div>
                         </div>
                         <div class="form-group">
-                           
+                            <ol class="list-group">
                             @for (int i = 0; i < Model.Answers.Count; i++)
                             {
-                                @Html.HiddenFor(model => model.Answers[i].IdAnswer)
-
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        @Html.DisplayFor(model => model.Answers[i].AnswerText,
-                             new { htmlAttributes = new { @class = "form-control" } })
-                                        @Html.CheckBoxFor(model => model.Answers[i].Correct,
-    htmlAttributes: new { @class = "control" })
+                                <li class="list-group-item">
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <div class="form-control-plaintext">
+                                                <div style=" width:100%">
+                                                    @Html.DisplayFor(model => model.Answers[i].AnswerText )
+                                                </div>
+                                                <div class="ml-1">
+                                                    @Html.CheckBoxFor(model => model.Answers[i].Correct,
+                                             htmlAttributes: new { @class = "control" }) 
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
+                                </li>
 
-                                
                             }
+                                </ol>
                         </div>
                         <div>
                             <input autofocus class="btn btn-primary btn-block" type="submit" value="Next" />

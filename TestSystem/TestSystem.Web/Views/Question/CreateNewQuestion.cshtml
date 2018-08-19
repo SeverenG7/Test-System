@@ -22,8 +22,8 @@
                 new { enctype = "multipart/form-data" }))
             {
                 @Html.AntiForgeryToken()
-                <input type="file" id="files" name="files[]"
-                       style="visibility:hidden" multiple value="Choose" />
+                <input type="file" id="files" name="image"
+                       style="visibility:hidden" value="Choose" />
 
                         <h4 class="text-info display-3">Add new question...</h4>
                 <hr />
@@ -56,10 +56,14 @@
                                 @Html.ValidationMessageFor(model => model.QuestionText, "", new { @class = "text-danger" })
                             </div>
                         </div>
-
                         <label for="files" class="btn btn-primary">Select Image</label>
-                        <output id="list"></output>
-
+                        <div class="form-inline">
+                            <div>
+                            </div>
+                            <div>
+                                <output id="list"></output>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row col-md-5">
@@ -75,7 +79,7 @@
                                                 <div class="card">
                                             @Html.TextAreaFor(model => model.Answers[i].AnswerText,
                                            htmlAttributes: new { @class= "form-control" , @placeholder = "Put answer text..." ,
-                                               style = "width:300px  "})
+                                               style = "width:300px"})
                                                     </div>
                                                 <div class="ml-2">
                                             @Html.CheckBoxFor(model => model.Answers[i].Correct,

@@ -8,10 +8,11 @@ namespace TestSystem.Logic.Interfaces
     {
         TestViewModel GetTest(int? id);
         void CreateTest(TestCreateViewModel testDto, HttpPostedFileBase image);
+        void UpdateTest(TestCreateViewModel testDto, HttpPostedFileBase image);
         void RemoveTest(int id);
-        TestViewModel GenerateTest(int questionNumbers , int idTheme , string difficult);
+        TestGenerateViewModel GenerateTest(TestGenerateViewModel model);
         IEnumerable<TestViewModel> GetLastTests();
-        TestCreateViewModel GetCreateModel();
-
+        TestCreateViewModel GetCreateModel(int? id);
+        TestGenerateViewModel GetGenerateViewModel(TestViewModel test);
     }
 }

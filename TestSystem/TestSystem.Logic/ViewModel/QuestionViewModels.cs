@@ -26,9 +26,10 @@ namespace TestSystem.Logic.ViewModel
         public IEnumerable<SelectListItem>  Theme { get; set; }       
         public string selectedTheme { get; set; }
        
-        [Required(ErrorMessage = "Every question must have answers")]
-        [Range(2, 5, ErrorMessage = "In question you can place from 2 to 5 answers")]
-        public List<Answer> Answers { get; set; }
+        public List<AnswerViewModel> Answers { get; set; }
+
+        public byte[] QuestionImage { get; set; }
+        public string ImageMimeType { get; set; }
 
         public QuestionCreateViewModel()
         {

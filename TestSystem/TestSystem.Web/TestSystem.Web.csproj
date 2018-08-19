@@ -224,6 +224,9 @@
     <Compile Include="Infrasrtuctre\NinjectDependencyResolver.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\actionImages\error-403.jpg" />
+    <Content Include="Content\actionImages\notFoundError.jpg" />
+    <Content Include="Content\actionImages\serverError.jpg" />
     <Content Include="Content\actionImages\userBack.jpg" />
     <Content Include="Content\actionImages\userFon.jpg" />
     <Content Include="Content\actionImages\testBack.jpg" />
@@ -232,6 +235,7 @@
     <Content Include="Content\actionImages\iconPlus.png" />
     <Content Include="Content\actionImages\iconEdit.png" />
     <Content Include="Content\actionImages\iconRemove.png" />
+    <Content Include="Content\actionImages\User404.jpg" />
     <Content Include="Content\blank.html" />
     <Content Include="Content\cards.html" />
     <Content Include="Content\charts.html" />
@@ -439,7 +443,6 @@
     <Content Include="Views\Theme\CreateNewTheme.cshtml" />
     <Content Include="Views\Question\EditQuestion.cshtml" />
     <Content Include="Views\Theme\AboutThemes.cshtml" />
-    <Content Include="Views\Shared\_UserLayout.cshtml" />
     <Content Include="Views\User\MainMenu.cshtml" />
     <Content Include="Views\Error\NotFoundPage.cshtml" />
     <Content Include="Views\Test\GenerateTest.cshtml" />
@@ -450,6 +453,8 @@
     <Content Include="Views\User\TestPassing.cshtml" />
     <Content Include="Views\Ending\EndTest.cshtml" />
     <Content Include="Views\Result\ResultInfo.cshtml" />
+    <Content Include="Views\Test\EditTest.cshtml" />
+    <Content Include="Views\Error\InternalServerErrorPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -12,7 +12,7 @@
 </head>
 <body>
     <div class="container">
-        <h2>Tests</h2>
+        <h2 class="display-3 text-info">Themes dashboard</h2>
         <div class="form-inline">
             @using (Html.BeginForm())
             {
@@ -37,7 +37,7 @@
                     Create new
                 </button>
             </div>
-                <table class="table table-bordered table-hover" id="dataTable" >
+                <table class="table table-hover" >
                     <thead class="show">
                         <tr>
                             <th>Theme</th>
@@ -56,6 +56,7 @@
                         }
                         <tr class="@selectedRow">
                             <td>
+
                                 @Html.DisplayFor(modelItem => item.ThemeName)
                             </td>
                             <td>
@@ -74,7 +75,7 @@
                                         Select
                                     </button>
                                     <button class="btn btn-danger"
-                                            onclick="location.href='@Url.Action("DeleteTheme", "Theme", new { id = item.IdTheme} )'">
+                                          onclick="location.href='@Url.Action("DeleteTheme", "Theme", new { id = item.IdTheme} )'" >
                                         Delete
                                     </button>
                                 </div>
@@ -85,11 +86,11 @@
 
             @if (Model.Tests != null)
             {
-                <h3>Tests by Selected Theme</h3>
+                <h3 class="display-4 text-info">Tests by Selected Theme</h3>
                 <div class="scroll-table_1">
-                    <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                    <table class="table  table-hover" >
                         <thead class="show">
-                            <tr>
+                            <tr class="text-center">
                                 <th>Test</th>
                                 <th>Questions</th>
                                 <th>Theme</th>
@@ -106,16 +107,24 @@
                             }
                             <tr class="@selectedRow">
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.TestName)
+                                    <a class="nav-link text-dark" href="@Url.Action("GetInfoTest", "Test",new {IdTest = item.IdTest })">
+                                        @Html.DisplayFor(modelItem => item.TestName)
+                                        </a>
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.QuestionsNumber)
+                                    <a class="nav-link text-dark" href="@Url.Action("GetInfoTest", "Test",new {IdTest = item.IdTest })">
+                                        @Html.DisplayFor(modelItem => item.QuestionsNumber)
+                                        </a>
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Theme.ThemeName)
+                                    <a class="nav-link text-dark" href="@Url.Action("GetInfoTest", "Test",new {IdTest = item.IdTest })">
+                                        @Html.DisplayFor(modelItem => item.Theme.ThemeName)
+                                        </a>
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.CreateDate)
+                                    <a class="nav-link text-dark" href="@Url.Action("GetInfoTest", "Test",new {IdTest = item.IdTest })">
+                                        @Html.DisplayFor(modelItem => item.CreateDate)
+                                        </a>
                                 </td>
                             </tr>
                         }
@@ -126,13 +135,13 @@
 
                     @if (Model.Questions != null)
                     {
-                        <h3>Questions by Selected Theme</h3>
+                        <h3 class="display-4 text-info">Questions by Selected Theme</h3>
                         <div class="scroll-table_1">
-                            <table class="table table-bordered table-hover">
-                                <tr>
-                                    <th>Question</th>
-                                    <th>Answers</th>
-                                    <th>Score</th>
+                            <table class="table table-hover">
+                                <tr class="text-center">
+                                    <th>Question text</th>
+                                    <th>Tests number</th>
+                                    <th>Difficult</th>
                                 </tr>
 
                                 @foreach (var item in Model.Questions)
@@ -144,13 +153,22 @@
                                     }
                                     <tr class="@selectedRow">
                                         <td>
-                                            @item.QuestionText
+                                            <a class="nav-link text-dark"
+                                               href="@Url.Action("GetInfoQuestion", "Question",new {IdQuestion = item.IdQuestion })#More">
+                                                @item.QuestionText
+                                                </a>
                                         </td>
                                         <td>
-                                            @item.AnswerNumber
+                                            <a class="nav-link text-dark"
+                                               href="@Url.Action("GetInfoQuestion", "Question",new {IdQuestion = item.IdQuestion })#More">
+                                                @item.Tests.Count
+                                                </a>
                                         </td>
                                         <td>
-                                            @item.Score
+                                            <a class="nav-link text-dark"
+                                               href="@Url.Action("GetInfoQuestion", "Question",new {IdQuestion = item.IdQuestion })#More">
+                                                @item.Difficult
+                                                </a>
                                         </td>
                                     </tr>
                                 }
@@ -162,6 +180,4 @@
             </div>
 </body>
 </html>
-@Scripts.Render("~/scripts/jquery-3.3.1.js")
-@Scripts.Render("~/scripts/jquery.unobtrusive-ajax.js")
 
