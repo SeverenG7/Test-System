@@ -2,49 +2,110 @@
 using System.Collections.Generic;
 using System.Linq;
 using TestSystem.DataProvider.Interfaces;
-using TestSystem.Logic.Interfaces;
-using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Model.Models;
-using TestSystem.Logic.MapGeneric;
-using AutoMapper;
+using TestSystem.Logic.ViewModel;
+using System.Web.Mvc;
+using System.Web;
+using TestSystem.Logic.Interfaces;
 
 namespace TestSystem.Logic.Services
 {
-    public class QuestionService : MapClass<Question, QuestionDto>, IQuestionService
+    public class QuestionService : IQuestionService
     {
-        private IUnitOfWork Database { get;}
+        #region Infrastructure
+        private  IUnitOfWork Database { get;}
         public QuestionService(IUnitOfWork unitOfWork)
         {
             Database = unitOfWork;
         }
-        public void CreateQuestion(QuestionDto questionDTO)
+        #endregion
+
+        #region Methods
+        public QuestionCreateViewModel GetCreationModel(int? id)
         {
-            questionDTO.Score = ComputeScore(questionDTO);
-            Question question = MapperToDB.Map<Question>(questionDTO);
+            if (!id.HasValue)
+            {
+                QuestionCreateViewModel newQuestion = new QuestionCreateViewModel();
+                newQuestion.Theme = new SelectList(Database.Themes.GetAll(), "IdTheme", "ThemeName");
+                newQuestion.Answers = new List<Answer>();
+                for (int i = 0; i < 5; i++)
+                {
+                    newQuestion.Answers.Add(new Answer());
+                }
+                return newQuestion;
+            }
+            else
+            {
+                if (Database.Questions.Get(id.Value) != null)
+                {
+                    Question question = Database.Questions.Get(id.Value);
+                    QuestionCreateViewModel updateQuestion = new QuestionCreateViewModel
+                    {
+                        selectedDifficult = question.Difficult,
+                        selectedTheme = question.Theme.ThemeName,
+                        QuestionText = question.QuestionText,
+                        Answers = question.Answers.ToList(),
+                        IdQuestion = question.IdQuestion
+                    };
+                    updateQuestion.Theme = new SelectList(Database.Themes.GetAll(), "IdTheme", "ThemeName");
+                    return updateQuestion;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        public void CreateQuestion(QuestionCreateViewModel model , HttpPostedFileBase image)
+        {
+            Question question = new Question
+            {
+                QuestionText = model.QuestionText,
+                Difficult = model.selectedDifficult,
+                IdTheme = int.Parse(model.selectedTheme),
+                CreateDate = DateTime.Now
+            };
+
+            foreach (Answer ans in model.Answers)
+            {
+                if (!String.IsNullOrEmpty(ans.AnswerText))
+                {
+                    question.Answers.Add(ans);
+                }
+            }
+            if (image != null)
+            {
+                question.ImageMimeType = image.ContentType;
+                question.QuestionImage = new byte[image.ContentLength];
+                image.InputStream.Read(question.QuestionImage, 0, image.ContentLength);
+            }
+            question.AnswerNumber = question.Answers.Count;
+
             Database.Questions.Add(question);
             Database.Answers.AddRange(question.Answers);
             Database.Complete();
         }
 
-        public void Dispose()
+        public QuestionViewModel GetQuestion(int? id)
         {
-            Database.Dispose();
-        }
-
-        public QuestionDto GetQuestion(int? id)
-        {
-            if (id == null)
-                throw new Exception();
             Question question = Database.Questions.Get(id.Value);
-            if (question == null)
-                throw new Exception();
-            var mapper = new MapperConfiguration(mcf => mcf.CreateMap<Question, QuestionDto>()).CreateMapper();
-            return mapper.Map<Question,QuestionDto>(question);
-        }
-
-        public IEnumerable<QuestionDto> GetQuestions()
-        {
-            return MapperFromDB.Map<IEnumerable<Question>, List<QuestionDto>>(Database.Questions.GetAll());
+            QuestionViewModel questionView = new QuestionViewModel
+            {
+                QuestionImage = question.QuestionImage,
+                QuestionText = question.QuestionText,
+                IdQuestion = question.IdQuestion,
+                Answers = question.Answers.ToList(),
+                Score = question.Score,
+                AnswerNumber = question.AnswerNumber,
+                CreateDate = question.CreateDate,
+                Difficult = question.Difficult,
+                IdTheme = question.IdTheme,
+                ImageMimeType = question.ImageMimeType,
+                Tests = question.Tests,
+                Theme = question.Theme
+            };
+            return questionView;
         }
 
         public void RemoveQuestion(int id)
@@ -57,9 +118,11 @@ namespace TestSystem.Logic.Services
             }
         }
 
-        public void UpdateQuestion(QuestionDto questionDTO)
+        public void UpdateQuestion(QuestionCreateViewModel questionDTO)
         {
-            foreach (AnswerDto ans in questionDTO.Answers)
+            Question question = Database.Questions.Get(questionDTO.IdQuestion);
+
+            foreach (Answer ans in questionDTO.Answers)
             {
                 Answer answer = Database.Answers.Get(ans.IdAnswer);
                 answer.AnswerText = ans.AnswerText;
@@ -87,15 +150,27 @@ namespace TestSystem.Logic.Services
             }
         }
 
-        public IEnumerable<QuestionDto> GetLastQuestions()
+        public IEnumerable<QuestionViewModel> GetLastQuestions()
         {
-            return MapperFromDB.Map<IEnumerable<Question>, IEnumerable<QuestionDto>>
-                (Database.Questions.GetAll().
+            List<Question> questions = Database.Questions.GetAll().
                 OrderByDescending(x => x.CreateDate).
-                Take(5));
+                Take(5).ToList();
+
+            List<QuestionViewModel> lastQuestions = new List<QuestionViewModel>();
+
+            foreach (Question question in questions)
+            {
+                lastQuestions.Add(new QuestionViewModel
+                {
+                    QuestionText = question.QuestionText,
+                    IdQuestion = question.IdQuestion
+                });
+            }
+
+            return lastQuestions;
         }
 
-        public  int ComputeScore(QuestionDto question)
+        public  int ComputeScore(QuestionViewModel question)
         {
             int koeff = 0;
             switch (question.Difficult)
@@ -112,5 +187,12 @@ namespace TestSystem.Logic.Services
             }
             return (koeff * question.AnswerNumber);
         }
+
+        public void Dispose()
+        {
+            Database.Dispose();
+        }
+
+        #endregion
     }
 }

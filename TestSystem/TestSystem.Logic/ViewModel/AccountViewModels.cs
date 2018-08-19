@@ -1,54 +1,44 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using TestSystem.Model.Models;
 
-namespace TestSystem.Web.Models
+
+namespace TestSystem.Logic.ViewModel
 {
-    public class ExternalLoginConfirmationViewModel
+    public class UserViewModel
     {
-        [Required]
-        [Display(Name = "Email")]
+        public string Id { get; set; }
         public string Email { get; set; }
+        public string Password { get; set; }
+        public string UserFirstName { get; set; }
+        public string UserLastName { get; set; }
+        public string Role { get; set; }
     }
 
-    public class ExternalLoginListViewModel
+    public class UserMainViewModel
     {
-        public string ReturnUrl { get; set; }
-    }
-
-    public class SendCodeViewModel
-    {
-        public string SelectedProvider { get; set; }
-        public ICollection<System.Web.Mvc.SelectListItem> Providers { get; set; }
-        public string ReturnUrl { get; set; }
-        public bool RememberMe { get; set; }
-    }
-
-    public class VerifyCodeViewModel
-    {
-        [Required]
-        public string Provider { get; set; }
-
-        [Required]
-        [Display(Name = "Code")]
-        public string Code { get; set; }
-        public string ReturnUrl { get; set; }
-
-        [Display(Name = "Remember this browser?")]
-        public bool RememberBrowser { get; set; }
-
-        public bool RememberMe { get; set; }
-    }
-
-    public class ForgotViewModel
-    {
-        [Required]
-        [Display(Name = "Email")]
+        public string Id { get; set; }
         public string Email { get; set; }
+        public string UserFirstName { get; set; }
+        public string UserLastName { get; set; }
+        public string Role { get; set; }
+        public IEnumerable <Result> Results { get; set; }
+        public Test Test { get; set; }
+    }
+
+    public class UserInfoViewModel
+    {
+        public string IdUserInfo { get; set; }
+        public string UserFirstName { get; set; }
+        public string UserLastName { get; set; }
+        public string UserRole { get; set; }
+        public virtual ICollection<ResultViewModel> Result { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
     }
 
     public class LoginViewModel
     {
-        [Required(ErrorMessage ="Please, put your email adress.")]
+        [Required(ErrorMessage = "Please, put your email adress.")]
         [Display(Name = "Email")]
         [EmailAddress]
         public string Email { get; set; }
@@ -70,7 +60,7 @@ namespace TestSystem.Web.Models
         ErrorMessage = "Your name should have from 4 to 20 letters.")]
         public string FirstName { get; set; }
 
-        [Required(ErrorMessage = "Please, fill field with your name")]
+        [Required(ErrorMessage = "Please, fill field with your lastname")]
         [Display(Name = "Lastname")]
         public string LastName { get; set; }
 

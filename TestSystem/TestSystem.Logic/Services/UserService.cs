@@ -10,8 +10,8 @@ using TestSystem.Logic.Interfaces;
 using TestSystem.Logic.Infrastructure;
 using TestSystem.DataProvider.Interfaces;
 using TestSystem.Model.Models;
-using TestSystem.Logic.DataTransferObjects;
-
+using TestSystem.Logic.ViewModel;
+using System.Web;
 
 namespace TestSystem.Logic.Services
 {
@@ -20,7 +20,6 @@ namespace TestSystem.Logic.Services
 
         #region Infrastructure
         IUnitOfWork Database { get; set; }
-
         public UserService(IUnitOfWork uow)
         {
             Database = uow;
@@ -35,7 +34,7 @@ namespace TestSystem.Logic.Services
         #endregion
 
         #region Methods
-        public async Task<OperationDetails> CreateAsync(UserDto userDto)
+        public async Task<OperationDetails> CreateAsync(UserViewModel userDto)
         {
             ApplicationUser user = await Database.ApplicationUserManagers.FindByEmailAsync(userDto.Email);
             if (user == null)
@@ -63,8 +62,7 @@ namespace TestSystem.Logic.Services
 
            
         }
-
-        public async Task<OperationDetails> AuthenticateAsync(UserDto userDto)
+        public async Task<OperationDetails> AuthenticateAsync(UserViewModel userDto)
         {
             ClaimsIdentity claim = null;
             ApplicationUser user = await Database.ApplicationUserManagers.FindAsync(userDto.Email, userDto.Password);
@@ -89,7 +87,6 @@ namespace TestSystem.Logic.Services
             }
             return new OperationDetails(true, "", "", claim, "");
         }
-
         public async Task SetInitialDataAsync( List<string> roles)
         {
             foreach (string roleName in roles)
@@ -139,6 +136,27 @@ namespace TestSystem.Logic.Services
         }
 
 
+        public UserMainViewModel MainMenuUser(int? id)
+        {
+            UserMainViewModel model = new UserMainViewModel();
+            model.Results = Database.Results.GetAll().
+                Where(x => x.UserInfo.IdUserInfo == FindIdUser(HttpContext.Current.User.Identity.Name)
+                && x.TestPassed == false).
+                ToList();
+
+            foreach(Result result in model.Results)
+            {
+                result.Test.Theme = Database.Themes.Get(result.Test.IdTheme.Value);
+            }
+
+            if (id.HasValue)
+            {
+                model.Test = Database.Results.Get(id.Value).Test;
+            }
+            return model;
+        }
+
+
         public string FindIdUser(string userName)
         {
             var user = Database.ApplicationUserManagers.FindByEmail(userName);
@@ -151,16 +169,15 @@ namespace TestSystem.Logic.Services
 
         #endregion
 
-
         #region Custom methods
 
-        public UserDto GetUserInfo(string userName)
+        public UserViewModel GetUserInfo(string userName)
         {
-            UserDto user = new UserDto();
+            UserViewModel user = new UserViewModel();
             var somebody = Database.UserInfoes.Find(x => x.ApplicationUser.Email == userName).First();
             if ( somebody != null)
             {
-                  user = new UserDto
+                  user = new UserViewModel
                 {
                     Id = somebody.ApplicationUser.Id,
                     Email = userName,

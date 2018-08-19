@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Web.Mvc;
-using TestSystem.Logic.DataTransferObjects;
+﻿using System.Web.Mvc;
 using TestSystem.Logic.Interfaces;
-using TestSystem.Web.Models;
+using TestSystem.Logic.ViewModel;
 using System.Web;
 using System.Net;
 
@@ -17,100 +14,67 @@ namespace TestSystem.Web.Controllers
 
         private readonly IQuestionService _questionService;
         private readonly ICommonService _commonService;
-        private readonly IThemeService _themeService;
 
-        public QuestionController(IQuestionService questionService, ICommonService commonService,
-            IThemeService themeService)
+        public QuestionController(IQuestionService questionService, ICommonService commonService)
         {
             _questionService = questionService;
             _commonService = commonService;
-            _themeService = themeService;
         }
 
         #endregion
-
 
         #region Create/Edit Question
 
         [HttpGet]
         public ActionResult CreateNewQuestion()
         {
-            QuestionCreateViewModel newQuestion = new QuestionCreateViewModel();
-            newQuestion.Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName");
-            newQuestion.Answers = new List<AnswerDto>();
-            for (int i = 0; i < 5; i++)
-            {
-                newQuestion.Answers.Add(new AnswerDto());
-            }
-            return View(newQuestion);
+            return View(_questionService.GetCreationModel(null));
         }
 
         [HttpPost]
         public ActionResult CreateNewQuestion(QuestionCreateViewModel model,
             HttpPostedFileBase image = null)
         {
-           
-                QuestionDto question = new QuestionDto
-                {
-                    QuestionText = model.QuestionText,
-                    Difficult = model.selectedDifficult,
-                    IdTheme = Int32.Parse(model.selectedTheme)
-                };
-
-                question.Answers = new List<AnswerDto>();
-
-                foreach (AnswerDto ans in model.Answers)
-                {
-                    if (!String.IsNullOrEmpty(ans.AnswerText))
-                    {
-                        question.Answers.Add(ans);
-                    }
-                }
-
-                question.AnswerNumber = question.Answers.Count;
-                question.CreateDate = DateTime.Now;
-
-                if (image != null)
-                {
-                    question.ImageMimeType = image.ContentType;
-                    question.QuestionImage = new byte[image.ContentLength];
-                    image.InputStream.Read(question.QuestionImage, 0, image.ContentLength);
-                }
-
-                _questionService.CreateQuestion(question);
-
+            if (ModelState.IsValid)
+            {
+                _questionService.CreateQuestion(model, image);
                 return RedirectToAction("GetInfoQuestion", "Question");
-            
-            //else
-            //{
-            //    model.Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName");
-            //    return View(model);
-            //}
-
+            }
+            else
+            {
+                model = _questionService.GetCreationModel(null);
+                return View(model);
+            }
         }
-
 
         [HttpGet]
         public ActionResult EditQuestion(int IdQuestion)
         {
-            QuestionDto updatingQuestion = _questionService.GetQuestion(IdQuestion);
-            return View(updatingQuestion);
+            QuestionCreateViewModel model = _questionService.GetCreationModel(IdQuestion);
+            if (model != null)
+            {
+                return View(_questionService.GetCreationModel(IdQuestion));
+            }
+            else
+            {
+                return HttpNotFound();
+            }
         }
 
         [HttpPost]
-        public ActionResult EditQuestion(QuestionDto model)
+        public ActionResult EditQuestion(QuestionCreateViewModel model)
         {
-
-            var questionUpdate = _questionService.GetQuestion(model.IdQuestion);
-            if (TryUpdateModel(questionUpdate, "",
-       new string[] { "QuestionText" }))
+            if (ModelState.IsValid)
             {
-                questionUpdate.Answers = model.Answers;
-                _questionService.UpdateQuestion(questionUpdate);
+                _questionService.UpdateQuestion(model);
                 return RedirectToAction("GetInfoQuestion", "Question", model.IdQuestion);
             }
-            return View();
+            else
+            {
+                return View(model);
+            }
         }
+
 
         public ActionResult DeleteFromTest(int? idQuestion, int? idTest)
         {
@@ -132,12 +96,12 @@ namespace TestSystem.Web.Controllers
         [HttpGet]
         public ActionResult GetInfoQuestion
             (int? IdTheme, string difficult, int? IdQuestion, int? IdTest, string search,
-            int? page , string QuestionText)
+            int? page, string QuestionText)
         {
             ViewBag.QuestionText = QuestionText;
             ViewBag.IdQuestion = IdQuestion;
-            return View(_commonService.FilterQuestions( IdTheme, difficult, IdQuestion,  IdTest, search,
-            page ));
+            return View(_commonService.FilterQuestions(IdTheme, difficult, IdQuestion, IdTest, search,
+            page));
         }
 
 
@@ -148,29 +112,31 @@ namespace TestSystem.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            QuestionDto questionDetails = _questionService.GetQuestion(IdQuestion.Value);
+            QuestionViewModel questionDetails = _questionService.GetQuestion(IdQuestion.Value);
             if (questionDetails == null)
             {
                 return HttpNotFound();
             }
-
             _questionService.RemoveQuestion(IdQuestion.Value);
             return RedirectToAction("GetInfoQuestion", "Question");
         }
 
         #endregion
 
+        #region Utility methods
         public FileContentResult GetImage(int idQuestion)
         {
-             QuestionDto question =  _questionService.GetQuestion(idQuestion);
+            QuestionViewModel question = _questionService.GetQuestion(idQuestion);
             if (question != null)
             {
-                return File(question.QuestionImage , question.ImageMimeType);
+                return File(question.QuestionImage, question.ImageMimeType);
             }
             else
             {
                 return null;
             }
         }
+
+        #endregion
     }
 }

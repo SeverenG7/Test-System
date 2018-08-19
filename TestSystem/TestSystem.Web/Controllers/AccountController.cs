@@ -3,8 +3,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.Owin.Security;
 using System.Threading.Tasks;
-using TestSystem.Web.Models;
-using TestSystem.Logic.DataTransferObjects;
+using TestSystem.Logic.ViewModel;
 using System.Security.Claims;
 using TestSystem.Logic.Interfaces;
 using TestSystem.Logic.Infrastructure;
@@ -49,7 +48,7 @@ namespace UserStore.Controllers
             {
                 try
                 {
-                    UserDto userDto = new UserDto { Email = model.Email, Password = model.Password };
+                    UserViewModel userDto = new UserViewModel { Email = model.Email, Password = model.Password };
                     OperationDetails details = await UserService.AuthenticateAsync(userDto);
                     ClaimsIdentity claim = details.Value;
                     if (claim == null)
@@ -189,13 +188,13 @@ namespace UserStore.Controllers
              await SetInitialDataAsync();
             if (ModelState.IsValid)
             {
-                UserDto userDto = new UserDto
+                UserViewModel userDto = new UserViewModel
                 {
                     Email = model.Email,
                     Password = model.Password,
                     UserFirstName = model.FirstName,
                     UserLastName = model.LastName,
-                    Role = "admin"
+                    Role = "user"
                 };
                 try
                 {

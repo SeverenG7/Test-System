@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TestSystem.Logic.DataTransferObjects.ResultDto>
+﻿@model List<TestSystem.Logic.ViewModel.ResultFullViewModel>
 
 
 <div class="row">
@@ -15,31 +15,31 @@
                             <tr class="thead-dark">
                                 <td>User</td>
                                 <td>Test</td>
-                              </tr>
+                            </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.UserInfo.ApplicationUser.Email)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Test.TestName)                  
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.UserInfo.ApplicationUser.Email)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Test.TestName)
+                                    </td>
+                                </tr>
                             }
                         </tbody>
                     </table>
-                <div class="container">
-                    <form action="@Url.Action("GetInfoResult", "Result")">
-                        <button class="btn btn-primary" type="submit">More about results...</button>
-                    </form>
+                    <div class="container">
+                        <form action="@Url.Action("GetInfoResult", "Result")">
+                            <button class="btn btn-primary" type="submit">More about results...</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-    </div>
 
 

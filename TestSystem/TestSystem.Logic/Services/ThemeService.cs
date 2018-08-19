@@ -1,14 +1,15 @@
 ﻿using TestSystem.DataProvider.Interfaces;
 using TestSystem.Logic.Interfaces;
-using TestSystem.Logic.DataTransferObjects;
+using TestSystem.Logic.ViewModel;
 using TestSystem.Model.Models;
 using TestSystem.Logic.MapGeneric;
 using System.Collections.Generic;
-
+using System.Linq;
+using System;
 
 namespace TestSystem.Logic.Services
 {
-    public class ThemeService : MapClass<Theme,ThemeDto> , IThemeService
+    public class ThemeService : MapClass<Theme,ThemeViewModel> , IThemeService
     {
         IUnitOfWork Database { get; set; }
 
@@ -17,21 +18,25 @@ namespace TestSystem.Logic.Services
             Database = unitOfWork;
         }
 
-        public IEnumerable<ThemeDto> GetAll()
+        public IEnumerable<ThemeViewModel> GetAll()
         {
-            return MapperFromDB.Map<IEnumerable<Theme>, List<ThemeDto>>(Database.Themes.GetAll());
+            return MapperFromDB.Map<IEnumerable<Theme>, List<ThemeViewModel>>(Database.Themes.GetAll());
         }
 
-        public ThemeDto Get(int? id)
+        public ThemeViewModel Get(int? id)
         {
             Theme theme = Database.Themes.Get(id.Value);
-            ThemeDto themeDTO = MapperFromDB.Map<ThemeDto>(theme);
+            ThemeViewModel themeDTO = MapperFromDB.Map<ThemeViewModel>(theme);
             return themeDTO;
         }
 
-        public void Create(ThemeDto themeDTO)
+        public void Create(ThemeCreateViewModels model)
         {
-            Theme theme = MapperToDB.Map<Theme>(themeDTO);
+            Theme theme = new Theme
+            {
+                ThemeName = model.ThemeName,
+                Description = model.Description
+            };
             Database.Themes.Add(theme);
             Database.Complete();
         }
@@ -51,11 +56,35 @@ namespace TestSystem.Logic.Services
             }
         }
 
-        public void Update(ThemeDto themeDTO)
+        public void Update(ThemeViewModel themeDTO)
         {
             Theme theme = Database.Themes.Get(themeDTO.IdTheme);
             Theme themeUpdate = MapperToDB.Map<Theme>(themeDTO);
             Database.Themes.Update(themeUpdate);
+        }
+
+        public ThemeAboutViewModel AboutThemes(int? IdTheme, string search)
+        {
+            ThemeAboutViewModel modelView = new ThemeAboutViewModel();
+            modelView.Themes = Database.Themes.GetAll();
+
+            if (!String.IsNullOrEmpty(search))
+            {
+                modelView.Themes = modelView.Themes.Where(x => x.ThemeName.Contains(search));
+            }
+
+            if (IdTheme.HasValue)
+            {
+                if (modelView.Themes.Where(x => x.IdTheme == IdTheme) != null)
+                {
+                    modelView.Tests = Database.Tests.GetAll().
+                        Where(x => x.IdTheme == IdTheme.Value).ToList();
+
+                    modelView.Questions = Database.Questions.GetAll().
+                        Where(x => x.IdTheme == IdTheme.Value).ToList();
+                }
+            }
+            return modelView;
         }
 
     }

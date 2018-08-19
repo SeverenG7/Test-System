@@ -3,7 +3,7 @@ using System.Web.Mvc;
 using PagedList;
 using TestSystem.Model.Models;
 
-namespace TestSystem.Logic.LogicView
+namespace TestSystem.Logic.ViewModel
 {
     public class FiltrationViewModel
     {

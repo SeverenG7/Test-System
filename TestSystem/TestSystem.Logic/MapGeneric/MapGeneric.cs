@@ -2,12 +2,12 @@
 
 namespace TestSystem.Logic.MapGeneric
 {
-    public class MapClass<TModel, TModelDTO> 
+    public class MapClass<TModel, TModelDTO>
     {
         protected IMapper MapperToDB;
         protected IMapper MapperFromDB;
 
-       public MapClass()
+        public MapClass()
         {
             MapperFromDB = new MapperConfiguration
                 (mcf => mcf.CreateMap(typeof(TModel), typeof(TModelDTO))).CreateMapper();

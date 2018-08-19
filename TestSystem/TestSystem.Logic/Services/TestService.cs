@@ -2,33 +2,34 @@
 using System.Collections.Generic;
 using TestSystem.DataProvider.Interfaces;
 using TestSystem.Logic.Interfaces;
-using TestSystem.Logic.DataTransferObjects;
+using TestSystem.Logic.ViewModel;
 using TestSystem.Model.Models;
 using TestSystem.Logic.MapGeneric;
 using System.Linq;
+using System.Web.Mvc;
+using System.Web;
 
 namespace TestSystem.Logic.Services
 {
-    public class TestService : MapClass<Test, TestDto>, ITestService
+    public class TestService : MapClass<Test, TestViewModel>, ITestService
     {
+        #region Infrastructure
         IUnitOfWork Database { get; }
 
         public TestService(IUnitOfWork unitOfWork)
         {
             Database = unitOfWork;
         }
+        #endregion
 
-        public IEnumerable<ThemeDto> GetAllTheme()
-        {
-            return MapperFromDB.Map<IEnumerable<Theme>, List<ThemeDto>>(Database.Themes.GetAll());
-        }
+        #region Methods
 
         public void Dispose()
         {
             Database.Dispose();
         }
 
-        public TestDto GetTest(int? id)
+        public TestViewModel GetTest(int? id)
         {
             if (id == null)
                 throw new Exception();
@@ -36,14 +37,10 @@ namespace TestSystem.Logic.Services
             if (test == null)
                 throw new Exception();
 
-            TestDto testDTO = MapperFromDB.Map<TestDto>(test);
+            TestViewModel testDTO = MapperFromDB.Map<TestViewModel>(test);
             return testDTO;
         }
 
-        public IEnumerable<TestDto> GetTests()
-        {
-            return MapperFromDB.Map<IEnumerable<Test>, List<TestDto>>(Database.Tests.GetAll());
-        }
 
         public void RemoveTest(int id)
         {
@@ -55,33 +52,36 @@ namespace TestSystem.Logic.Services
             }
         }
 
-        public void CreateTest(TestDto testDTO)
+        public void CreateTest(TestCreateViewModel testDTO , HttpPostedFileBase image)
         {
             Test test = new Test
             {
-                CreateDate = testDTO.CreateDate,
-                Difficult = testDTO.Difficult,
-                IdTheme = testDTO.IdTheme,
+                CreateDate = DateTime.Now,
+                Difficult = testDTO.selectedDifficult,
+                IdTheme = Int32.Parse(testDTO.selectedTheme),
                 TestDescription = testDTO.TestDescription,
                 TestName = testDTO.TestName,
-                QuestionsNumber = testDTO.QuestionsNumber,
-                Time = testDTO.Time,
-                TestImage = testDTO.TestImage,
-                ImageMimeType = testDTO.ImageMimeType
+                Time = new TimeSpan(0, testDTO.selectedTime, 0),
             };
 
-            foreach (QuestionDto q in testDTO.Questions)
+            foreach(QuestionForTestViewModel question in testDTO.Questions)
             {
-                test.Questions.Add(Database.Questions.Get(q.IdQuestion));
-                test.TotalScore += q.Score;
+                test.Questions.Add(Database.Questions.Get(question.IdQuestion));
+                test.TotalScore += question.Score;
             }
 
-           
+            if (image != null)
+            {
+                test.ImageMimeType = image.ContentType;
+                test.TestImage = new byte[image.ContentLength];
+                image.InputStream.Read(test.TestImage, 0, image.ContentLength);
+            }
+
             Database.Tests.Add(test);
             Database.Complete();
         }
 
-        public void UpdateTest(TestDto testDTO)
+        public void UpdateTest(TestViewModel testDTO)
         {
             Test test = (Test)Database.Tests.Find(x => x.IdTest == testDTO.IdTest);
 
@@ -92,7 +92,7 @@ namespace TestSystem.Logic.Services
             }
         }
 
-        public TestDto GenerateTest(int questionNumbers, int IdTheme, string difficult)
+        public TestViewModel GenerateTest(int questionNumbers, int IdTheme, string difficult)
         {
             Random randomGenerate = new Random();
 
@@ -114,29 +114,56 @@ namespace TestSystem.Logic.Services
 
             List<int> questions_2 = questionsIdAdding.ToList();
 
-            TestDto generateTest = new TestDto
+            TestViewModel generateTest = new TestViewModel
             {
                 Difficult = difficult,
                 IdTheme = IdTheme
             };
-            generateTest.Questions = new List<QuestionDto>();
+            generateTest.Questions = new List<QuestionViewModel>();
 
             foreach (int id in questions_1.Concat(questions_2))
             {
-                generateTest.Questions.Add(MapperFromDB.Map<QuestionDto>(Database.Questions.Get(id)));
+                generateTest.Questions.Add(MapperFromDB.Map<QuestionViewModel>(Database.Questions.Get(id)));
             }
 
             return generateTest;
         }
 
-        public IEnumerable<TestDto> GetLastTests()
+        public IEnumerable<TestViewModel> GetLastTests()
         {
-            return MapperFromDB.Map< IEnumerable<Test>, IEnumerable < TestDto >>
+            return MapperFromDB.Map< IEnumerable<Test>, IEnumerable < TestViewModel >>
                 (Database.Tests.GetAll().
                  OrderByDescending(x => x.CreateDate).
                  Take(5));
         }
 
+        public TestCreateViewModel GetCreateModel()
+        {
+            TestCreateViewModel model = new TestCreateViewModel
+            {
+                Theme = new SelectList(Database.Themes.GetAll(), "IdTheme", "ThemeName")
+            };
+
+            IEnumerable<Question> questions = Database.Questions.GetAll();
+            model.Questions = new List<QuestionForTestViewModel>();
+
+            foreach (Question question in questions)
+            {
+                model.Questions.Add(new QuestionForTestViewModel
+                {
+                    IdQuestion = question.IdQuestion,
+                    QuestionText = question.QuestionText,
+                    Difficult = question.Difficult,
+                    Theme = question.Theme.ThemeName,
+                    Chosen = false
+                });
+
+            }
+
+            return model;
+        }
+
+        #endregion
     }
 
 }

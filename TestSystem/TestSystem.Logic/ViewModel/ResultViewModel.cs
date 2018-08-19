@@ -1,8 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TestSystem.Model.Models;
 
-namespace TestSystem.Logic.LogicView
+namespace TestSystem.Logic.ViewModel
 {
+    public class ResultFullViewModel
+    {
+        public int IdResult { get; set; }
+        public string IdUserInfo { get; set; }
+        public int IdTest { get; set; }
+        public double ResultScore { get; set; }
+        public string ResultDescription { get; set; }
+        public virtual TestViewModel Test { get; set; }
+        public virtual UserInfoViewModel UserInfo { get; set; }
+        public DateTime CreateDate { get; set; }
+        public bool TestPassed { get; set; }
+    }
 
     public class AnswerResultViewModel
     {
@@ -56,5 +69,29 @@ namespace TestSystem.Logic.LogicView
         { }
             
     }
-        
+
+    public class ResultViewModel
+    {
+        public List<UserInfo> Users { get; set; }
+        public List<Result> Results { get; set; }
+
+        public ResultViewModel()
+        {
+            Users = new List<UserInfo>();
+            Results = new List<Result>();
+        }
+    }
+
+    public class PremissionViewModel
+    {
+        public List<TestPremissionViewModel> Tests { get; set; }
+        public Result UserResult { get; set; }
+
+        public PremissionViewModel()
+        {
+            Tests = new List<TestPremissionViewModel>();
+            UserResult = new Result();
+        }
+    }
+
 }

@@ -1,4 +1,4 @@
-﻿@model TestSystem.Web.Models.ResultViewModel
+﻿@model TestSystem.Logic.ViewModel.ResultViewModel
 
 @{ 
  string notPassed = "Test not passed yet";
@@ -101,7 +101,7 @@
                             <td>
                                 @if (item.TestPassed)
                                 {
-                               <p>@Math.Round(@item.ResultScore) %</p>
+                               <p>@Math.Round(@item.ResultScore.Value) %</p>
                                 }
                                 else
                                 {

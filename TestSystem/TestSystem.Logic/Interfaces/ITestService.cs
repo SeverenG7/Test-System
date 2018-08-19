@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
-using TestSystem.Logic.DataTransferObjects;
+using System.Web;
+using TestSystem.Logic.ViewModel;
 
 namespace TestSystem.Logic.Interfaces
 {
     public interface ITestService
     {
-        IEnumerable<TestDto> GetTests();
-        TestDto GetTest(int? id);
-        void CreateTest(TestDto testDto);
+        TestViewModel GetTest(int? id);
+        void CreateTest(TestCreateViewModel testDto, HttpPostedFileBase image);
         void RemoveTest(int id);
-        TestDto GenerateTest(int questionNumbers , int idTheme , string difficult);
-        IEnumerable<TestDto> GetLastTests();
+        TestViewModel GenerateTest(int questionNumbers , int idTheme , string difficult);
+        IEnumerable<TestViewModel> GetLastTests();
+        TestCreateViewModel GetCreateModel();
 
     }
 }

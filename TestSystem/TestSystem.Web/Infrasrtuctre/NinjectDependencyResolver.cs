@@ -32,16 +32,14 @@ namespace TestSystem.Web.Infrasrtuctre
             CommonServiceModule commonServiceModule = new CommonServiceModule();
             UnitOfWorkModule unitOfWorkModule = new UnitOfWorkModule();
             QuestionServiceModule questionServiceModule = new QuestionServiceModule();
-            AnswerServiceModule answerServiceModule = new AnswerServiceModule();
             ThemeServiceModule themeServiceModule = new ThemeServiceModule();
             UserServiceModule userServiceModule = new UserServiceModule();
             ResultServiceModule resultServiceModule = new ResultServiceModule();
             TestPassServiceModule testPassServiceModule = new TestPassServiceModule();
 
             _kernel.Load(unitOfWorkModule, testServiceModule,questionServiceModule,
-                answerServiceModule, themeServiceModule , userServiceModule ,
-                resultServiceModule ,
-                testPassServiceModule, commonServiceModule);
+                themeServiceModule , userServiceModule ,
+                resultServiceModule ,testPassServiceModule, commonServiceModule);
 
         }
 

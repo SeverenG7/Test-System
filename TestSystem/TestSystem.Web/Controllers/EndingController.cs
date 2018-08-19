@@ -1,8 +1,4 @@
-﻿using TestSystem.Logic.DataTransferObjects;
-using TestSystem.Logic.Interfaces;
-using TestSystem.Web.Models;
-using TestSystem.Web.Infrasrtuctre;
-using TestSystem.Logic.Infrastructure;
+﻿using TestSystem.Logic.Interfaces;
 using System.Web.Mvc;
 
 namespace TestSystem.Web.Controllers

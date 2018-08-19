@@ -4,7 +4,6 @@ namespace TestSystem.Web.Controllers
 {
     public class EnterController : Controller
     {
-
         public ActionResult EnterToSystem()
         {
             if (HttpContext.Request.IsAuthenticated)

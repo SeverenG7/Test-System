@@ -1,7 +1,7 @@
 ﻿using TestSystem.DataProvider.Interfaces;
 using TestSystem.Logic.Interfaces;
 using TestSystem.Logic.Infrastructure;
-using TestSystem.Logic.DataTransferObjects;
+using TestSystem.Logic.ViewModel;
 using TestSystem.Model.Models;
 using TestSystem.Logic.MapGeneric;
 using System.Linq;
@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 namespace TestSystem.Logic.Services
 {
-    public class TestPassService : MapClass<Question, QuestionDto>, ITestPassService
+    public class TestPassService : MapClass<Question, QuestionViewModel>, ITestPassService
     {
         static IUnitOfWork Database { get; set; }
 
@@ -23,7 +23,7 @@ namespace TestSystem.Logic.Services
             Database = unitOfWork;
         }
 
-        public QuestionDto StartTest(int IdResult)
+        public QuestionViewModel StartTest(int IdResult)
         {
             char delimetr = ',';
             List<UserQuestion> userQuestions = new List<UserQuestion>();
@@ -54,13 +54,13 @@ namespace TestSystem.Logic.Services
                 Get(Int32.Parse(tempResult.QuestionPassing.Split(delimetr)[0]));
             HttpContext.Current.Application["Test" + HttpContext.Current.User.Identity.Name] = questiondb.IdQuestion;
 
-            var mapper = new MapperConfiguration(mcf => mcf.CreateMap<Question, QuestionDto>()).CreateMapper();
-            QuestionDto questionDto = mapper.Map<Question, QuestionDto>(questiondb);
+            var mapper = new MapperConfiguration(mcf => mcf.CreateMap<Question, QuestionViewModel>()).CreateMapper();
+            QuestionViewModel questionDto = mapper.Map<Question, QuestionViewModel>(questiondb);
             return questionDto;
 
         }
 
-        public OperationDetails TestPassing(QuestionDto question)
+        public OperationDetails TestPassing(QuestionViewModel question)
         {
             TimerModule currentTimer = (TimerModule)HttpContext.Current.Application["Timer" + HttpContext.Current.User.Identity.Name];
             TempResult tempResult = Database.TempResults.GetAll().
@@ -69,7 +69,7 @@ namespace TestSystem.Logic.Services
             PassedQuestion(question, ref tempResult);
             if (currentTimer.StopWatch.IsRunning && !String.IsNullOrWhiteSpace(tempResult.QuestionPassing))
             {
-                QuestionDto nextQuestion = MapperFromDB.Map<Question, QuestionDto>
+                QuestionViewModel nextQuestion = MapperFromDB.Map<Question, QuestionViewModel>
                     (Database.Questions.Get(tempResult.QuestionPassing.StringStirrer().FirstOrDefault()));
                 HttpContext.Current.Application["Test" + HttpContext.Current.User.Identity.Name] = nextQuestion.IdQuestion;
                 return new OperationDetails(true, nextQuestion);
@@ -99,9 +99,9 @@ namespace TestSystem.Logic.Services
 
                 if (String.IsNullOrWhiteSpace(tempResult.QuestionsPassed))
                 {
-                    QuestionDto question = MapperFromDB.Map<Question, QuestionDto>
+                    QuestionViewModel question = MapperFromDB.Map<Question, QuestionViewModel>
                     (Database.Questions.Get(currentId));
-                    foreach (AnswerDto answer in question.Answers)
+                    foreach(Answer answer in question.Answers)
                     {
                         answer.Correct = false;
                     }
@@ -112,9 +112,9 @@ namespace TestSystem.Logic.Services
                 if (tempResult.QuestionsPassed.StringStirrer().
                    Contains(currentId))
                 {
-                    QuestionDto question = MapperFromDB.Map<Question, QuestionDto>
+                    QuestionViewModel question = MapperFromDB.Map<Question, QuestionViewModel>
                   (Database.Questions.Get(currentId));
-                    foreach (AnswerDto answer in question.Answers)
+                    foreach (Answer answer in question.Answers)
                     {
                         answer.Correct = false;
                     }
@@ -124,9 +124,9 @@ namespace TestSystem.Logic.Services
                 }
                 else
                 {
-                    QuestionDto question = MapperFromDB.Map<Question, QuestionDto>
+                    QuestionViewModel question = MapperFromDB.Map<Question, QuestionViewModel>
                 (Database.Questions.Get(IdQuestion));
-                    foreach (AnswerDto answer in question.Answers)
+                    foreach (Answer answer in question.Answers)
                     {
                         answer.Correct = false;
                     }
@@ -171,7 +171,7 @@ namespace TestSystem.Logic.Services
                 lastResult.UserInfo.UserFirstName);
         }
 
-        private void PassedQuestion(QuestionDto question, ref TempResult tempResult)
+        private void PassedQuestion(QuestionViewModel question, ref TempResult tempResult)
         {
             int IdResult = tempResult.IdResult;
             question.IdQuestion = (int)HttpContext.Current.Application["Test" + HttpContext.Current.User.Identity.Name];
@@ -183,7 +183,7 @@ namespace TestSystem.Logic.Services
             double answerWeight = (questionDB.Score / question.Answers.Count);
             foreach (Answer answer in questionDB.Answers)
             {
-                AnswerDto answerUser = question.Answers.Where(x => x.IdAnswer == answer.IdAnswer).SingleOrDefault();
+                Answer answerUser = question.Answers.Where(x => x.IdAnswer == answer.IdAnswer).SingleOrDefault();
                 userQuestion.UserAnswers.Add(new UserAnswer()
                 {
                     IdUserQuestion = userQuestion.IdUserQuestion,

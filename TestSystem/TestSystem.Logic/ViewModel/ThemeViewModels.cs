@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using TestSystem.Logic.DataTransferObjects;
-using System.Web.Mvc;
+using TestSystem.Model.Models;
 
-namespace TestSystem.Web.Models
+namespace TestSystem.Logic.ViewModel
 {
     public class ThemeCreateViewModels
     {
@@ -20,9 +19,9 @@ namespace TestSystem.Web.Models
 
     public class ThemeAboutViewModel
     {
-        public IEnumerable<ThemeDto> Themes { get; set; }
-        public IEnumerable<TestDto> Tests { get; set; }
-        public IEnumerable<QuestionDto> Questions { get; set; }
+        public IEnumerable<Theme> Themes { get; set; }
+        public IEnumerable<Test> Tests { get; set; }
+        public IEnumerable<Question> Questions { get; set; }
         public List<int> TestsNumber { get; set; }
         public List<int> QuestionsNumber { get; set; }
 
@@ -31,6 +30,15 @@ namespace TestSystem.Web.Models
             TestsNumber = new List<int>();
             QuestionsNumber = new List<int>();
         }
+    }
+
+    public class ThemeViewModel
+    {
+        public int IdTheme { get; set; }
+        public string ThemeName { get; set; }
+        public string Description { get; set; }
+        public virtual ICollection<TestViewModel> Tests { get; set; }
+        public virtual ICollection<QuestionViewModel> Questions { get; set; }
     }
 
 }

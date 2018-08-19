@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using TestSystem.Logic.DataTransferObjects;
 using System.Web.Mvc;
+using TestSystem.Model.Models;
 
-namespace TestSystem.Web.Models
+namespace TestSystem.Logic.ViewModel
 {
     public class TestCreateViewModel
     {
@@ -35,14 +36,14 @@ namespace TestSystem.Web.Models
                 "Senior"
 
             });
-            Theme = new SelectList(new List<ThemeDto>());
+            Theme = new SelectList(new List<Theme>());
             List<int> list = new List<int>();
             for (int i = 1; i < 31; i++)
             {
                 list.Add(i);
             }
             Time = new SelectList(list);
-            Theme = new SelectList(new List<ThemeDto>());
+            Theme = new SelectList(new List<Theme>());
             selectedTime = 10;
         }
 
@@ -65,7 +66,7 @@ namespace TestSystem.Web.Models
         [DataType(DataType.MultilineText)]
         public string TestDescription { get; set; }
 
-        public List<QuestionDto> Questions { get; set; }
+        public List<Question> Questions { get; set; }
 
         public IEnumerable<SelectListItem> NumberQuestions { get; set; }
         public int selectedNumber { get; set; }
@@ -87,8 +88,8 @@ namespace TestSystem.Web.Models
                 list.Add(i);
             }
             NumberQuestions = new SelectList(list);
-            Theme = new SelectList(new List<ThemeDto>());
-            Questions = new List<QuestionDto>();
+            Theme = new SelectList(new List<Theme>());
+            Questions = new List<Question>();
 
         }
     }
@@ -100,7 +101,25 @@ namespace TestSystem.Web.Models
         public int QuestionsNumber { get; set; }
         public string TestDescription { get; set; }
         public string Difficult { get; set; }
-        public ThemeDto Theme { get; set; }
+        public Theme Theme { get; set; }
         public bool Choosen { get; set; }
+    }
+
+    public class TestViewModel
+    {
+        public int IdTest { get; set; }
+        public string TestName { get; set; }
+        public int QuestionsNumber { get; set; }
+        public string TestDescription { get; set; }
+        public string Difficult { get; set; }
+        public DateTime CreateDate { get; set; }
+        public int? IdTheme { get; set; }
+        public ThemeViewModel Theme { get; set; }
+        public virtual ICollection<QuestionViewModel> Questions { get; set; }
+        public virtual ICollection<ResultViewModel> Result { get; set; }
+        public TimeSpan Time { get; set; }
+        public int TotalScore { get; set; }
+        public byte[] TestImage { get; set; }
+        public string ImageMimeType { get; set; }
     }
 }

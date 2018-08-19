@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TestSystem.DataProvider.Interfaces;
 using TestSystem.Logic.Interfaces;
 using TestSystem.Model.Models;
-using TestSystem.Logic.LogicView;
+using TestSystem.Logic.ViewModel;
 using System.Linq;
 using PagedList;
 using System.Web.Mvc;
@@ -18,6 +18,7 @@ namespace TestSystem.Logic.Services
         {
             Database = unitOfWork;
         }
+
         public FiltrationViewModel FilterQuestions(int? IdTheme, 
             string difficult, int? IdQuestion, 
             int? IdTest, string search,

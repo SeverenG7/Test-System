@@ -1,21 +1,16 @@
 ﻿using System.Collections.Generic;
-using TestSystem.Logic.DataTransferObjects;
-using TestSystem.Logic.LogicView;
+using TestSystem.Logic.ViewModel;
 
 namespace TestSystem.Logic.Interfaces
 {
     public interface IResultService
     {
-        IEnumerable<ResultDto> GetResultsById(string id);
-        IEnumerable<ResultDto> GetResults();
-        ResultDto GetResult(int? id);
-        void GivePremission(int IdTest , string IdUser , string Description);
-        void RemoveResult(int id);
-        void UpdateResult(ResultDto resultDTO);
-        UserInfoDto GetUser(int id);
-        IEnumerable<UserInfoDto> GetUsers(string search);
-        IEnumerable<ResultDto> GetLastResults();
+        ResultFullViewModel GetResult(int? id);
+        void GivePremission(PremissionViewModel model);
+        List<ResultFullViewModel> GetLastResults();
         ResultInfoViewModel GetResultInfo(int IdResult);
+        ResultViewModel GetAllResults(string search, string id);
+        PremissionViewModel CreatePremissionModel(string IdUser);
         void Dispose();
     }
 }

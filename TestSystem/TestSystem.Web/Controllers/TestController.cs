@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Web.Mvc;
-using TestSystem.Logic.DataTransferObjects;
+﻿using System.Web.Mvc;
 using TestSystem.Logic.Interfaces;
-using TestSystem.Web.Models;
+using TestSystem.Logic.ViewModel;
 using System;
 using System.Net;
 using System.Web;
@@ -31,108 +29,83 @@ namespace TestSystem.Web.Controllers
 
         #endregion
 
-        [Authorize(Roles = "admin")]
-        [HttpGet]
-        public ActionResult GetInfoTest
-          (int? IdTheme, string difficult, int? IdQuestion, int? IdTest, string search,
-            int? page)
-        {            
-            return View(_commonService.FilterTests(IdTheme, difficult, IdQuestion, IdTest, search,
-            page));
-        }
-
-        [Authorize(Roles = "admin")]
+        #region Create/Edit Tests
         [HttpGet]
         public ActionResult CreateNewTest()
         {
-            TestCreateViewModel model = new TestCreateViewModel
-            {
-                Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName")
-            };
-
-            IEnumerable<QuestionDto> questionDTOs = _questionService.GetQuestions();
-            model.Questions = new List<QuestionForTestViewModel>();
-
-            foreach (QuestionDto question in questionDTOs)
-            {
-                model.Questions.Add(new QuestionForTestViewModel
-                {
-                    IdQuestion = question.IdQuestion,
-                    QuestionText = question.QuestionText,
-                    Difficult = question.Difficult,
-                    Theme = question.Theme.ThemeName,
-                    Chosen = false
-                });
-
-            }
-            return View(model);
+            return View(_testService.GetCreateModel());
         }
-        [Authorize(Roles = "admin")]
+
         [HttpPost]
         public ActionResult CreateNewTest(TestCreateViewModel model,
              HttpPostedFileBase file)
         {
             if (ModelState.IsValid)
             {
-                List<QuestionDto> questions = new List<QuestionDto>();
-
-                foreach (QuestionForTestViewModel question in model.Questions)
-                {
-                    if (question.Chosen)
-                    {
-                        questions.Add(_questionService.GetQuestion(question.IdQuestion));
-                    }
-                }
-
-                TestDto test = new TestDto
-                {
-                    TestName = model.TestName,
-                    TestDescription = model.TestDescription,
-                    IdTheme = Int32.Parse(model.selectedTheme),
-                    Difficult = model.selectedDifficult,
-                    CreateDate = DateTime.Now,
-                    Questions = questions,
-                    QuestionsNumber = questions.Count,
-                    Time = new TimeSpan(0, model.selectedTime, 0)
-                };
-
-                if (file != null)
-                {
-                    test.ImageMimeType = file.ContentType;
-                    test.TestImage = new byte[file.ContentLength];
-                    file.InputStream.Read(test.TestImage, 0, file.ContentLength);
-                }
-                _testService.CreateTest(test);
-
+                _testService.CreateTest(model,file);
                 return RedirectToAction("GetInfoTest", "Test");
             }
             else
             {
-
-                model.Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName");
-               
-
-                IEnumerable<QuestionDto> questionDTOs = _questionService.GetQuestions();
-                model.Questions = new List<QuestionForTestViewModel>();
-
-                foreach (QuestionDto question in questionDTOs)
-                {
-                    model.Questions.Add(new QuestionForTestViewModel
-                    {
-                        IdQuestion = question.IdQuestion,
-                        QuestionText = question.QuestionText,
-                        Difficult = question.Difficult,
-                        Theme = question.Theme.ThemeName,
-                        Chosen = false
-                    });
-
-                }
-
+                model = _testService.GetCreateModel();
                 return View(model);
             }
 
         }
-        [Authorize(Roles = "admin")]
+
+        [HttpGet]
+        public ActionResult GenerateTest()
+        {
+            TestGenerateViewModel model = new TestGenerateViewModel
+            {
+                Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName")
+            };
+            return View(model);
+        }
+
+
+        //[HttpPost]
+        //public ActionResult GenerateTest(TestGenerateViewModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        if (!model.Create)
+        //        {
+        //            model.Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName");
+        //            model.Questions.Clear();
+        //            TestViewModel test = _testService.GenerateTest(model.selectedNumber, Int32.Parse(model.selectedTheme), model.selectedDifficult);
+        //            foreach (Logic.QuestionViewModel question in test.Questions)
+        //            {
+        //                model.Questions.Add(question);
+        //            }
+        //        }
+
+        //        else
+        //        {
+        //            TestViewModel test = new TestViewModel
+        //            {
+        //                TestName = model.TestName,
+        //                TestDescription = model.TestDescription,
+        //                IdTheme = Int32.Parse(model.selectedTheme),
+        //                Difficult = model.selectedDifficult,
+        //                CreateDate = DateTime.Now,
+        //                Questions = model.Questions,
+        //                QuestionsNumber = model.Questions.Count
+        //            };
+
+        //            _testService.CreateTest(test);
+        //            return RedirectToAction("GetInfoTest", "Test");
+        //        }
+        //    }
+
+        //    return View(model);
+
+        //}
+
+        #endregion
+
+        #region Delete/Details Tests
+
         public ActionResult DeleteTest(int? id)
         {
             if (!id.HasValue)
@@ -146,60 +119,24 @@ namespace TestSystem.Web.Controllers
             _testService.RemoveTest(id.Value);
             return RedirectToAction("GetInfoTest", "Test");
         }
-        [Authorize(Roles = "admin")]
+
+
         [HttpGet]
-        public ActionResult GenerateTest()
+        public ActionResult GetInfoTest
+       (int? IdTheme, string difficult, int? IdQuestion, int? IdTest, string search,
+       int? page)
         {
-            TestGenerateViewModel model = new TestGenerateViewModel
-            {
-                Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName")
-            };
-            return View(model);
+            return View(_commonService.FilterTests(IdTheme, difficult, IdQuestion, IdTest, search,
+            page));
         }
 
-        [Authorize(Roles = "admin")]
-        [HttpPost]
-        public ActionResult GenerateTest(TestGenerateViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                if (!model.Create)
-                {
-                    model.Theme = new SelectList(_themeService.GetAll(), "IdTheme", "ThemeName");
-                    model.Questions.Clear();
-                    TestDto test = _testService.GenerateTest(model.selectedNumber, Int32.Parse(model.selectedTheme), model.selectedDifficult);
-                    foreach (QuestionDto question in test.Questions)
-                    {
-                        model.Questions.Add(question);
-                    }
-                }
+        #endregion
 
-                else
-                {
-                    TestDto test = new TestDto
-                    {
-                        TestName = model.TestName,
-                        TestDescription = model.TestDescription,
-                        IdTheme = Int32.Parse(model.selectedTheme),
-                        Difficult = model.selectedDifficult,
-                        CreateDate = DateTime.Now,
-                        Questions = model.Questions,
-                        QuestionsNumber = model.Questions.Count
-                    };
-
-                    _testService.CreateTest(test);
-                    return RedirectToAction("GetInfoTest", "Test");
-                }
-            }
-
-            return View(model);
-
-        }
-
+        #region Utility methods
         [AllowAnonymous]
         public FileContentResult GetImage(int idTest)
         {
-            TestDto test= _testService.GetTest(idTest);
+            TestViewModel test= _testService.GetTest(idTest);
             if (test.ImageMimeType != null)
             {
                 return File(test.TestImage, test.ImageMimeType);
@@ -209,5 +146,6 @@ namespace TestSystem.Web.Controllers
                 return null;
             }
         }
+        #endregion
     }
 }

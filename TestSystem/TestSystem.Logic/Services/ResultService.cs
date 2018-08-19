@@ -2,103 +2,52 @@
 using System.Collections.Generic;
 using TestSystem.DataProvider.Interfaces;
 using TestSystem.Logic.Interfaces;
-using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Model.Models;
+using TestSystem.Logic.ViewModel;
 using TestSystem.Logic.MapGeneric;
-using TestSystem.Logic.LogicView;
 using System.Linq;
-
 
 namespace TestSystem.Logic.Services
 {
-    public class ResultService : MapClass<Result, ResultDto>, IResultService
+    public class ResultService : MapClass<Result,ResultFullViewModel> ,IResultService
     {
+        #region Infrastructure
         IUnitOfWork Database { get; }
-
         public ResultService(IUnitOfWork unitOfWork)
         {
             Database = unitOfWork;
         }
 
+        #endregion
 
-        public void GivePremission(int IdTest, string IdUser , string Description)
+        #region Methods
+
+        public void GivePremission(PremissionViewModel model)
         {
+            int IdTest = model.Tests.
+                Where(x => x.Choosen == true).
+                FirstOrDefault().IdTest;
+
             Result result = new Result
             {
                 CreateDate = DateTime.Now,
                 IdTest = IdTest,
-                IdUserInfo = IdUser,
-                ResultDescription = Description,
+                IdUserInfo = model.UserResult.IdUserInfo,
+                ResultDescription = model.UserResult.ResultDescription,
                 ResultScore = null,
             };
             Database.Results.Add(result);
             Database.Complete();
         }
 
-        public void Dispose()
+        public ResultFullViewModel GetResult(int? id)
         {
-            Database.Dispose();
+            return MapperFromDB.Map<Result, ResultFullViewModel>(Database.Results.Get(id.Value));
         }
 
-        public ResultDto GetResult(int? id)
+        public List<ResultFullViewModel> GetLastResults()
         {
-            return MapperFromDB.Map<ResultDto>(Database.Results.Get(id.Value));
-        }
-
-        public IEnumerable<ResultDto> GetResultsById(string id)
-        {
-            if (String.IsNullOrEmpty(id))
-            {
-                return MapperFromDB.Map<IEnumerable<Result>, List<ResultDto>>(Database.Results.GetAll());
-            }
-            else
-            {
-                return MapperFromDB.Map<IEnumerable<Result>, List<ResultDto>>(Database.Results.GetAll().
-                    Where(x => x.IdUserInfo == id));
-            }
-        }
-
-        public IEnumerable<ResultDto> GetResults()
-        {
-
-            return MapperFromDB.Map<IEnumerable<Result>, List<ResultDto>>(Database.Results.GetAll());
-
-
-        }
-
-        public void RemoveResult(int id)
-        {
-        }
-
-        public void UpdateResult(ResultDto resultDTO)
-        {
-            throw new NotImplementedException();
-        }
-
-        public UserInfoDto GetUser(int id)
-        {
-            return MapperFromDB.Map<UserInfoDto>(Database.Results.Get(id));
-        }
-
-        public IEnumerable<UserInfoDto> GetUsers(string search)
-        {
-            if (String.IsNullOrEmpty(search))
-            {
-                return MapperFromDB.Map<IEnumerable<UserInfo>, List<UserInfoDto>>(Database.UserInfoes.GetAll());
-            }
-            else
-            {
-                var users = Database.UserInfoes.GetAll().
-                     Where(x => x.UserFirstName.Contains(search) ||
-                     x.UserLastName.Contains(search) ||
-                     x.ApplicationUser.Email.Contains(search));
-                return MapperFromDB.Map<IEnumerable<UserInfo>, List<UserInfoDto>>(users.AsEnumerable());
-            }
-        }
-
-        public IEnumerable<ResultDto> GetLastResults()
-        {
-            return MapperFromDB.Map<IEnumerable<Result>, IEnumerable<ResultDto>>
+            return MapperFromDB.Map<IEnumerable<Result>, List<ResultFullViewModel>>
                 (Database.Results.GetAll().
                 OrderByDescending(x => x.CreateDate).
                 Take(5));
@@ -130,5 +79,66 @@ namespace TestSystem.Logic.Services
                 return null;
             }
         }
+
+        public ResultViewModel GetAllResults(string search, string id)
+        {
+            ResultViewModel model = new ResultViewModel();
+            if (String.IsNullOrEmpty(search))
+            {
+                model.Users = Database.UserInfoes.GetAll().ToList();
+            }
+            else
+            {
+                var users = Database.UserInfoes.GetAll().
+                     Where(x => x.UserFirstName.Contains(search) ||
+                     x.UserLastName.Contains(search) ||
+                     x.ApplicationUser.Email.Contains(search));
+                model.Users = users.ToList();
+            }
+
+
+            if (String.IsNullOrEmpty(id))
+            {
+                model.Results = Database.Results.GetAll().ToList();
+            }
+            else
+            {
+                model.Results = Database.Results.GetAll().
+                    Where(x => x.IdUserInfo == id).ToList();
+            }
+
+            return model;
+        }
+
+        public PremissionViewModel CreatePremissionModel(string IdUser)
+        {
+            PremissionViewModel model = new PremissionViewModel();
+            model.UserResult.IdUserInfo = IdUser;
+            foreach (Test test in Database.Tests.GetAll())
+            {
+                model.Tests.Add(new TestPremissionViewModel
+                {
+                    TestName = test.TestName,
+                    Difficult = test.Difficult,
+                    IdTest = test.IdTest,
+                    TestDescription = test.TestDescription,
+                    Theme = test.Theme
+                });
+            }
+            return model;
+        }
+
+        public void Dispose()
+        {
+            Database.Dispose();
+        }
+
+        #endregion
     }
 }
+
+            
+
+
+       
+

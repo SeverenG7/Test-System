@@ -1,4 +1,4 @@
-﻿using TestSystem.Logic.LogicView;
+﻿using TestSystem.Logic.ViewModel;
 
 namespace TestSystem.Logic.Interfaces
 {
