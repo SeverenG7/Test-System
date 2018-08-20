@@ -36,7 +36,17 @@ namespace TestSystem.Web.Controllers
                 ViewBag.Result = id.Value;
             }
             ViewBag.Name = HttpContext.User.Identity.Name;
-            return View(_userService.MainMenuUser(id));
+            return View(_userService.MainMenuUser(id ,true));
+        }
+
+        public ActionResult UserResults(int? id)
+        {
+            if (id.HasValue)
+            {
+                ViewBag.Result = id.Value;
+            }
+            ViewBag.Name = HttpContext.User.Identity.Name;
+            return View(_userService.MainMenuUser(id,false));
         }
 
         [TestPassing]

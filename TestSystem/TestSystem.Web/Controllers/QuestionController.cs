@@ -102,8 +102,17 @@ namespace TestSystem.Web.Controllers
         {
             ViewBag.QuestionText = QuestionText;
             ViewBag.IdQuestion = IdQuestion;
-            return View(_commonService.FilterQuestions(IdTheme, difficult, IdQuestion, IdTest, search,
-            page));
+            var model = _commonService.FilterQuestions(IdTheme, difficult, IdQuestion, IdTest, search,
+            page);
+            if (model != null)
+            {
+                return View(_commonService.FilterQuestions(IdTheme, difficult, IdQuestion, IdTest, search,
+                page));
+            }
+            else
+            {
+                return HttpNotFound();
+            }
         }
 
 
@@ -112,7 +121,7 @@ namespace TestSystem.Web.Controllers
         {
             if (!IdQuestion.HasValue)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return HttpNotFound();
             }
             QuestionViewModel questionDetails = _questionService.GetQuestion(IdQuestion.Value);
             if (questionDetails == null)

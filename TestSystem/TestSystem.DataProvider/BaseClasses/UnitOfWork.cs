@@ -10,19 +10,12 @@ using Microsoft.AspNet.Identity.EntityFramework;
 namespace TestSystem.DataProvider.BaseClasses
 {
 
-    /// <summary>
-    /// Realization of IUnitOfWork interface
-    /// </summary>
     public class UnitOfWork : IUnitOfWork
     {
 
         private readonly ApplicationContext _context;
         private bool _disposed;
 
-        /// <summary>
-        /// In this constructer we initialize all repositories.
-        /// </summary>
-        /// <param name="context"></param>
         public UnitOfWork(ApplicationContext context)
         {
             _context = context;

@@ -42,7 +42,14 @@ namespace TestSystem.Logic.Services
 
         public ResultFullViewModel GetResult(int? id)
         {
-            return MapperFromDB.Map<Result, ResultFullViewModel>(Database.Results.Get(id.Value));
+            try
+            {
+                return MapperFromDB.Map<Result, ResultFullViewModel>(Database.Results.Get(id.Value));
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         public List<ResultFullViewModel> GetLastResults()
@@ -55,26 +62,33 @@ namespace TestSystem.Logic.Services
 
         public ResultInfoViewModel GetResultInfo(int IdResult)
         {
-            List<QuestionResultViewModel> resultQuestions = new List<QuestionResultViewModel>();
-            Result result = Database.Results.Get(IdResult);
-            if (result.TestPassed != false)
+            try
             {
-                foreach (Question question in result.Test.Questions)
+                List<QuestionResultViewModel> resultQuestions = new List<QuestionResultViewModel>();
+                Result result = Database.Results.Get(IdResult);
+                if (result.TestPassed != false)
                 {
-                    UserQuestion userQuestion = Database.UserQuestions.Find(x => x.IdQuestion == question.IdQuestion &&
-                    x.IdResult == IdResult).
-                        SingleOrDefault();
-                    resultQuestions.Add(new QuestionResultViewModel(question, userQuestion));
-                    foreach (Answer answer in question.Answers)
+                    foreach (Question question in result.Test.Questions)
                     {
-                        resultQuestions.LastOrDefault().Answers.Add(new AnswerResultViewModel(answer, userQuestion.UserAnswers.
-                            Where(x => x.IdAnswer == answer.IdAnswer).
-                            SingleOrDefault()));
+                        UserQuestion userQuestion = Database.UserQuestions.Find(x => x.IdQuestion == question.IdQuestion &&
+                        x.IdResult == IdResult).
+                            SingleOrDefault();
+                        resultQuestions.Add(new QuestionResultViewModel(question, userQuestion));
+                        foreach (Answer answer in question.Answers)
+                        {
+                            resultQuestions.LastOrDefault().Answers.Add(new AnswerResultViewModel(answer, userQuestion.UserAnswers.
+                                Where(x => x.IdAnswer == answer.IdAnswer).
+                                SingleOrDefault()));
+                        }
                     }
+                    return new ResultInfoViewModel(result, resultQuestions);
                 }
-                return new ResultInfoViewModel(result, resultQuestions);
+                else
+                {
+                    return null;
+                }
             }
-            else
+            catch (Exception e)
             {
                 return null;
             }
@@ -95,7 +109,6 @@ namespace TestSystem.Logic.Services
                      x.ApplicationUser.Email.Contains(search));
                 model.Users = users.ToList();
             }
-
 
             if (String.IsNullOrEmpty(id))
             {
@@ -148,6 +161,19 @@ namespace TestSystem.Logic.Services
 
 
             return model;
+        }
+
+        public void Delete(int? id)
+        {
+            if (id.HasValue)
+            {
+                Result result = Database.Results.Get(id.Value);
+                if (result != null)
+                {
+                    Database.Results.Remove(result);
+                    Database.Complete();
+                }
+            }
         }
 
         public void Dispose()

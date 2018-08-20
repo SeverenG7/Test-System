@@ -1,0 +1,107 @@
+﻿@model TestSystem.Logic.ViewModel.UserMainViewModel
+
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <link href=@Url.Content("/Content/vendor/bootstrap/css/bootstrap.min.css") rel="stylesheet">
+    <link href=@Url.Content("/Content/vendor/font-awesome/css/font-awesome.min.css") rel="stylesheet" type="text/css">
+    <meta name="viewport" content="width=device-width" />
+    <title>Tests info</title>
+</head>
+<body style="background-image:url(../../Content/actionImages/userBack.jpg)">
+    <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-9">
+            <h2 class="display-4 text-white">
+                Your results @ViewBag.Name !
+            </h2>
+        </div>
+        <div class=" card col-md-2 mb-5 text-center" style="background-color:darkgray;
+height:50px; width:50px">
+            <a class="nav-link text-white" href="@Url.Action("Logout" , "Account")">
+                Logout
+                <i class="fa fa-fw fa-sign-out"></i>
+            </a>
+        </div>
+    </div>
+    <div class="container">
+        <button class="btn btn-primary mb-3"
+                onclick="location.href='@Url.Action("MainMenu", "User" , new { })'">
+            See tests
+        </button>
+        @if (Model.Results != null)
+        {<div class="row">
+                @foreach (var result in Model.Results)
+                {
+                    <div class="col-xl-4  mb-3 ">
+                        <div class="card text-white bg-secondary o-hidden h-100">
+                            <div class="card-body">
+                                <div class="card-body-icon">
+                                </div>
+                                <div class="mr-5 t">
+                                    <p style="font-size:x-large" class="text-uppercase">
+                                        @result.Test.TestName
+                                    </p>
+                                    <ul>
+                                        <li>
+                                            Theme: @result.Test.Theme.ThemeName
+                                        </li>
+                                        <li>
+                                            Difficult: @result.Test.Difficult
+                                        </li>
+                                        <li class="text-warning">
+                                            Your score : @Math.Round(result.ResultScore.Value) %
+                                        </li>
+                                        <li>
+                                            Date passing : @result.CreateDate
+                                        </li>
+                                        <li>
+                                            Date passing : @result.CreateDate
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="text-center">
+                                    <p style="color:lawngreen">
+                                        Questions with all correct answers:
+                                        @{
+                                            double answerCorrect = (result.UserQuestions.Where(x => x.UserScore == x.MaxScore).Count() * 100
+                                                / result.UserQuestions.Count);
+                                        }
+                                        @answerCorrect %
+                                    </p>
+                                    <p style="color:yellow">
+                                        Questions with partial correct answers:
+                                        @{
+                                            double answerPartial = (result.UserQuestions.Where(x => x.UserScore > 0 && x.UserScore != x.MaxScore).Count()
+                                                    * 100 / result.UserQuestions.Count);
+                                        }
+                                        @answerPartial %
+                                    </p>
+                                    <p style="color:maroon">
+                                        Questions with full wrong answers:
+                                        @{
+                                            double answerWrong = result.UserQuestions.Where(x => x.UserScore == 0).Count()
+                                                    * 100 / result.UserQuestions.Count;
+                                        }
+                                        @answerWrong %
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        <div class="row ">
+        </div>
+    </div>
+</body>
+</html>

@@ -31,14 +31,16 @@ namespace TestSystem.Logic.Services
 
         public TestViewModel GetTest(int? id)
         {
-            if (id == null)
-                throw new Exception();
-            Test test = Database.Tests.Get(id.Value);
-            if (test == null)
-                throw new Exception();
-
-            TestViewModel testDTO = MapperFromDB.Map<TestViewModel>(test);
-            return testDTO;
+            try
+            {
+                Test test = Database.Tests.Get(id.Value);
+                TestViewModel testDTO = MapperFromDB.Map<TestViewModel>(test);
+                return testDTO;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         public void RemoveTest(int id)
@@ -140,7 +142,7 @@ namespace TestSystem.Logic.Services
                 foreach (QuestionViewModel question in model.Questions)
                 {
                     generateTest.Questions.Add((Database.Questions.Get(question.IdQuestion)));
-                    generateTest.TotalScore += question.Score;
+                    generateTest.TotalScore += Database.Questions.Get(question.IdQuestion).Score;
                 }
 
                 Database.Tests.Add(generateTest);

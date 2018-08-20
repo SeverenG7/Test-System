@@ -13,11 +13,16 @@ namespace TestSystem.Logic.Services
 {
     public class CommonService : ICommonService
     {
+        #region Infrastructure
         private IUnitOfWork Database { get; }
         public CommonService(IUnitOfWork unitOfWork)
         {
             Database = unitOfWork;
         }
+
+        #endregion
+
+        #region Methods
 
         public FiltrationViewModel FilterQuestions(int? IdTheme, 
             string difficult, int? IdQuestion, 
@@ -37,52 +42,59 @@ namespace TestSystem.Logic.Services
 
                 IEnumerable<Question> questions = Database.Questions.GetAll();
 
-                if (IdTheme.HasValue && IdTheme != 0)
+                try
                 {
-                    stateFilter.Add(IdTheme.Value.ToString());
-                    questions = questions.Where(x => x.IdTheme == IdTheme);
-                }
+                    if (IdTheme.HasValue && IdTheme != 0)
+                    {
+                        stateFilter.Add(IdTheme.Value.ToString());
+                        questions = questions.Where(x => x.IdTheme == IdTheme);
+                    }
 
-                if (!String.IsNullOrEmpty(difficult) && !difficult.Equals("All"))
+                    if (!String.IsNullOrEmpty(difficult) && !difficult.Equals("All"))
+                    {
+                        questions = questions.Where(x => x.Difficult == difficult);
+                    }
+
+                    if (!String.IsNullOrEmpty(search))
+                    {
+                        questions = questions.Where(x => x.QuestionText.Contains(search));
+                    }
+
+                    List<Theme> themes = Database.Themes.GetAll().ToList();
+                    themes.Insert(0, new Theme() { IdTheme = 0, ThemeName = "All" });
+
+
+                    if (IdQuestion.HasValue)
+                    {
+                        if (filterModel.Questions == null)
+                            filterModel.IdQuestion = IdQuestion.Value;
+                        filterModel.Answers = questions.
+                            Where(x => x.IdQuestion == IdQuestion).
+                            SingleOrDefault().
+                            Answers;
+                        filterModel.Tests = questions.
+                            Where(x => x.IdQuestion == IdQuestion).
+                            SingleOrDefault().
+                            Tests.ToPagedList(pageNumber, pageSize);
+                    }
+                    if (IdTest.HasValue)
+                    {
+                        filterModel.IdTest = IdTest.Value;
+                        questions = filterModel.Tests.
+                           Where(x => x.IdTest == IdTest).
+                           SingleOrDefault().
+                           Questions.ToPagedList(pageNumber, pageSize);
+                    }
+
+                    filterModel.Questions = questions.ToPagedList(pageNumber, pageSize);
+                    filterModel.Themes = new SelectList(themes, "IdTheme", "ThemeName");
+
+                    return filterModel;
+                }
+                catch (Exception e)
                 {
-                    questions = questions.Where(x => x.Difficult == difficult);
+                    return null;
                 }
-
-                if (!String.IsNullOrEmpty(search))
-                {
-                    questions = questions.Where(x => x.QuestionText.Contains(search));
-                }
-
-                List<Theme> themes = Database.Themes.GetAll().ToList();
-                themes.Insert(0, new Theme() { IdTheme = 0, ThemeName = "All" });
-
-
-                if (IdQuestion.HasValue)
-                {
-                    if (filterModel.Questions == null)
-                        filterModel.IdQuestion = IdQuestion.Value;
-                    filterModel.Answers = questions.
-                        Where(x => x.IdQuestion == IdQuestion).
-                        SingleOrDefault().
-                        Answers;
-                    filterModel.Tests = questions.
-                        Where(x => x.IdQuestion == IdQuestion).
-                        SingleOrDefault().
-                        Tests.ToPagedList(pageNumber,pageSize);
-                }
-                if (IdTest.HasValue)
-                {
-                    filterModel.IdTest = IdTest.Value;
-                    questions = filterModel.Tests.
-                       Where(x => x.IdTest == IdTest).
-                       SingleOrDefault().
-                       Questions.ToPagedList(pageNumber, pageSize);
-                }
-
-                filterModel.Questions = questions.ToPagedList(pageNumber, pageSize);
-                filterModel.Themes = new SelectList(themes, "IdTheme", "ThemeName");
-
-                return filterModel;
             }
             else
             {
@@ -96,51 +108,59 @@ namespace TestSystem.Logic.Services
 
 
                 IEnumerable<Question> questions = Database.Questions.GetAll();
-                if (IdTheme.HasValue && IdTheme != 0)
+
+                try
                 {
-                    questions = questions.Where(x => x.IdTheme == IdTheme);
-                }
+                    if (IdTheme.HasValue && IdTheme != 0)
+                    {
+                        questions = questions.Where(x => x.IdTheme == IdTheme);
+                    }
 
-                if (!String.IsNullOrEmpty(difficult) && !difficult.Equals("All"))
+                    if (!String.IsNullOrEmpty(difficult) && !difficult.Equals("All"))
+                    {
+                        questions = questions.Where(x => x.Difficult == difficult);
+                    }
+
+                    if (!String.IsNullOrEmpty(search))
+                    {
+                        questions = questions.Where(x => x.QuestionText.Contains(search));
+                    }
+
+                    List<Theme> themes = Database.Themes.GetAll().ToList();
+                    themes.Insert(0, new Theme() { IdTheme = 0, ThemeName = "All" });
+
+
+                    if (IdQuestion.HasValue)
+                    {
+                        if (filterModel.Questions == null)
+                            filterModel.IdQuestion = IdQuestion.Value;
+                        filterModel.Answers = questions.
+                            Where(x => x.IdQuestion == IdQuestion).
+                            SingleOrDefault().
+                            Answers;
+                        filterModel.Tests = questions.
+                            Where(x => x.IdQuestion == IdQuestion).
+                            SingleOrDefault().
+                            Tests.ToPagedList(pageNumber, pageSize);
+                    }
+                    if (IdTest.HasValue)
+                    {
+                        filterModel.IdTest = IdTest.Value;
+                        questions = filterModel.Tests.
+                           Where(x => x.IdTest == IdTest).
+                           SingleOrDefault().
+                           Questions.ToPagedList(pageNumber, pageSize);
+                    }
+
+                    filterModel.Questions = questions.ToPagedList(pageNumber, pageSize);
+                    filterModel.Themes = new SelectList(themes, "IdTheme", "ThemeName");
+
+                    return filterModel;
+                }
+                catch (Exception e)
                 {
-                    questions = questions.Where(x => x.Difficult == difficult);
+                    return null;
                 }
-
-                if (!String.IsNullOrEmpty(search))
-                {
-                    questions = questions.Where(x => x.QuestionText.Contains(search));
-                }
-
-                List<Theme> themes = Database.Themes.GetAll().ToList();
-                themes.Insert(0, new Theme() { IdTheme = 0, ThemeName = "All" });
-
-
-                if (IdQuestion.HasValue)
-                {
-                    if (filterModel.Questions == null)
-                        filterModel.IdQuestion = IdQuestion.Value;
-                    filterModel.Answers = questions.
-                        Where(x => x.IdQuestion == IdQuestion).
-                        SingleOrDefault().
-                        Answers;
-                    filterModel.Tests = questions.
-                        Where(x => x.IdQuestion == IdQuestion).
-                        SingleOrDefault().
-                        Tests.ToPagedList(pageNumber, pageSize);
-                }
-                if (IdTest.HasValue)
-                {
-                    filterModel.IdTest = IdTest.Value;
-                    questions = filterModel.Tests.
-                       Where(x => x.IdTest == IdTest).
-                       SingleOrDefault().
-                       Questions.ToPagedList(pageNumber, pageSize);
-                }
-
-                filterModel.Questions = questions.ToPagedList(pageNumber, pageSize);
-                filterModel.Themes = new SelectList(themes, "IdTheme", "ThemeName");
-
-                return filterModel;
             }
         }
 
@@ -163,38 +183,45 @@ namespace TestSystem.Logic.Services
 
                 IEnumerable<Test> tests = Database.Tests.GetAll();
 
-                if (IdTheme.HasValue && IdTheme != 0)
+                try
                 {
-                    stateFilter.Add(IdTheme.Value.ToString());
-                    tests = tests.Where(x => x.IdTheme == IdTheme);
-                }
+                    if (IdTheme.HasValue && IdTheme != 0)
+                    {
+                        stateFilter.Add(IdTheme.Value.ToString());
+                        tests = tests.Where(x => x.IdTheme == IdTheme);
+                    }
 
-                if (!String.IsNullOrEmpty(difficult) && !difficult.Equals("All"))
+                    if (!String.IsNullOrEmpty(difficult) && !difficult.Equals("All"))
+                    {
+                        tests = tests.Where(x => x.Difficult == difficult);
+                    }
+
+                    if (!String.IsNullOrEmpty(search))
+                    {
+                        tests = tests.Where(x => x.TestName.Contains(search));
+                    }
+
+                    List<Theme> themes = Database.Themes.GetAll().ToList();
+                    themes.Insert(0, new Theme() { IdTheme = 0, ThemeName = "All" });
+
+
+                    if (IdTest.HasValue)
+                    {
+                        filterModel.IdTest = IdTest.Value;
+                        filterModel.Questions = tests.
+                           Where(x => x.IdTest == IdTest).
+                           SingleOrDefault().
+                           Questions.ToPagedList(1, 100);
+                    }
+                    filterModel.Tests = tests.ToPagedList(pageNumberTests, pageSizeTests);
+                    filterModel.Themes = new SelectList(themes, "IdTheme", "ThemeName");
+
+                    return filterModel;
+                }
+                catch (Exception e)
                 {
-                    tests = tests.Where(x => x.Difficult == difficult);
+                    return null;
                 }
-
-                if (!String.IsNullOrEmpty(search))
-                {
-                    tests = tests.Where(x => x.TestName.Contains(search));
-                }
-
-                List<Theme> themes = Database.Themes.GetAll().ToList();
-                themes.Insert(0, new Theme() { IdTheme = 0, ThemeName = "All" });
-
-
-                if (IdTest.HasValue)
-                {
-                    filterModel.IdTest = IdTest.Value;
-                    filterModel.Questions = tests.
-                       Where(x => x.IdTest == IdTest).
-                       SingleOrDefault().
-                       Questions.ToPagedList(1, 100);
-                }
-                filterModel.Tests = tests.ToPagedList(pageNumberTests, pageSizeTests);
-                filterModel.Themes = new SelectList(themes, "IdTheme", "ThemeName");
-
-                return filterModel;
             }
             else
             {
@@ -206,40 +233,48 @@ namespace TestSystem.Logic.Services
                 difficult = stateFilter[0];
                 search = stateFilter[1];
                 IEnumerable<Test> tests = Database.Tests.GetAll();
-
-                if (IdTheme.HasValue && IdTheme != 0)
+                try
                 {
-                    stateFilter.Add(IdTheme.Value.ToString());
-                    tests = tests.Where(x => x.IdTheme == IdTheme);
-                }
+                    if (IdTheme.HasValue && IdTheme != 0)
+                    {
+                        stateFilter.Add(IdTheme.Value.ToString());
+                        tests = tests.Where(x => x.IdTheme == IdTheme);
+                    }
 
-                if (!String.IsNullOrEmpty(difficult) && !difficult.Equals("All"))
+                    if (!String.IsNullOrEmpty(difficult) && !difficult.Equals("All"))
+                    {
+                        tests = tests.Where(x => x.Difficult == difficult);
+                    }
+
+                    if (!String.IsNullOrEmpty(search))
+                    {
+                        tests = tests.Where(x => x.TestName.Contains(search));
+                    }
+
+                    List<Theme> themes = Database.Themes.GetAll().ToList();
+                    themes.Insert(0, new Theme() { IdTheme = 0, ThemeName = "All" });
+
+
+                    if (IdTest.HasValue)
+                    {
+                        filterModel.IdTest = IdTest.Value;
+                        filterModel.Questions = tests.
+                           Where(x => x.IdTest == IdTest).
+                           SingleOrDefault().
+                           Questions.ToPagedList(1, 100);
+                    }
+                    filterModel.Tests = tests.ToPagedList(pageNumber, pageSize);
+                    filterModel.Themes = new SelectList(themes, "IdTheme", "ThemeName");
+
+                    return filterModel;
+                }
+                catch (Exception e)
                 {
-                    tests = tests.Where(x => x.Difficult == difficult);
+                    return null;
                 }
-
-                if (!String.IsNullOrEmpty(search))
-                {
-                    tests = tests.Where(x => x.TestName.Contains(search));
-                }
-
-                List<Theme> themes = Database.Themes.GetAll().ToList();
-                themes.Insert(0, new Theme() { IdTheme = 0, ThemeName = "All" });
-
-
-                if (IdTest.HasValue)
-                {
-                    filterModel.IdTest = IdTest.Value;
-                    filterModel.Questions = tests.
-                       Where(x => x.IdTest == IdTest).
-                       SingleOrDefault().
-                       Questions.ToPagedList(1, 100);
-                }
-                filterModel.Tests = tests.ToPagedList(pageNumber, pageSize);
-                filterModel.Themes = new SelectList(themes, "IdTheme", "ThemeName");
-
-                return filterModel;
             }
         }
+
+        #endregion
     }
 }

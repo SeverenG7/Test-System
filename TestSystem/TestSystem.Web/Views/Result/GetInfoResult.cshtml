@@ -100,6 +100,7 @@
                         <tr>
                             <td>
                                 @item.Test.TestName
+                                @Html.Hidden(item.IdResult.ToString())
                             </td>
                             <td>
                                 @if (item.TestPassed)
@@ -118,6 +119,10 @@
                                 <button class="btn btn-primary"
                                         onclick="location.href='@Url.Action("ResultInfo", "Result" ,new { IdResult = item.IdResult })'">
                                     Details
+                                </button>
+                                <button class="btn btn-danger"
+                                        onclick="location.href='@Url.Action("DeleteResult", "Result" ,new { id = item.IdResult })'">
+                                    Remove
                                 </button>
                             </td>
                         </tr>

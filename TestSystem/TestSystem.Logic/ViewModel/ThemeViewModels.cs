@@ -16,7 +16,6 @@ namespace TestSystem.Logic.ViewModel
         public string Description { get; set; }
     }
 
-
     public class ThemeAboutViewModel
     {
         public IEnumerable<Theme> Themes { get; set; }

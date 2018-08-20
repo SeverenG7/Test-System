@@ -11,6 +11,7 @@ namespace TestSystem.Logic.Interfaces
         ResultInfoViewModel GetResultInfo(int IdResult);
         ResultViewModel GetAllResults(string search, string id);
         PremissionViewModel CreatePremissionModel(string IdUser, string sortOrder);
+        void Delete(int? id);
         void Dispose();
     }
 }

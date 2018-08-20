@@ -1,6 +1,5 @@
 ﻿using System.Web.Mvc;
 using System.Web;
-using System;
 using TestSystem.Web.Controllers;
 
 namespace TestSystem.Web.Infrasrtuctre
@@ -16,7 +15,6 @@ namespace TestSystem.Web.Infrasrtuctre
             return (httpContext.Application["Timer" + httpContext.User.Identity.Name] != null);
         }
     }
-
 
     public class TestPassingAttribute : FilterAttribute, IActionFilter
     {

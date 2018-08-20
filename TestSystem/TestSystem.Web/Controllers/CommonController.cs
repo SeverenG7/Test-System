@@ -20,11 +20,6 @@ namespace TestSystem.Web.Controllers
             _resultService = resultService;
         }
 
-        public CommonController()
-        {
-
-        }
-
         #endregion
 
         #region Actions

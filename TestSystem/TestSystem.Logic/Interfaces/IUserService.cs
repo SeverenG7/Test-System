@@ -16,6 +16,6 @@ namespace TestSystem.Logic.Interfaces
         Task<OperationDetails> ForgotPasswordAsync(string email);
         Task<OperationDetails> ResetPassworAsync(string email, string token, string password);
         string FindIdUser(string userName);
-        UserMainViewModel MainMenuUser(int? id);
+        UserMainViewModel MainMenuUser(int? id , bool predicate);
     }
 }

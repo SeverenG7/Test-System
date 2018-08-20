@@ -53,7 +53,7 @@ namespace UserStore.Controllers
                     ClaimsIdentity claim = details.Value;
                     if (claim == null)
                     {
-                        ModelState.AddModelError("", "Неверный логин или пароль , или не подтвержден e-mail");
+                        ModelState.AddModelError("", "Wrong login/password or not confirm e-mail");
                     }
                     else
                     {
@@ -185,7 +185,7 @@ namespace UserStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
-             await SetInitialDataAsync();
+            await SetInitialDataAsync();
             if (ModelState.IsValid)
             {
                 UserViewModel userDto = new UserViewModel
@@ -205,9 +205,9 @@ namespace UserStore.Controllers
                         var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = userDto.Id, operationDetails.Value },
                                    protocol: Request.Url.Scheme);
                         string reference = 
-                               "Для завершения регистрации перейдите по ссылке:: <a href=\""
-                                                               + callbackUrl + "\">завершить регистрацию</a>";
-                        string theme = "Подтверждение электронной почты";
+                               "For ending register go to link: <a href=\""
+                                                               + callbackUrl + "\">end register</a>";
+                        string theme = "Confirm Email";
                         await UserService.SendEmailAsync(userDto.Id, theme , reference );
                         return View("DisplayEmail");
                     }

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Net;
 using System.Web.Mvc;
 using TestSystem.Logic.Interfaces;
 using TestSystem.Logic.ViewModel;
@@ -53,6 +53,22 @@ namespace TestSystem.Web.Controllers
                 TempData["Warning"] = "User not pass test - nothing see here";
                 return RedirectToAction("GetInfoResult", "Result");            
             }
+        }
+
+        [HttpGet]
+        public ActionResult DeleteResult(int? id)
+        {
+            if (!id.HasValue)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (_resultService.GetResult(id.Value) == null)
+            {
+                return HttpNotFound();
+            }
+
+            _resultService.Delete(id.Value);
+            return RedirectToAction("GetInfoResult");
         }
 
         #endregion

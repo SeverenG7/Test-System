@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using TestSystem.Logic.Interfaces;
 using TestSystem.Logic.ViewModel;
 using System.Net;

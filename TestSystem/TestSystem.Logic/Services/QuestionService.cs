@@ -100,26 +100,15 @@ namespace TestSystem.Logic.Services
 
         public QuestionViewModel GetQuestion(int? id)
         {
-
-
-            //Question question = Database.Questions.Get(id.Value);
-            //QuestionViewModel questionView = new QuestionViewModel
-            //{
-            //    QuestionImage = question.QuestionImage,
-            //    QuestionText = question.QuestionText,
-            //    IdQuestion = question.IdQuestion,
-            //    Score = question.Score,
-            //    AnswerNumber = question.AnswerNumber,
-            //    CreateDate = question.CreateDate,
-            //    Difficult = question.Difficult,
-            //    IdTheme = question.IdTheme,
-            //    ImageMimeType = question.ImageMimeType,
-            //    Tests = question.Tests,
-            //    Theme = question.Theme
-            //};
-
-            return MapperFromDB.Map<Question, QuestionViewModel>(Database.Questions.Get(id.Value));
-
+            Question question = Database.Questions.Get(id.Value);
+            if (question != null)
+            {
+                return MapperFromDB.Map<Question, QuestionViewModel>(Database.Questions.Get(id.Value));
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public void RemoveQuestion(int id)
@@ -177,22 +166,29 @@ namespace TestSystem.Logic.Services
 
         public IEnumerable<QuestionViewModel> GetLastQuestions()
         {
-            List<Question> questions = Database.Questions.GetAll().
-                OrderByDescending(x => x.CreateDate).
-                Take(5).ToList();
-
-            List<QuestionViewModel> lastQuestions = new List<QuestionViewModel>();
-
-            foreach (Question question in questions)
+            try
             {
-                lastQuestions.Add(new QuestionViewModel
-                {
-                    QuestionText = question.QuestionText,
-                    IdQuestion = question.IdQuestion
-                });
-            }
+                List<Question> questions = Database.Questions.GetAll().
+                    OrderByDescending(x => x.CreateDate).
+                    Take(5).ToList();
 
-            return lastQuestions;
+                List<QuestionViewModel> lastQuestions = new List<QuestionViewModel>();
+
+                foreach (Question question in questions)
+                {
+                    lastQuestions.Add(new QuestionViewModel
+                    {
+                        QuestionText = question.QuestionText,
+                        IdQuestion = question.IdQuestion
+                    });
+                }
+
+                return lastQuestions;
+            }
+            catch(Exception e)
+            {
+                return null;
+            }
         }
 
         public  int ComputeScore(Question question)

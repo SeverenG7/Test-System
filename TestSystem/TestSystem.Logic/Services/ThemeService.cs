@@ -11,12 +11,16 @@ namespace TestSystem.Logic.Services
 {
     public class ThemeService : MapClass<Theme,ThemeViewModel> , IThemeService
     {
+        #region Infrastructure
         IUnitOfWork Database { get; set; }
 
         public ThemeService(IUnitOfWork unitOfWork)
         {
             Database = unitOfWork;
         }
+        #endregion
+
+        #region Methods
 
         public IEnumerable<ThemeViewModel> GetAll()
         {
@@ -86,6 +90,6 @@ namespace TestSystem.Logic.Services
             }
             return modelView;
         }
-
+        #endregion
     }
 }

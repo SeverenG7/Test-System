@@ -5,7 +5,7 @@ html {
 
 body {
     overflow-x: hidden;
-    /*background-image: url(/Content/actionImages/testBack.jpg) ;*/
+    background-image: url(/Content/actionImages/testBack.jpg) ;
 }
 
 body.sticky-footer {

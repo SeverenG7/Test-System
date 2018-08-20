@@ -16,12 +16,17 @@ namespace TestSystem.Logic.Services
 {
     public class TestPassService : MapClass<Question, QuestionViewModel>, ITestPassService
     {
+        #region Infrastructure
         static IUnitOfWork Database { get; set; }
 
         public TestPassService(IUnitOfWork unitOfWork)
         {
             Database = unitOfWork;
         }
+
+        #endregion
+
+        #region Interface Methods
 
         public QuestionViewModel StartTest(int IdResult)
         {
@@ -67,13 +72,17 @@ namespace TestSystem.Logic.Services
             TempResult tempResult = Database.TempResults.GetAll().
                 Where(x => x.UserName == HttpContext.Current.User.Identity.Name).
                 SingleOrDefault();
-            PassedQuestion(question, ref tempResult);
+            bool isPass  = PassedQuestion(question, ref tempResult);
             if (currentTimer.StopWatch.IsRunning && !String.IsNullOrWhiteSpace(tempResult.QuestionPassing))
             {
-                QuestionViewModel nextQuestion = MapperFromDB.Map<Question, QuestionViewModel>
-                    (Database.Questions.Get(tempResult.QuestionPassing.StringStirrer().FirstOrDefault()));
-                HttpContext.Current.Application["Test" + HttpContext.Current.User.Identity.Name] = nextQuestion.IdQuestion;
-                return new OperationDetails(true, nextQuestion);
+                if (isPass)
+                {
+                    QuestionViewModel nextQuestion = MapperFromDB.Map<Question, QuestionViewModel>
+                        (Database.Questions.Get(tempResult.QuestionPassing.StringStirrer().FirstOrDefault()));
+                    HttpContext.Current.Application["Test" + HttpContext.Current.User.Identity.Name] = nextQuestion.IdQuestion;
+                    return new OperationDetails(true, nextQuestion);
+                }
+                return new OperationDetails(true, question);
             }
 
             else
@@ -172,7 +181,11 @@ namespace TestSystem.Logic.Services
                 lastResult.UserInfo.UserFirstName);
         }
 
-        private void PassedQuestion(QuestionViewModel question, ref TempResult tempResult)
+        #endregion
+
+        #region Supports methods
+
+        private bool PassedQuestion(QuestionViewModel question, ref TempResult tempResult)
         {
             int IdResult = tempResult.IdResult;
             question.IdQuestion = (int)HttpContext.Current.Application["Test" + HttpContext.Current.User.Identity.Name];
@@ -180,22 +193,33 @@ namespace TestSystem.Logic.Services
               && x.IdQuestion == question.IdQuestion).
               SingleOrDefault();
             double questionScore = 0;
-            Question questionDB = Database.Questions.Get(question.IdQuestion);
-            double answerWeight = (questionDB.Score / question.Answers.Count);
-            foreach (Answer answer in questionDB.Answers)
+            try
             {
-                AnswerViewModel answerUser = question.Answers.Where(x => x.IdAnswer == answer.IdAnswer).SingleOrDefault();
-                userQuestion.UserAnswers.Add(new UserAnswer()
+                Question questionDB = Database.Questions.Get(question.IdQuestion);
+
+                    double answerWeight = (questionDB.Score / questionDB.Answers.
+                        Where(x => x.Correct == true).
+                        Count());
+  
+                foreach (Answer answer in questionDB.Answers)
                 {
-                    IdUserQuestion = userQuestion.IdUserQuestion,
-                    IdAnswer = answer.IdAnswer,
-                    Correct = answerUser.Correct
-                });
-                if (answerUser.Correct == answer.Correct)
-                {
-                    questionScore += answerWeight;
-                    userQuestion.UserScore += answerWeight;
+                    AnswerViewModel answerUser = question.Answers.Where(x => x.IdAnswer == answer.IdAnswer).SingleOrDefault();
+                    userQuestion.UserAnswers.Add(new UserAnswer()
+                    {
+                        IdUserQuestion = userQuestion.IdUserQuestion,
+                        IdAnswer = answer.IdAnswer,
+                        Correct = answerUser.Correct
+                    });
+                    if (answerUser.Correct == answer.Correct && answer.Correct == true)
+                    {
+                        questionScore += answerWeight;
+                        userQuestion.UserScore += answerWeight;
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                return false;
             }
             tempResult.TotalScore += questionScore;
             tempResult.QuestionPassing = tempResult.QuestionPassing.StringStirrer(question.IdQuestion);
@@ -205,6 +229,7 @@ namespace TestSystem.Logic.Services
             Database.UserQuestions.Update(userQuestion);
             Database.TempResults.Update(tempResult);
             Database.Complete();
+            return true;
         }
 
         private void EndTestPassing(TempResult tempResult)
@@ -214,6 +239,8 @@ namespace TestSystem.Logic.Services
             object obj = new object();
             currentTimer.EndTimer(obj);
         }
+
+        #endregion
 
         #region Timer custom class
 

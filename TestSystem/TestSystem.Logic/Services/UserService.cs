@@ -81,8 +81,7 @@ namespace TestSystem.Logic.Services
                 }
                 else
                 {
-                    claim = await Database.ApplicationUserManagers.CreateIdentityAsync(user,
-                                                DefaultAuthenticationTypes.ApplicationCookie);
+                    return null;
                 }
             }
             return new OperationDetails(true, "", "", claim, "");
@@ -134,29 +133,46 @@ namespace TestSystem.Logic.Services
                 return new OperationDetails(result.Succeeded, result.Errors.ToString(), "Reset password");
             }
         }
-
-
-        public UserMainViewModel MainMenuUser(int? id)
+        public UserMainViewModel MainMenuUser(int? id ,bool predicate)
         {
-            UserMainViewModel model = new UserMainViewModel();
-            model.Results = Database.Results.GetAll().
-                Where(x => x.UserInfo.IdUserInfo == FindIdUser(HttpContext.Current.User.Identity.Name)
-                && x.TestPassed == false).
-                ToList();
-
-            foreach(Result result in model.Results)
+            if (predicate)
             {
-                result.Test.Theme = Database.Themes.Get(result.Test.IdTheme.Value);
-            }
+                UserMainViewModel model = new UserMainViewModel();
+                model.Results = Database.Results.GetAll().
+                    Where(x => x.UserInfo.IdUserInfo == FindIdUser(HttpContext.Current.User.Identity.Name)
+                    && x.TestPassed == !predicate).
+                    ToList();
 
-            if (id.HasValue)
-            {
-                model.Test = Database.Results.Get(id.Value).Test;
+                foreach (Result result in model.Results)
+                {
+                    result.Test.Theme = Database.Themes.Get(result.Test.IdTheme.Value);
+                }
+
+                if (id.HasValue)
+                {
+                    model.Test = Database.Results.Get(id.Value).Test;
+                }
+                return model;
             }
-            return model;
+            else
+            {
+                UserMainViewModel model = new UserMainViewModel();
+                model.Results = Database.Results.GetAll().
+                    Where(x => x.UserInfo.IdUserInfo == FindIdUser(HttpContext.Current.User.Identity.Name)
+                    && x.TestPassed == true).
+                    ToList();
+
+                foreach (Result result in model.Results)
+                {
+                    result.Test.Theme = Database.Themes.Get(result.Test.IdTheme.Value);
+                }
+                if (id.HasValue)
+                {
+                    model.Test = Database.Results.Get(id.Value).Test;
+                }
+                return model;
+            }
         }
-
-
         public string FindIdUser(string userName)
         {
             var user = Database.ApplicationUserManagers.FindByEmail(userName);

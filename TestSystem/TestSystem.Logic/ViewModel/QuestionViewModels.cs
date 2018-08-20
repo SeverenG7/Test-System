@@ -47,16 +47,6 @@ namespace TestSystem.Logic.ViewModel
         }
     }
 
-    public class QuestionFewViewModel
-    {
-        public int IdQuestion { get; set; }
-        public string QuestionText { get; set; }
-        public string Theme { get; set; }
-        public string Difficult { get; set; }
-        public int Score { get; set; }
-
-    }
-
     public class QuestionViewModel
     {
         public int IdQuestion { get; set; }
@@ -84,26 +74,6 @@ namespace TestSystem.Logic.ViewModel
 
     }
 
-    public class QuestionDetailsViewModel
-    {
-        public string QuestionText { get; set; }
-        public int Score { get; set; }
-        public string Difficult { get; set; }
-        public DateTime CreateDate { get; set; }
-        public  string Theme { get; set; }
-        public virtual List<Answer> Answers { get; set; }
-        public virtual List<Test> Tests { get; set; }
-
-        public QuestionDetailsViewModel(Question question)
-        {
-            QuestionText = question.QuestionText;
-            Score = question.Score;
-            CreateDate = question.CreateDate;
-            Difficult = question.Difficult;
-            Answers = question.Answers.ToList();
-            Tests = new List<Test>();
-        }
-    }
 }
 
 
