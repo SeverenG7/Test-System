@@ -1,4 +1,4 @@
-﻿@model TestSystem.Web.Models.TestGenerateViewModel
+﻿@model TestSystem.Logic.ViewModel.TestGenerateViewModel
 
 
 
@@ -6,6 +6,7 @@
 
 <html>
 <head>
+    <link href="~/Content/css/Tables.css" rel="stylesheet" type="text/css" />
     <meta name="viewport" content="width=device-width" />
     <title>GenerateNewTest</title>
 </head>
@@ -17,20 +18,20 @@
             <div class="card-header-tabs">
 
                 @Html.AntiForgeryToken()
-
-
-                <h4 class="text-info alert-info">Add new test here...</h4>
+                <h4 class="text-info display-3">Add parametres to start generate...</h4>
                 <hr />
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
+                <label class=" mb-2">
+                If you like generated test, turn on checkbox and press "Generate" again </label>
                 <div class="row float-lg-left col-md-5">
                     <div class="container">
-                        <div class="form-inline">
+                        <div class="row">
                             <div class=" form-group">
                                 <div class="col-md-12">
                                     <label class="text-center col-md-12"> Choose theme... </label>
                                     @Html.DropDownListFor(model => model.selectedTheme, Model.Theme,
-htmlAttributes: new { @class = "form-control" })
+          htmlAttributes: new { @class = "form-control" })
                                 </div>
                             </div>
 
@@ -38,13 +39,21 @@ htmlAttributes: new { @class = "form-control" })
                                 <div class="col-md-12">
                                     <label class="text-center col-md-12">Choose difficult...</label>
                                     @Html.DropDownListFor(model => model.selectedDifficult, Model.Difficult,
-htmlAttributes: new { @class = "form-control" })
+      htmlAttributes: new { @class = "form-control" })
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            @Html.LabelFor(model => model.TestName, htmlAttributes: new { @class = "control-label col-md-12" })
+                            Put time for pass test
+                            <div class="col-md-6">
+                                @Html.EditorFor(model => model.selectedTime, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.selectedTime, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            Put Test Name
                             <div class="col-md-12">
                                 @Html.EditorFor(model => model.TestName, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.TestName, "", new { @class = "text-danger" })
@@ -52,30 +61,31 @@ htmlAttributes: new { @class = "form-control" })
                         </div>
 
                         <div class="form-group">
-                            @Html.LabelFor(model => model.TestDescription, htmlAttributes: new { @class = "control-label col-md-12" })
+                            Few words about this, introduction for users
                             <div class="col-md-12">
                                 @Html.EditorFor(model => model.TestDescription, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.TestDescription, "", new { @class = "text-danger" })
                             </div>
                         </div>
+
                         <div class=" form-group">
                             <div class="col-md-12">
-                                <label class="text-center col-md-12">Put number questions</label>
+                                <label class=" col-md-12">Put number questions</label>
                                 @Html.DropDownListFor(model => model.selectedNumber, Model.NumberQuestions,
  htmlAttributes: new { @class = "form-control" })
                             </div>
                         </div>
 
-
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-10">
-                                <input type="submit" value="Generate" class="btn btn-primary" />
+                                <input type="submit" value="Generate" class="btn btn-primary mr-3" />
+                                @Html.CheckBoxFor(model => model.Create)
                             </div>
                         </div>
 
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-10">
-                                @Html.CheckBoxFor(model => model.Create, htmlAttributes: new { @class = "form-control" })
+
                             </div>
                         </div>
 
@@ -87,54 +97,54 @@ htmlAttributes: new { @class = "form-control" })
 
         if (Model.Questions != null)
         {
-            <div class="row">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover" cellspacing="0">
-                            <thead class="bg-primary text-white">
-                                <tr>
-                                    <td>Question</td>
-                                    <td>Theme</td>
-                                    <td>Difficult</td>
-                                </tr>
-                            </thead>
-                            <tbody>
 
-                                @for (int i = 0; i < Model.Questions.Count; i++)
-                                {
-                                <tr>
-                                    <td>
-
-                                        @Html.HiddenFor(modelItem => modelItem.Questions[i].IdQuestion)
-
-                                    </td>
-                                    <td>
-
-                                        @Html.DisplayFor(modelItem => modelItem.Questions[i].QuestionText)
-
-                                    </td>
-                                    <td>
-
-                                        @Html.DisplayFor(modelItem => modelItem.Questions[i].Theme.ThemeName)
-
-                                    </td>
-                                    <td>
-
-                                        @Html.DisplayFor(modelItem => modelItem.Questions[i].Difficult)
-
-                                    </td>
-                                </tr>
-                                }
-
-                            </tbody>
-                        </table>
-
+            <div class="row col-md-7 mt-3">
+                <div class="card-group ">
+                    <div class="row">
+                        <div class="card mb-3">
+                            <div class="card-header bg-primary text-white">
+                                <i class="fa fa-table"></i>
+                                Questions for adding...
+                            </div>
+                            <div class="card-body">
+                                <input type="text" id="search" placeholder="Type to search"
+                                       class="form-control">
+                                <div class="table-responsive scroll-table_1">
+                                    <div class="scroll-table_1">
+                                        <table class="table table-bordered table-hover"
+                                               cellspacing="0" id="Questions">
+                                            <thead>
+                                            </thead>
+                                            <tbody>
+                                                @for (int i = 0; i < Model.Questions.Count; i++)
+                                                {
+                                                    <tr>
+                                                        <td width="70%">
+                                                            <a class="nav-link text-dark"
+                                                               href="@Url.Action("GetInfoQuestion", "Question",new {IdQuestion  = Model.Questions[i].IdQuestion })#More">
+                                                                @Html.DisplayFor(modelItem => modelItem.Questions[i].QuestionText)
+                                                                @Html.HiddenFor(modelItem => modelItem.Questions[i].IdQuestion)
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <a class="nav-link text-dark"
+                                                               href="@Url.Action("GetInfoQuestion", "Question",new {IdQuestion = Model.Questions[i].IdQuestion })#More">
+                                                                @Html.DisplayFor(modelItem => modelItem.Questions[i].Difficult)
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         }
     }
-
 </body>
 </html>
 

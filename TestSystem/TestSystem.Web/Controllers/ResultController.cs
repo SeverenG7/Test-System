@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Net;
 using System.Web.Mvc;
-using TestSystem.Logic.DataTransferObjects;
 using TestSystem.Logic.Interfaces;
-using TestSystem.Web.Models;
-using PagedList;
-using AutoMapper;
-
+using TestSystem.Logic.ViewModel;
 
 namespace TestSystem.Web.Controllers
 {
@@ -16,50 +10,67 @@ namespace TestSystem.Web.Controllers
         #region Init services
 
         private readonly IResultService _resultService;
-        private readonly ITestService _testService;
-        public ResultController(IResultService resultService , ITestService testService)
+        public ResultController(IResultService resultService )
         {
             _resultService = resultService;
-            _testService = testService;
         }
 
         #endregion
+
+        #region Actions
+
         [HttpGet]
         public ActionResult GetInfoResult(string IdUser , string search)
         {
-            ResultViewModel model = new ResultViewModel();
-            model.Users = _resultService.GetUsers(search);
-            model.Results = _resultService.GetResultsById(IdUser);
-            return View(model);
+            return View(_resultService.GetAllResults(search , IdUser));
         }
 
         [HttpGet]
-        public ActionResult GivePremission(string IdUser)
+        public ActionResult GivePremission(string IdUser,string sortOrder)
         {
-            PremissionViewModel model = new PremissionViewModel();
-            model.UserResult.IdUserInfo = IdUser;
-            foreach (TestDto test in _testService.GetTests())
-            {
-                model.Tests.Add(new TestPremissionViewModel
-                {
-                    TestName = test.TestName, 
-                    Difficult = test.Difficult,
-                    IdTest = test.IdTest,
-                    TestDescription = test.TestDescription,
-                    Theme = test.Theme
-                });
-            }
-            return View(model);
+            ViewBag.NameSortParm =  sortOrder == "Name" ? "name_desc" : "Name";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewBag.DateSortParm = sortOrder == "Difficult" ? "difficult_desc" : "Difficult";
+            return View(_resultService.CreatePremissionModel(IdUser , sortOrder));
         }
 
         [HttpPost]
         public ActionResult GivePremission(PremissionViewModel model)
         {
-            _resultService.GivePremission( model.Tests.
-                Where(x => x.Choosen == true).
-                FirstOrDefault().IdTest , model.UserResult.IdUserInfo,
-                model.UserResult.ResultDescription);
-            return RedirectToAction("GetInfoResult" , model.UserResult.IdUserInfo);
+            _resultService.GivePremission(model);
+            return RedirectToAction("GetInfoResult" ,"Result");
         }
+
+        public ActionResult ResultInfo(int IdResult)
+        {
+            ResultInfoViewModel result = _resultService.GetResultInfo(IdResult);
+            if (result != null)
+            {
+                return View(_resultService.GetResultInfo(IdResult));
+            }
+            else
+            {
+                TempData["Warning"] = "User not pass test - nothing see here";
+                return RedirectToAction("GetInfoResult", "Result");            
+            }
+        }
+
+        [HttpGet]
+        public ActionResult DeleteResult(int? id)
+        {
+            if (!id.HasValue)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (_resultService.GetResult(id.Value) == null)
+            {
+                return HttpNotFound();
+            }
+
+            _resultService.Delete(id.Value);
+            return RedirectToAction("GetInfoResult");
+        }
+
+        #endregion
     }
 }

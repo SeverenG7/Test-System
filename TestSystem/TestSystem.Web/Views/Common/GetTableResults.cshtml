@@ -1,6 +1,4 @@
-﻿@model PagedList.IPagedList<TestSystem.Logic.DataTransferObjects.ResultDto>
-@using PagedList.Mvc;
-<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+﻿@model List<TestSystem.Logic.ViewModel.ResultFullViewModel>
 
 
 <div class="row">
@@ -12,52 +10,42 @@
             <div class="table-responsive">
                 <div class="panel panel-primary">
                     <div class="panel-heading">Last 5 results...</div>
-                    <table class="table table-bordered  table-hover  " width="100" cellspacing="10">
+                    <table class="table table-bordered  table-hover  " >
                         <thead class="bg-primary text-white">
                             <tr class="thead-dark">
                                 <td>User</td>
                                 <td>Test</td>
-                                <td>Score</td>
-                                <td>Date</td>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.UserInfo.ApplicationUser.Email)
-                                </td>
-                                <td>
-                                        @Html.DisplayFor(modelItem => item.Test.TestName)                  
-                                </td>
-                                <td>
-                                        @Html.DisplayFor(modelItem => item.ResultScore)                                
-                                </td>
-                                <td>
-                                        @Html.DisplayFor(modelItem => item.CreateDate)
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>
+                                        <a class="nav-link text-dark" href="@Url.Action("ResultInfo" ,
+                                                                           "Result" , new { item.IdResult})">
+                                        @Html.DisplayFor(modelItem => item.UserInfo.UserFirstName )
+                                          </a>
+                                    </td>
+                                    <td>
+                                        <a class="nav-link text-dark" href="@Url.Action("ResultInfo" ,
+                                                                           "Result" , new { item.IdResult})">
+                                            @Html.DisplayFor(modelItem => item.Test.TestName)
+                                            </a>
+                                    </td>
+                                </tr>
                             }
                         </tbody>
                     </table>
-                    <div class="form-row">
-                        <div class="col-md-3"> Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) from @Model.PageCount</div>
+                    <div class="container">
+                        <form action="@Url.Action("GetInfoResult", "Result")">
+                            <button class="btn btn-primary" type="submit">More about results...</button>
+                        </form>
                     </div>
-                    <div class="btn-group" id="contentPager">
-                        @Html.PagedListPager(Model, pageResults => Url.Action("CommonTables", new { pageResults }))
-                    </div>
-                </div>
-                <div class="container">
-                    <form action="@Url.Action("GetInfoResult", "Result")">
-                        <button class="btn btn-primary" type="submit">More about results...</button>
-                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-@Scripts.Render("~/scripts/jquery-3.3.1.js")
-@Scripts.Render("~/scripts/jquery.unobtrusive-ajax.js")
 

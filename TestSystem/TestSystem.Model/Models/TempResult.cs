@@ -2,7 +2,7 @@
 {
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System;
+
 
     [Table("TempResult")]
     public class TempResult
@@ -18,5 +18,7 @@
         public string QuestionPassing { get; set; }
 
         public double TotalScore { get; set; }
+
+        public string UserName { get; set; }
     }
 }

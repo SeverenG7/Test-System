@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
-using TestSystem.Logic.DataTransferObjects;
+﻿using System.Web.Mvc;
 using TestSystem.Logic.Interfaces;
-using TestSystem.Web.Models;
-using PagedList;
+using TestSystem.Logic.ViewModel;
 using System.Net;
 
 namespace TestSystem.Web.Controllers
@@ -13,109 +8,44 @@ namespace TestSystem.Web.Controllers
     [Authorize(Roles = "admin")]
     public class ThemeController : Controller
     {
-        private readonly IThemeService _themeService;
-        private readonly ITestService _testService;
-        private readonly IQuestionService _questionService;
 
-        public ThemeController(IThemeService themeService , ITestService testService 
-            , IQuestionService questionService)
+        #region Intit services
+
+        private readonly IThemeService _themeService;
+
+        public ThemeController(IThemeService themeService)
         {
             _themeService = themeService;
-            _testService = testService;
-            _questionService = questionService;
         }
 
+        #endregion
 
+        #region Create/Edit Themes
 
-        // GET: Theme
-        public ActionResult AboutThemes(int? IdTheme , string search)
-        {
-            _themeService.GetAll();
-            ThemeAboutViewModel modelView = new ThemeAboutViewModel();
-            modelView.Themes = _themeService.GetAll().ToList();
-
-            if (!String.IsNullOrEmpty(search))
-            {
-                modelView.Themes = modelView.Themes.Where(x => x.ThemeName.Contains(search));
-            }
-
-            if (IdTheme.HasValue)
-            {
-                if (modelView.Themes.Where(x => x.IdTheme == IdTheme) != null)
-                {
-                    ViewBag.IdTheme = IdTheme.Value;
-
-                    modelView.Tests = _testService.GetTests().
-                        Where(x => x.IdTheme == IdTheme.Value).ToList();
-
-                    modelView.Questions = _questionService.GetQuestions().
-                        Where(x => x.IdTheme == IdTheme.Value).ToList();
-                }
-            }
-
-
-            return View(modelView);
-        }
-
-        // GET: Theme/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: Theme/Create
+        [HttpGet]
         public ActionResult CreateNewTheme()
         {
             return View();
         }
 
-        // POST: Theme/Create
         [HttpPost]
         public ActionResult CreateNewTheme(ThemeCreateViewModels model)
         {
             if (ModelState.IsValid)
             {
-                try
-                {
-                    ThemeDto theme = new ThemeDto
-                    {
-                        ThemeName = model.ThemeName,
-                        Description = model.Description
-                    };
-
-                    _themeService.Create(theme);
-                    return RedirectToAction("AboutThemes");
-                }
-                catch
-                {
-                    return View();
-                }
+                _themeService.Create(model);
+                return RedirectToAction("AboutThemes");
             }
-            return View(model);
-        }
-
-        // GET: Theme/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Theme/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
+            else
             {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
+                return View(model);
             }
         }
 
+        #endregion
+
+        #region Delete/Details Themes
+        [HttpGet]
         public ActionResult DeleteTheme(int? id)
         {
             if (!id.HasValue)
@@ -129,6 +59,17 @@ namespace TestSystem.Web.Controllers
 
             _themeService.Remove(id.Value);
             return RedirectToAction("AboutThemes");
-        }    
+        }
+
+        [HttpGet]
+        public ActionResult AboutThemes(int? IdTheme, string search)
+        {
+            if (IdTheme.HasValue)
+            {
+                ViewBag.IdTheme = IdTheme.Value;
+            }
+            return View(_themeService.AboutThemes(IdTheme, search));
+        }
+        #endregion
     }
 }

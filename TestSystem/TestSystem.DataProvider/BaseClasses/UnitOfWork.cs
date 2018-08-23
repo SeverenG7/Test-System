@@ -10,19 +10,12 @@ using Microsoft.AspNet.Identity.EntityFramework;
 namespace TestSystem.DataProvider.BaseClasses
 {
 
-    /// <summary>
-    /// Realization of IUnitOfWork interface
-    /// </summary>
     public class UnitOfWork : IUnitOfWork
     {
 
         private readonly ApplicationContext _context;
         private bool _disposed;
 
-        /// <summary>
-        /// In this constructer we initialize all repositories.
-        /// </summary>
-        /// <param name="context"></param>
         public UnitOfWork(ApplicationContext context)
         {
             _context = context;
@@ -34,6 +27,8 @@ namespace TestSystem.DataProvider.BaseClasses
             Themes = new ThemeRepository(_context);
             UserInfoes = new UserInfoRepository(_context);
             TempResults = new TempResultRepository(_context);
+            UserQuestions = new UserQuestionsRepository(_context);
+            UserAnswers = new UserAnswersRepository(_context);
             ApplicationRoleManagers = new ApplicationRoleManager
                 (new RoleStore<ApplicationRole>(_context));
             ApplicationUserManagers = new ApplicationUserManager
@@ -47,6 +42,8 @@ namespace TestSystem.DataProvider.BaseClasses
         public IRepository<Theme> Themes { get; }
         public IRepository<UserInfo> UserInfoes { get; }
         public IRepository<TempResult> TempResults { get; }
+        public IRepository<UserQuestion> UserQuestions { get; }
+        public IRepository<UserAnswer> UserAnswers { get; }
 
         public ApplicationUserManager ApplicationUserManagers { get; }
         public ApplicationRoleManager ApplicationRoleManagers { get; }
@@ -66,6 +63,9 @@ namespace TestSystem.DataProvider.BaseClasses
                     Tests.Dispose();
                     Themes.Dispose();
                     UserInfoes.Dispose();
+                    TempResults.Dispose();
+                    UserQuestions.Dispose();
+                    UserAnswers.Dispose();
                     ApplicationRoleManagers.Dispose();
                     ApplicationRoleManagers.Dispose();
                 }

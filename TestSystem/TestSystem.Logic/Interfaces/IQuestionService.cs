@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using TestSystem.Logic.DataTransferObjects;
+using System.Web;
+using TestSystem.Logic.ViewModel;
 
 namespace TestSystem.Logic.Interfaces
 {
     public interface IQuestionService : IDisposable
     {
-        IEnumerable<QuestionDto> GetQuestions();
-        QuestionDto GetQuestion(int? id);
-        void CreateQuestion(QuestionDto questionDto);
+        QuestionViewModel GetQuestion(int? id);
+        QuestionCreateViewModel GetCreationModel(int? id);
+        void CreateQuestion(QuestionCreateViewModel questionDto, HttpPostedFileBase image);
         void RemoveQuestion(int id);
-        void UpdateQuestion(QuestionDto questionDto);
+        void UpdateQuestion(QuestionCreateViewModel questionDto, HttpPostedFileBase image);
         void DeleteQuestionFromTest(int? idQuestion, int? idTest);
+        IEnumerable<QuestionViewModel> GetLastQuestions();
     }
 }

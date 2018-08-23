@@ -3,8 +3,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.Owin.Security;
 using System.Threading.Tasks;
-using TestSystem.Web.Models;
-using TestSystem.Logic.DataTransferObjects;
+using TestSystem.Logic.ViewModel;
 using System.Security.Claims;
 using TestSystem.Logic.Interfaces;
 using TestSystem.Logic.Infrastructure;
@@ -49,12 +48,12 @@ namespace UserStore.Controllers
             {
                 try
                 {
-                    UserDto userDto = new UserDto { Email = model.Email, Password = model.Password };
+                    UserViewModel userDto = new UserViewModel { Email = model.Email, Password = model.Password };
                     OperationDetails details = await UserService.AuthenticateAsync(userDto);
                     ClaimsIdentity claim = details.Value;
                     if (claim == null)
                     {
-                        ModelState.AddModelError("", "Неверный логин или пароль , или не подтвержден e-mail");
+                        ModelState.AddModelError("", "Wrong login/password or not confirm e-mail");
                     }
                     else
                     {
@@ -186,10 +185,10 @@ namespace UserStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
-             await SetInitialDataAsync();
+            await SetInitialDataAsync();
             if (ModelState.IsValid)
             {
-                UserDto userDto = new UserDto
+                UserViewModel userDto = new UserViewModel
                 {
                     Email = model.Email,
                     Password = model.Password,
@@ -206,9 +205,9 @@ namespace UserStore.Controllers
                         var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = userDto.Id, operationDetails.Value },
                                    protocol: Request.Url.Scheme);
                         string reference = 
-                               "Для завершения регистрации перейдите по ссылке:: <a href=\""
-                                                               + callbackUrl + "\">завершить регистрацию</a>";
-                        string theme = "Подтверждение электронной почты";
+                               "For ending register go to link: <a href=\""
+                                                               + callbackUrl + "\">end register</a>";
+                        string theme = "Confirm Email";
                         await UserService.SendEmailAsync(userDto.Id, theme , reference );
                         return View("DisplayEmail");
                     }

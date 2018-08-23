@@ -27,6 +27,8 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
+    <ApplicationInsightsResourceId>/subscriptions/aeafb2ba-ccc0-4646-a0ff-d3c5d545d343/resourcegroups/kolyan/providers/microsoft.insights/components/testNicksystem</ApplicationInsightsResourceId>
+    <ApplicationInsightsAnnotationResourceId>/subscriptions/aeafb2ba-ccc0-4646-a0ff-d3c5d545d343/resourcegroups/kolyan/providers/microsoft.insights/components/testNicksystem</ApplicationInsightsAnnotationResourceId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -56,23 +58,26 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AI.DependencyCollector, Version=2.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.6.4\lib\net45\Microsoft.AI.DependencyCollector.dll</HintPath>
+    <Reference Include="Microsoft.AI.DependencyCollector, Version=2.7.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.7.2\lib\net45\Microsoft.AI.DependencyCollector.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AI.PerfCounterCollector, Version=2.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.6.4\lib\net45\Microsoft.AI.PerfCounterCollector.dll</HintPath>
+    <Reference Include="Microsoft.AI.PerfCounterCollector, Version=2.7.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.7.2\lib\net45\Microsoft.AI.PerfCounterCollector.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AI.ServerTelemetryChannel, Version=2.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.6.4\lib\net45\Microsoft.AI.ServerTelemetryChannel.dll</HintPath>
+    <Reference Include="Microsoft.AI.ServerTelemetryChannel, Version=2.7.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.7.2\lib\net45\Microsoft.AI.ServerTelemetryChannel.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AI.Web, Version=2.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.Web.2.6.4\lib\net45\Microsoft.AI.Web.dll</HintPath>
+    <Reference Include="Microsoft.AI.Web, Version=2.7.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Web.2.7.2\lib\net45\Microsoft.AI.Web.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AI.WindowsServer, Version=2.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.2.6.4\lib\net45\Microsoft.AI.WindowsServer.dll</HintPath>
+    <Reference Include="Microsoft.AI.WindowsServer, Version=2.7.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.2.7.2\lib\net45\Microsoft.AI.WindowsServer.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.ApplicationInsights, Version=2.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.2.6.4\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
+    <Reference Include="Microsoft.ApplicationInsights, Version=2.7.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.2.7.2\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationInsights.TraceListener, Version=2.7.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.TraceListener.2.7.2\lib\net45\Microsoft.ApplicationInsights.TraceListener.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -212,46 +217,44 @@
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\ResultController.cs" />
+    <Compile Include="Controllers\EndingController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\ThemeController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="ErrorHandler\AiHandleErrorAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\CommonsViewModels.cs" />
-    <Compile Include="Models\QuestionViewModels.cs" />
-    <Compile Include="Models\ResultsViewModel.cs" />
-    <Compile Include="Models\TestViewModels.cs" />
-    <Compile Include="Models\ThemeViewModels.cs" />
-    <Compile Include="Models\UsersViewModels.cs" />
+    <Compile Include="Infrasrtuctre\TestPassingAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Infrasrtuctre\NinjectDependencyResolver.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\actionImages\error-403.jpg" />
+    <Content Include="Content\actionImages\notFoundError.jpg" />
+    <Content Include="Content\actionImages\serverError.jpg" />
+    <Content Include="Content\actionImages\userBack.jpg" />
+    <Content Include="Content\actionImages\userFon.jpg" />
+    <Content Include="Content\actionImages\testBack.jpg" />
+    <Content Include="Content\actionImages\testBackground.jpg" />
     <Content Include="Content\actionImages\iconInfo.png" />
     <Content Include="Content\actionImages\iconPlus.png" />
     <Content Include="Content\actionImages\iconEdit.png" />
     <Content Include="Content\actionImages\iconRemove.png" />
-    <Content Include="Content\blank.html" />
-    <Content Include="Content\cards.html" />
-    <Content Include="Content\charts.html" />
+    <Content Include="Content\actionImages\User404.jpg" />
+    <Content Include="Content\css\Lists.css" />
     <Content Include="Content\css\sb-admin.css" />
     <Content Include="Content\css\sb-admin.min.css" />
-    <Content Include="Content\forgot-password.html" />
+    <Content Include="Content\css\Tables.css" />
     <Content Include="Content\gulpfile.js" />
-    <Content Include="Content\index.html" />
     <Content Include="Content\js\sb-admin-charts.js" />
     <Content Include="Content\js\sb-admin-charts.min.js" />
     <Content Include="Content\js\sb-admin-datatables.js" />
     <Content Include="Content\js\sb-admin-datatables.min.js" />
     <Content Include="Content\js\sb-admin.js" />
     <Content Include="Content\js\sb-admin.min.js" />
-    <Content Include="Content\login.html" />
     <Content Include="Content\navbar.html" />
     <Content Include="Content\PagedList.css" />
-    <Content Include="Content\register.html" />
-    <Content Include="Content\tables.html" />
     <Content Include="Content\vendor\bootstrap\css\bootstrap-grid.css" />
     <Content Include="Content\vendor\bootstrap\css\bootstrap-grid.min.css" />
     <Content Include="Content\vendor\bootstrap\css\bootstrap-reboot.css" />
@@ -301,8 +304,6 @@
     <Content Include="Scripts\esm\popper-utils.min.js.map" />
     <Content Include="Scripts\esm\popper-utils.js.map" />
     <Content Include="Content\.gitignore" />
-    <Content Include="Content\.jsbeautifyrc" />
-    <Content Include="Content\.travis.yml" />
     <Content Include="Content\LICENSE" />
     <Content Include="Content\package-lock.json" />
     <Content Include="Content\package.json" />
@@ -323,7 +324,6 @@
     <Content Include="Content\pug\navbar.pug" />
     <Content Include="Content\pug\register.pug" />
     <Content Include="Content\pug\tables.pug" />
-    <Content Include="Content\README.md" />
     <Content Include="Content\scss\navbar\_navbar_colors.scss" />
     <Content Include="Content\scss\navbar\_navbar_fixed.scss" />
     <Content Include="Content\scss\navbar\_navbar_global.scss" />
@@ -379,6 +379,9 @@
     <Content Include="Content\vendor\font-awesome\scss\_variables.scss" />
     <Content Include="Content\vendor\jquery\jquery.min.map" />
     <Content Include="Content\vendor\jquery\jquery.slim.min.map" />
+    <Content Include="Connected Services\Application Insights\ConnectedService.json" />
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\testNicksystem - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -402,9 +405,6 @@
     <Content Include="Scripts\umd\popper.min.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Views\Web.config" />
@@ -437,9 +437,7 @@
     <Content Include="Views\Question\GetInfoQuestion.cshtml" />
     <Content Include="Views\Theme\CreateNewTheme.cshtml" />
     <Content Include="Views\Question\EditQuestion.cshtml" />
-    <Content Include="Views\Question\DeleteQuestion.cshtml" />
     <Content Include="Views\Theme\AboutThemes.cshtml" />
-    <Content Include="Views\Shared\_UserLayout.cshtml" />
     <Content Include="Views\User\MainMenu.cshtml" />
     <Content Include="Views\Error\NotFoundPage.cshtml" />
     <Content Include="Views\Test\GenerateTest.cshtml" />
@@ -447,10 +445,16 @@
     <Content Include="Views\Common\GetTableResults.cshtml" />
     <Content Include="Views\Result\GetInfoResult.cshtml" />
     <Content Include="Views\Result\GivePremission.cshtml" />
-    <Content Include="Views\User\StartTest.cshtml" />
+    <Content Include="Views\User\TestPassing.cshtml" />
+    <Content Include="Views\Ending\EndTest.cshtml" />
+    <Content Include="Views\Result\ResultInfo.cshtml" />
+    <Content Include="Views\Test\EditTest.cshtml" />
+    <Content Include="Views\Error\InternalServerErrorPage.cshtml" />
+    <Content Include="Views\User\UserResults.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -468,6 +472,9 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\index.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -488,7 +495,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>57200</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:57200/</IISUrl>
+          <IISUrl>http://localhost:57200</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

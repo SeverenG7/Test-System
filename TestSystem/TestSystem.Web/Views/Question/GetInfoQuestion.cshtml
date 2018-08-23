@@ -1,15 +1,22 @@
-﻿@model TestSystem.Web.Models.FiltrationViewModel
+﻿@model TestSystem.Logic.ViewModel.FiltrationViewModel
+@using PagedList.Mvc
 
+@{
+    string Icon = "";
+}
 
 <!DOCTYPE html>
 <html>
 <head>
+    <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/css/Tables.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/css/Lists.css" rel="stylesheet" type="text/css" />
     <meta name="viewport" content="width=device-width" />
     <title>Tests info</title>
 </head>
 <body>
     <div class="container">
-        <h2>More information about questions</h2>
+        <h2 class="display-3 text-info">Questions dashboard</h2>
         <form method="get">
             <div class="form-inline">
                 @using (Html.BeginForm())
@@ -45,120 +52,130 @@
 
                     </div>
                 </div>
-                <input type="submit" value="Sort" class="btn btn-default" />
+                <input type="submit" value="Sort" class="btn btn-primary" style="width:100px" />
 
             </div>
         </form>
-
-        <table class="table table-bordered table-hover" id="dataTable" width="100" cellspacing="0">
-            <thead class="show">
-                <tr>
-                    <th>Question </th>
-                    <th>Theme</th>
-                    <th>Difficult</th>
-                    <th>Creation at</th>
-                    <th></th>
-                </tr>
-            </thead>
-
-            @foreach (var item in Model.Questions)
-            {
-                string selectedRow = "";
-                if (item.IdQuestion == ViewBag.IdQuestion)
-                {
-                    selectedRow = "bg-light";
-                }
-                <tr class="@selectedRow">
-                    <td>
-                        @Html.DisplayFor(modelItem => item.QuestionText)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Theme.ThemeName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Difficult)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CreateDate)
-                    </td>
-                    <td>
-                        <button class="btn btn-primary"
-                                onclick="location.href='@Url.Action( "GetInfoQuestion","Question" , new { IdQuestion = item.IdQuestion })'">
-                            More...
-                        </button>
-                        <button class="btn btn-primary"
-                                onclick="location.href='@Url.Action("EditQuestion", "Question" ,new { IdQuestion = item.IdQuestion })'">
-                            Edit
-                        </button>
-                        <button class="btn btn-danger"
-                                onclick="location.href='@Url.Action("DeleteQuestion", "Question",new {IdQuestion = item.IdQuestion })'">
-                            Delete
-                        </button>
-
-
-                    </td>
-                </tr>
-            }
-        </table>
-
-        @if (Model.Answers != null)
-        {
-            <h3>
-                Answers in Selected Question
-            </h3>
-            <table class="table table-bordered table-hover">
-                <tr>
-                    <th>Answer</th>
-                    <th>Correct</th>
-                </tr>
-                @foreach (var item in Model.Answers)
-                {
+        <div id="tables">
+            <table class="table  table-hover" width="100" cellspacing="0">
+                <thead class="show">
                     <tr>
-                        <td>
-                            @item.AnswerText
-                        </td>
-                        <td>
-                            @item.Correct
-                        </td>
+                        <th>Question </th>
+                        <th>Theme</th>
+                        <th>Difficult</th>
+                        <th>Creation at</th>
+                        <th>Tools</th>
                     </tr>
-                }
-            </table>
-        }
+                </thead>
 
-        @if (Model.Tests != null)
-        {
-            <h3>Test in which u can find this question:</h3>
-            <table class="table table-bordered table-hover">
-                <tr>
-                    <th>Test</th>
-                    <th>Theme</th>
-                    <th>Desrciption</th>
-                </tr>
-
-                @foreach (var item in Model.Tests)
+                @foreach (var item in Model.Questions)
                 {
                     string selectedRow = "";
-                    if (item.IdTest == ViewBag.IdTest)
+                    if (item.IdQuestion == Model.IdQuestion)
                     {
-                        selectedRow = "success";
+                        selectedRow = "bg-warning";
                     }
                     <tr class="@selectedRow">
-                        <td>
-                            @item.TestName
+                        <td width="300">
+                            @Html.DisplayFor(modelItem => item.QuestionText)
                         </td>
                         <td>
-                            @item.Theme.ThemeName
+                            @Html.DisplayFor(modelItem => item.Theme.ThemeName)
                         </td>
                         <td>
-                            @item.TestDescription
+                            @Html.DisplayFor(modelItem => item.Difficult)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreateDate)
+                        </td>
+                        <td>
+                            <button class="btn btn-primary"
+                                    onclick="location.href=
+                                    '@Url.Action( "GetInfoQuestion","Question" , new { IdQuestion = item.IdQuestion,
+                                page = Model.Questions.PageNumber}
+                                )#More'">
+                                More...
+                            </button>
+                            <button class="btn btn-primary"
+                                    onclick="location.href='@Url.Action("EditQuestion", "Question",new {IdQuestion = item.IdQuestion })'">
+                                Edit
+                            </button>
+                            <button class="btn btn-danger"
+                                    onclick="location.href='@Url.Action("DeleteQuestion", "Question",new {IdQuestion = item.IdQuestion })'">
+                                Delete
+                            </button>
                         </td>
                     </tr>
                 }
-
             </table>
-        }
+            <div class="form-row">
+                <div class="col-md-3">
+                    Page @(Model.Questions.PageCount < Model.Questions.PageNumber ? 0 : Model.Questions.PageNumber)
+                    from @Model.Questions.PageCount
+                </div>
+            </div>
+            <div class="btn-group" id="contentPager">
+                @Html.PagedListPager(Model.Questions, page => Url.Action("GetInfoQuestion", new { page }))
+            </div>
+        </div>
+
+        <div class="container" id="More">
+            @if (Model.Answers != null)
+            {
+                foreach (var item in Model.Questions)
+                {
+                    if (item.IdQuestion == ViewBag.IdQuestion)
+                    {
+                        <div class="text-center">
+                            <p style="font-size:x-large">@Html.DisplayFor(itemModel => item.QuestionText)</p>
+                        </div>
+                    }
+                }
+                if (ViewBag.QuestionText != null)
+                {
+                    <div class="text-center">
+                        <p style="font-size:x-large">@ViewBag.QuestionText</p>
+                    </div>
+                }
+                <h3 class="display-4">
+                    Answers in Selected Question
+                </h3>
+                <ol class="list-counter-circle text-dark">
+                    @foreach (var answer in Model.Answers)
+                    {
+                        if (answer.Correct == true)
+                        {
+                            Icon = "fa fa-fw fa-check";
+                        }
+                        else
+                        {
+                            Icon = "";
+                        }
+                        <li style="background-color:lightgrey">
+                            @answer.AnswerText
+                            <i class="@Icon"></i>
+                        </li>
+                    }
+                </ol>
+           
+            }
+
+            @if (Model.Tests != null)
+            {
+                <h3 class="display-4">Tests in which u can find this question:</h3>
+                <ol class="list-counter-circle mb-5">
+                    @foreach (var test in Model.Tests)
+                    {
+                        <li style="background-color:lightgrey">
+                            <a class=" text-dark" href="@Url.Action("GetInfoTest","Test" , new {IdTest = test.IdTest })">
+                                @test.TestName <span class="text-info"> Theme:</span>  @test.Theme.ThemeName
+                                <span class="text-info">Difficult: </span>    @test.Difficult
+                            </a>
+                        </li>
+                    }
+                </ol>
+            }
+        </div>
     </div>
 </body>
 </html>
-@Scripts.Render("~/scripts/jquery-3.3.1.js")
-@Scripts.Render("~/scripts/jquery.unobtrusive-ajax.js")

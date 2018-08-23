@@ -9,10 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSystem.DataProvider", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSystem.Logic", "TestSystem.Logic\TestSystem.Logic.csproj", "{873E76BD-58E3-4055-890A-521F4EA0C1E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSystem.CommonLogic", "TestSystem.CommonLogic\TestSystem.CommonLogic.csproj", "{EA4E68D4-7934-4C57-BFD3-A4016544517F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSystem.UnitTests", "TestSystem.UnitTests\TestSystem.UnitTests.csproj", "{6D7CA345-3596-4434-83DC-F27F10B4604D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSystem.Model", "TestSystem.Model\TestSystem.Model.csproj", "{0CAE968B-8AD1-41C4-A280-B60F1C92BDE8}"
 EndProject
 Global
@@ -33,14 +29,6 @@ Global
 		{873E76BD-58E3-4055-890A-521F4EA0C1E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{873E76BD-58E3-4055-890A-521F4EA0C1E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{873E76BD-58E3-4055-890A-521F4EA0C1E0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EA4E68D4-7934-4C57-BFD3-A4016544517F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EA4E68D4-7934-4C57-BFD3-A4016544517F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EA4E68D4-7934-4C57-BFD3-A4016544517F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EA4E68D4-7934-4C57-BFD3-A4016544517F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6D7CA345-3596-4434-83DC-F27F10B4604D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6D7CA345-3596-4434-83DC-F27F10B4604D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6D7CA345-3596-4434-83DC-F27F10B4604D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6D7CA345-3596-4434-83DC-F27F10B4604D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0CAE968B-8AD1-41C4-A280-B60F1C92BDE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0CAE968B-8AD1-41C4-A280-B60F1C92BDE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CAE968B-8AD1-41C4-A280-B60F1C92BDE8}.Release|Any CPU.ActiveCfg = Release|Any CPU

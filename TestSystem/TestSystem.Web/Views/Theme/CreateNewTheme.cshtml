@@ -1,4 +1,4 @@
-﻿@model TestSystem.Web.Models.ThemeCreateViewModels
+﻿@model TestSystem.Logic.ViewModel.ThemeCreateViewModels
 
 
 
@@ -17,7 +17,7 @@
             @Html.AntiForgeryToken()
 
 
-            <h4 class="text-info alert-info">Add new theme here...</h4>
+            <h4 class="text-info display-3">Add new theme here...</h4>
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group">
@@ -43,9 +43,6 @@
             </div>
         }
 
-        <div>
-            @Html.ActionLink("Back to List", "Index")
-        </div>
     </div>
 </body>
 </html>

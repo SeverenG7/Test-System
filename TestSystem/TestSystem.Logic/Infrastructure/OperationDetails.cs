@@ -25,5 +25,16 @@ namespace TestSystem.Logic.Infrastructure
             Message = message;
             Property = property;
         }
+
+        public OperationDetails(bool succeded, dynamic value)
+        {
+            Succedeed = succeded;
+            Value = value;
+        }
+        public OperationDetails(string id, dynamic value)
+        {
+            Id = id;
+            Value = value;
+        }
     }
 }

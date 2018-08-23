@@ -16,11 +16,9 @@ namespace TestSystem.Model.Models
 
         [Key]
         public int IdTest { get; set; }
-
         [Required]
         [StringLength(50)]
         public string TestName { get; set; }
-
         public int QuestionsNumber { get; set; }
 
         [Column(TypeName = "text")]
@@ -37,5 +35,11 @@ namespace TestSystem.Model.Models
 
         [Required]
         public string Difficult { get; set; }
+        public TimeSpan Time { get; set; }
+        public int TotalScore { get; set; }
+
+        [Column(TypeName = "image")]
+        public byte[] TestImage { get; set; }
+        public string ImageMimeType { get; set; }
     }
 }

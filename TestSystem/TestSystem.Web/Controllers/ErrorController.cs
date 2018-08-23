@@ -11,11 +11,14 @@ namespace TestSystem.Web.Controllers
             {
                 if (HttpContext.User.IsInRole("user"))
                 {
-                    ViewBag.Layout = "~/Views/Shared/_UserLayout.cshtml";
+                    ViewBag.Reference ="User/MainMenu";
+                    ViewBag.Layout = null;
                 }
                 if (HttpContext.User.IsInRole("admin"))
                 {
+                    ViewBag.Reference = "Common/CommonTables";
                     ViewBag.Layout = "~/Views/Shared/_MyLayout.cshtml";
+                    ViewBag.Image = "~/Content/actionImages/notFoundError.jpg";
                 }
             }
             else
@@ -30,12 +33,50 @@ namespace TestSystem.Web.Controllers
 
         public ActionResult ForbiddenPage()
         {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                if (HttpContext.User.IsInRole("user"))
+                {
+                    ViewBag.Reference = "User/MainMenu";
+                    ViewBag.Layout = null;
+                }
+                if (HttpContext.User.IsInRole("admin"))
+                {
+                    ViewBag.Reference = "Common/CommonTables";
+                    ViewBag.Layout = "~/Views/Shared/_MyLayout.cshtml";
+                    ViewBag.Image = "~/Content/actionImages/.jpg";
+                }
+            }
+            else
+            {
+                ViewBag.Layuot = null;
+            }
+
             Response.StatusCode = (int)HttpStatusCode.Forbidden;
             return View();
         }
 
         public ActionResult InternalServerErrorPage()
         {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                if (HttpContext.User.IsInRole("user"))
+                {
+                    ViewBag.Reference = "User/MainMenu";
+                    ViewBag.Layout = null;
+                }
+                if (HttpContext.User.IsInRole("admin"))
+                {
+                    ViewBag.Reference = "Common/CommonTables";
+                    ViewBag.Layout = "~/Views/Shared/_MyLayout.cshtml";
+                    ViewBag.Image = "~/Content/actionImages/.jpg";
+                }
+            }
+            else
+            {
+                ViewBag.Layuot = null;
+            }
+
             Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             return View();
         }

@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using TestSystem.Logic.DataTransferObjects;
+﻿using TestSystem.Logic.Infrastructure;
+using TestSystem.Logic.ViewModel;
 
 namespace TestSystem.Logic.Interfaces
 {
     public interface ITestPassService
     {
-        QuestionDto StartTest(int IdResult);     
+        QuestionViewModel StartTest(int IdResult);
+        OperationDetails TestPassing( QuestionViewModel question);
+        OperationDetails GetCurrentTestState(int IdQuestion);
+        OperationDetails Results();
     }
 }

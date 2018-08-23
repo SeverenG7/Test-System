@@ -1,4 +1,4 @@
-﻿@model TestSystem.Web.Models.RegisterViewModel
+﻿@model TestSystem.Logic.ViewModel.RegisterViewModel
 @{
     Layout = null;
  }
@@ -20,9 +20,16 @@
     <link href=@Url.Content("/Content/vendor/font-awesome/css/font-awesome.min.css") rel="stylesheet" type="text/css">
     <!-- Custom styles for this template-->
     <link href=@Url.Content("/Content/css/sb-admin.css") rel="stylesheet">
+    <style>
+        body {
+            background-image:url(../../Content/actionImages/testBack.jpg);
+            background-size: cover
+            
+        }
+    </style>
 </head>
 
-<body class="bg-dark">
+<body >
   <div class="container">
       <div class="card card-login mx-auto mt-5">
           <div class="card-header">Register new account in Test system</div>

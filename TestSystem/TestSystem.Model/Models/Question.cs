@@ -23,6 +23,7 @@ namespace TestSystem.Model.Models
 
         [Column(TypeName = "image")]
         public byte[] QuestionImage { get; set; }
+        public string ImageMimeType { get; set; }
 
         public int AnswerNumber { get; set; }
 

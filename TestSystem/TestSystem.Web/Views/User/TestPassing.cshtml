@@ -1,0 +1,128 @@
+﻿
+@model TestSystem.Logic.ViewModel.QuestionViewModel
+
+@{
+    Layout = null;
+    int QuestionCounter = 1;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Register</title>
+    <link href=@Url.Content("/Content/vendor/bootstrap/css/bootstrap.min.css") rel="stylesheet">
+    <link href=@Url.Content("/Content/vendor/font-awesome/css/font-awesome.min.css") rel="stylesheet" type="text/css">
+    <link href=@Url.Content("/Content/css/sb-admin.css") rel="stylesheet">
+    <style>
+        body {
+            background-image: url(../../Content/actionImages/testBack.jpg);
+            background-size: cover
+        }
+    </style>
+</head>
+<body class="bg-dark">
+    <div class="row">
+    <div class="col-md-4">
+        </div>
+        <div class="col-md-4">
+            <h3 class="display-3 text-info" id="counter"></h3>
+        </div>
+        </div>
+        <div class="container">
+            <div class="card mx-auto mt-5" style="width:50%">
+                <div class="card-header">Test passing </div>
+
+                <div class="card-body">
+                    @using (Html.BeginForm("TestPassingPost", "User", FormMethod.Post))
+                    {
+                        <div class="form-group border border-dark border-left-0 border-right-0 border-top-0 ">
+                            <div class="col-md-auto">
+                                @Html.DisplayFor(m => m.QuestionText,
+                               new { @class = "form-control" })
+                                @Html.HiddenFor(m => m.IdQuestion)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @for (int i = 0; i < Model.Answers.Count; i++)
+                            {
+                               
+                                        <div class="col-md-12">
+                                            <div class="form-control-plaintext">
+                                                <div style=" width:100%">
+                                                    @Html.DisplayFor(model => model.Answers[i].AnswerText )
+                                                </div>
+                                                <div class="ml-1">
+                                                    @Html.CheckBoxFor(model => model.Answers[i].Correct,
+                                             htmlAttributes: new { @class = "control" }) 
+                                                    @Html.HiddenFor(model => model.Answers[i].IdAnswer)
+                                                </div>
+                                            </div>
+                                        </div>
+                            }
+                   
+                        </div>
+                        <div>
+                            <input autofocus class="btn btn-primary btn-block" type="submit" value="Next" />
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="border-light">
+            <script src=@Url.Content("/Content/vendor/jquery/jquery.min.js")></script>
+            <script src=@Url.Content("/Content/vendor/bootstrap/js/bootstrap.bundle.min.js")></script>
+            <script src=@Url.Content("/Content/vendor/jquery-easing/jquery.easing.min.js")></script>
+            <script src=@Url.Content("/Content/js/sb-admin.min.js")></script>
+        </div>
+
+        <script type="text/javascript">
+    $(function () {
+        var defaultTimer = @ViewBag.Time,
+            callback = function () {
+                EndTest();
+            };
+
+        var counter = 1, timer,
+            totalTime = defaultTimer;
+        var s;
+        timer = setInterval(function () {
+            if (totalTime != -1 && !isNaN(totalTime)) {
+                val = 'Time left: ' + (function () {
+                    var m = Math.floor(totalTime / 60);
+                    if (m < 10) {
+                        return '0'.concat(m);
+                    }
+                    else {
+                        return m;
+                    }
+                })() + ':' + (function () {
+                    s = totalTime % 60;
+                    if (s < 10) {
+                        return '0'.concat(s);
+                    }
+                    else {
+                        return s;
+                    }
+                })();
+
+                $('#counter').html(val);
+                totalTime--;
+            }
+            else {
+                window.clearInterval(timer);
+                timer = null;
+                callback();
+            }
+        }, 1000);
+        });
+
+        function EndTest() {
+            window.location.href = '/Ending/EndTest/' ;
+        }
+        </script>
+</body>
+</html>

@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
-using TestSystem.Logic.DataTransferObjects;
+﻿using System.Web.Mvc;
 using TestSystem.Logic.Interfaces;
-using TestSystem.Web.Models;
-using PagedList;
 
 namespace TestSystem.Web.Controllers
 {
@@ -16,24 +10,19 @@ namespace TestSystem.Web.Controllers
 
         private readonly ITestService _testService;
         private readonly IQuestionService _questionService;
-        private readonly IThemeService _themeService;
         private readonly IResultService _resultService;
 
         public CommonController
-            (ITestService testService, IQuestionService questionService, IThemeService themeService , IResultService resultService)
+            (ITestService testService, IQuestionService questionService , IResultService resultService)
         {
             _testService = testService;
             _questionService = questionService;         
-            _themeService = themeService;
             _resultService = resultService;
         }
 
-        public CommonController()
-        {
+        #endregion
 
-        }
-
-        #endregion     
+        #region Actions
 
         [HttpGet]
         public ActionResult CommonTables()
@@ -41,51 +30,21 @@ namespace TestSystem.Web.Controllers
             return View();
         }
 
-        public ActionResult GetTableTests(int? pageTests)
+        public ActionResult GetTableTests()
         {
-            int pageSize = 5;
-            int pageNumber = (pageTests ?? 1);
-            
-            return PartialView(_testService.GetTests().ToPagedList(pageNumber, pageSize));
+            return PartialView(_testService.GetLastTests());
         }
 
-        public ActionResult GetTableQuestions(int? pageQuestions)
+        public ActionResult GetTableQuestions()
         {
-            int pageSize = 5;
-            int pageNumber = (pageQuestions ?? 1);
-
-            IEnumerable<QuestionDto> questionDTOs = _questionService.GetQuestions();
-            List<QuestionViewModel> questionViews = new List<QuestionViewModel>();
-
-            foreach (QuestionDto question in questionDTOs)
-            {
-                questionViews.Add(new QuestionViewModel
-                {
-                    IdQuestion = question.IdQuestion,
-                    QuestionText = question.QuestionText,
-                    Difficult = question.Difficult,
-                    Theme = "Some theme",
-                    Score = 0
-                });
-
-            }
-
-
-            return PartialView(questionViews.ToPagedList(pageNumber, pageSize));
+            return PartialView(_questionService.GetLastQuestions());
         }
 
-        public ActionResult GetTableResults(int? pageResults)
+        public ActionResult GetTableResults()
         {
-            int pageSize = 5;
-            int pageNumber = (pageResults ?? 1);
-
-            return PartialView(_resultService.GetResults().ToPagedList(pageNumber, pageSize));
+            return PartialView(_resultService.GetLastResults());
         }
 
-        public ActionResult Some()
-        {
-            return View();
-        }
-
+        #endregion
     }
 }
