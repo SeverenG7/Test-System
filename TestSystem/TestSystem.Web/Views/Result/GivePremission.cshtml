@@ -1,0 +1,82 @@
+﻿@model TestSystem.Logic.ViewModel.PremissionViewModel
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="~/Content/css/Tables.css" rel="stylesheet" type="text/css" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Tests info</title>
+</head>
+<body>
+    <div class="container">
+        <h2 class="display-3 text-info"> Giving premission...</h2>
+        @using (Html.BeginForm("GivePremission", "Result", FormMethod.Post))
+        {
+            <div class="row">
+                <div class=" col-md-6 mt-5">
+
+                    @Html.AntiForgeryToken()
+                    @Html.TextAreaFor(model => model.UserResult.ResultDescription,
+                   new {@class ="form-control"})
+                    @Html.HiddenFor(model => model.UserResult.IdUserInfo)
+
+                </div>
+                <div class="mt-5">
+                    <input type="submit" value="Add premission" class="btn btn-success" />
+                </div>
+            </div>
+            <div class="scroll-table_2">
+                <table class="table  table-hover mt-5">
+                    <thead class="thead-dark">
+                        <tr class="text-center">
+                            <td>
+                                <a class="nav-link text-info" href="@Url.Action("GivePremission",
+                                                               "Result", new { Model.UserResult.IdUserInfo ,
+                                                              sortOrder = "name_desc"})">
+                                    Test
+                                </a>
+                           </td>
+                            <td>Description</td>
+                            <td>
+                                <a class="nav-link text-info" href="@Url.Action("GivePremission",
+                                                               "Result", new { Model.UserResult.IdUserInfo ,
+                                                              sortOrder = "difficult_desc"})">
+                                    Difficult
+                                </a>
+                            </td>
+                            <td>Choose</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @for (int i = 0; i < Model.Tests.Count; i++)
+                        {
+                            <tr>
+                                <td>
+
+                                    @Html.DisplayFor(modelItem => modelItem.Tests[i].TestName)
+                                    @Html.HiddenFor(modelItem => modelItem.Tests[i].IdTest)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => modelItem.Tests[i].TestDescription)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => modelItem.Tests[i].Difficult)
+                                </td>
+                                <td>
+                                    @Html.CheckBoxFor(modelItem => modelItem.Tests[i].Choosen)
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        }
+
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,198 @@
+﻿@model TestSystem.Logic.ViewModel.FiltrationViewModel
+@using PagedList.Mvc
+
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/css/Tables.css" rel="stylesheet" type="text/css" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Tests info</title>
+    <style>
+        .thumb {
+            height: 150px;
+            border: 1px solid #000;
+            margin: 10px 5px 0 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class=" display-3 text-info">Tests dashboard</h2>
+        <form method="get">
+            <div class="form-inline">
+                @using (Html.BeginForm())
+                {
+                    <div class="col-md-3">
+                        <div class="input-group">
+
+                            @Html.TextBox("search",
+                           "", new { placeholder = "Search for..." , @class="form-control" })
+
+                            <span class="input-group-append">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                }
+
+                <div class="col-md-2">
+                    <div class="row">
+                        <div class="text-left ml-5">
+                            Choose theme
+                        </div>
+                        <div class="form-check-inline mb-3 ml-5">
+                            @Html.DropDownList("IdTheme", Model.Themes as SelectList,
+                                        htmlAttributes: new { @class = "form-control" ,
+                                        placeholder = "Theme..."})
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 ml-5">
+                    <div class="row">
+                        <div class="text-left">
+                            Choose difficult
+                        </div>
+                        <div class="form-inline mb-3 mr-4">
+
+                            @Html.DropDownList("difficult", Model.Difficult as SelectList,
+                                    htmlAttributes: new { @class = "form-control" ,
+                                    placeholder = "Difficult..."})
+
+                        </div>
+                        <input type="submit" value="Sort" class="btn btn-success mb-3" />
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <table class="table  table-hover" width="100" cellspacing="0">
+            <thead class="show">
+                <tr> 
+                    <th>Test</th>
+                    <th>Questions</th>
+                    <th>Theme</th>
+                    <th>Creation at</th>
+                    <th>Tools</th>
+                </tr>
+            </thead>
+
+            @foreach (var item in Model.Tests)
+            {
+                string selectedRow = "";
+                if (item.IdTest == Model.IdTest)
+                {
+                    selectedRow = "bg-warning";
+                }
+                <tr class="@selectedRow">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TestName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Questions.Count)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Theme.ThemeName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreateDate)
+                    </td>
+                    <td class="text-center">
+                        <button class="btn btn-primary"
+                                onclick="location.href='@Url.Action("GetInfoTest" , "Test" ,new { idTest = item.IdTest })#contentPager'">
+                            Select
+                        </button>
+                        <button class="btn btn-primary"
+                                onclick="location.href='@Url.Action("EditTest" , "Test" ,new { id = item.IdTest })'">
+                           Edit
+                        </button>
+                        <button class="btn btn-danger"
+                                onclick="location.href='@Url.Action("DeleteTest" , "Test" ,new { id = item.IdTest })'">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            }
+        </table>
+        <div class="form-row">
+            <div class="col-md-3">
+                Page @(Model.Tests.PageCount < Model.Tests.PageNumber ? 0 : Model.Tests.PageNumber)
+                from @Model.Tests.PageCount
+            </div>
+        </div>
+        <div class="btn-group" id="contentPager">
+            @Html.PagedListPager(Model.Tests, page => Url.Action("GetInfoTest", new { page }))
+        </div>
+        @if (Model.Questions != null)
+        {
+            <h3 class="display-3 text-info">Questions by Selected Test</h3>
+            <div class="scroll-table_2">
+                <div class="card-body">
+                    <table class="table  table-hover text-center" id="Questions">
+                        <tr>
+                            <th>Question</th>
+                            <th>Answers</th>
+                            <th>Score</th>
+                            <th>Tools</th>
+                        </tr>
+
+                        @foreach (var item in Model.Questions)
+                        {
+                            string selectedRow = "";
+                            if (item.IdQuestion == ViewBag.IdQuestion)
+                            {
+                                selectedRow = "success";
+                            }
+                            <tr class="@selectedRow">
+                                <td width="300">
+                                    <a class="nav-link text-dark"
+                                       href="@Url.Action("GetInfoQuestion", "Question",new {IdQuestion  = item.IdQuestion })#More">
+                                        @item.QuestionText
+                                    </a>
+                                </td>
+                                <td>
+                                    <a class="nav-link text-dark"
+                                       href="@Url.Action("GetInfoQuestion", "Question",new {IdQuestion  = item.IdQuestion })#More">
+                                        @item.AnswerNumber
+                                    </a>
+                                </td>
+                                <td>
+                                    <a class="nav-link text-dark"
+                                       href="@Url.Action("GetInfoQuestion", "Question",new {IdQuestion  = item.IdQuestion })#More">
+                                        @item.Score
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <div class="text-center">
+                                        <button class="btn btn-primary text-right"
+                                                onclick="
+                                location.href='@Url.Action("GetInfoQuestion" , "Question" ,new {IdQuestion = item.IdQuestion ,
+                                          idTest = ViewBag.IdTest, QuestionText = item.QuestionText})#More'">
+                                            Select
+                                        </button>
+                                        <button class="btn btn-danger"
+                                                onclick="
+                                location.href='@Url.Action("DeleteFromTest" , "Question" ,new {IdQuestion = item.IdQuestion ,
+                                          idTest = Model.IdTest})'">
+                                            Delete from test
+                                        </button>
+                                        <button class="btn btn-primary"
+                                                onclick="location.href='@Url.Action("EditQuestion", "Question",new {IdQuestion = item.IdQuestion })'">
+                                            Edit
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        }
+        </div>
+</body>
+</html>

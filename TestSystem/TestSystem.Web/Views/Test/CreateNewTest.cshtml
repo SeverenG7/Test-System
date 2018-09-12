@@ -1,0 +1,207 @@
+﻿@model TestSystem.Logic.ViewModel.TestCreateViewModel
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <link href="~/Content/css/Tables.css" rel="stylesheet" type="text/css" />
+    <meta name="viewport" content="width=device-width" />
+    <title>CreateNewTest</title>
+    <style>
+        .thumb {
+            height: 150px;
+            border: 1px solid #000;
+            margin: 10px 5px 0 0;
+        }
+    </style>
+</head>
+<body>
+    @using (Html.BeginForm("CreateNewTest", "Test", FormMethod.Post,
+        new { enctype = "multipart/form-data" }))
+    {
+        <div class="container">
+            <div class="card-header-tabs">
+
+                @Html.AntiForgeryToken()
+                <input type="file" id="files" name="file"
+                       style="visibility:hidden"  value="Choose" />
+                <h4 class="text-info display-3">Add new test here...</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="row float-lg-left col-md-5">
+                    <div class="container">
+                        <div class="row">
+                            <div class=" form-group">
+                                <div class="col-md-12">
+                                    <label class="text-center col-md-12"> Choose theme... </label>
+                                    @Html.DropDownListFor(model => model.selectedTheme, Model.Theme,
+          htmlAttributes: new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class=" form-group">
+                                <div class="col-md-12">
+                                    <label class="text-center col-md-12">Choose difficult...</label>
+                                    @Html.DropDownListFor(model => model.selectedDifficult, Model.Difficult,
+      htmlAttributes: new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            Put Test Name
+                            <div class="col-md-12">
+                                @Html.EditorFor(model => model.TestName, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.TestName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            Few words about this, introduction for users
+                            <div class="col-md-12">
+                                @Html.EditorFor(model => model.TestDescription, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.TestDescription, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            Put time for pass test
+                            <div class="col-md-6">
+                                @Html.EditorFor(model => model.selectedTime, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.selectedTime, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <label for="files" class="btn btn-primary ml-3">Select Image</label>
+                        <div class="form-inline">
+                            <div>
+                            </div>
+                            <div>
+                                <output id="list"></output>
+                            </div>
+                        </div>
+                        <div class="form-group mt-md-3">
+                            <div class="col-md-10 mr-5">
+                                <input type="submit" value="Create test" class="btn btn-primary" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="row col-md-7">
+                    <div class="card-group ">
+                        <div class="row">
+                            <div class="card mb-3">
+                                <div class="card-header bg-primary text-white">
+                                    <i class="fa fa-table"></i>
+                                    Questions for adding...
+                                </div>
+                                <div class="card-body">
+                                    <input type="text" id="search" placeholder="Type to search"
+                                           class="form-control">
+                                    <div class="table-responsive">
+                                        <div class="scroll-table_2">
+                                        
+                                            <table class="table table-bordered table-hover"
+                                                   cellspacing="0" id="Questions">
+                                                <thead>
+                                                </thead>
+                                                <tbody>
+                                                    @for (int i = 0; i < Model.Questions.Count; i++)
+                                                    {
+                                                        @Html.ValidationMessageFor(model => model.Questions[i].IdQuestion, "", new { @class = "text-danger" })
+                                                        <tr>
+                                                            <td width="50%">
+                                                                <a class="nav-link text-dark"
+                                                                   href="@Url.Action("GetInfoQuestion", "Question",new {IdQuestion  = Model.Questions[i].IdQuestion })#More">
+                                                                    @Html.DisplayFor(modelItem => modelItem.Questions[i].QuestionText)
+                                                                    @Html.HiddenFor(modelItem => modelItem.Questions[i].IdQuestion)
+                                                                </a>
+                                                            </td>
+                                                            <td>
+                                                                <a class="nav-link text-dark"
+                                                                   href="@Url.Action("GetInfoQuestion", "Question",new {IdQuestion = Model.Questions[i].IdQuestion })#More">
+                                                                    @Html.DisplayFor(modelItem => modelItem.Questions[i].Difficult)
+                                                                </a>
+                                                            </td>
+                                                            <td>
+                                                                Add / Not Add
+                                                                <a class="nav-link text-dark"
+                                                                   href="@Url.Action("GetInfoQuestion", "Question",new {IdQuestion  = Model.Questions[i].IdQuestion})#More">
+                                                                    @Html.CheckBoxFor(modelItem => modelItem.Questions[i].Chosen)
+                                                                </a>
+                                                            </td>
+                                                            <td>
+                                                                <a class="nav-link text-dark"
+                                                                   href="@Url.Action("GetInfoQuestion", "Question",new {IdQuestion  = Model.Questions[i].IdQuestion})#More">
+                                                                    @Html.DisplayFor(modelItem => modelItem.Questions[i].Theme)
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <script type="text/javascript">
+        var $rows = $('#Questions tr');
+        $('#search').keyup(function () {
+            var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+
+            $rows.show().filter(function () {
+                var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+                return !~text.indexOf(val);
+            }).hide();
+        });
+    </script>
+
+    <script>
+        function handleFileSelect(evt) {
+            var files = evt.target.files; // FileList object
+
+            // Loop through the FileList and render image files as thumbnails.
+            for (var i = 0, f; f = files[i]; i++) {
+
+                // Only process image files.
+                if (!f.type.match('image.*')) {
+                    continue;
+                }
+
+                var reader = new FileReader();
+
+                // Closure to capture the file information.
+                reader.onload = (function (theFile) {
+                    return function (e) {
+                        // Render thumbnail.
+                        var span = document.createElement('span');
+                        span.innerHTML = ['<img class="thumb" src="', e.target.result,
+                            '" title="', escape(theFile.name), '"/>'].join('');
+                        document.getElementById('list').insertBefore(span, null);
+                    };
+                })(f);
+
+                // Read in the image file as a data URL.
+                reader.readAsDataURL(f);
+            }
+        }
+
+        document.getElementById('files').addEventListener('change', handleFileSelect, false);
+    </script>
+
+</body>
+</html>
+

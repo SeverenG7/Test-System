@@ -1,0 +1,136 @@
+﻿@model TestSystem.Logic.ViewModel.ResultViewModel
+
+@{ 
+ string notPassed = "Test not passed yet";
+
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="~/Content/css/Tables.css" rel="stylesheet" type="text/css" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Tests info</title>
+</head>
+<body>
+    <div class="container">
+        <h2 class="display-3 text-info"> Results dashboard </h2>
+        <form method="get">
+            <div class="form-inline">
+                @using (Html.BeginForm())
+                {
+                    <div class="col-md-3">
+                        <div class="input-group">
+
+                            @Html.TextBox("search",
+                           "", new { placeholder = "Search for..." , @class="form-control" })
+
+                            <span class="input-group-append">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </form>
+
+
+        <table class="table table-hover  " width="100" cellspacing="0">
+            <thead class="show">
+                <tr>
+                    <th>Name </th>
+                    <th>Lastname</th>
+                    <th>Email</th>
+                    <th>Tools</th>
+                </tr>
+            </thead>
+
+            @foreach (var item in Model.Users)
+            {
+                string selectedRow = "";
+                {
+
+                }
+                <tr class="@selectedRow">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserFirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserLastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ApplicationUser.Email)
+                    </td>
+                    <td>
+                        <button class="btn btn-primary"
+                                onclick="location.href='@Url.Action( "GetInfoResult","Result" , new { IdUser = item.ApplicationUser.Id })'">
+                            More...
+                        </button>
+                        <button class="btn btn-warning"
+                                onclick="location.href='@Url.Action("GivePremission", "Result" ,new { IdUser = item.ApplicationUser.Id })'">
+                            Give premission
+                        </button>
+
+                    </td>
+                </tr>
+            }
+        </table>
+        @if (TempData["Warning"] != null)
+        {
+            <h4 class="text-danger"> @TempData["Warning"]</h4>
+        }
+
+        @if (Model.Results != null)
+        {
+            <h3>
+                Results of selected user
+            </h3>
+            <div class="scroll-table_2">
+                <table class="table  table-hover">
+                    <tr>
+                        <th>Test</th>
+                        <th>Score</th>
+                        <th>Date</th>
+                    </tr>
+                    @foreach (var item in Model.Results)
+                    {
+                        <tr>
+                            <td>
+                                @item.Test.TestName
+                                @Html.Hidden(item.IdResult.ToString())
+                            </td>
+                            <td>
+                                @if (item.TestPassed)
+                                {
+                                    <p>@Math.Round(@item.ResultScore.Value) %</p>
+                                }
+                                else
+                                {
+                                    @notPassed;
+                                }
+                            </td>
+                            <td>
+                                @item.CreateDate
+                            </td>
+                            <td>
+                                <button class="btn btn-primary"
+                                        onclick="location.href='@Url.Action("ResultInfo", "Result" ,new { IdResult = item.IdResult })'">
+                                    Details
+                                </button>
+                                <button class="btn btn-danger"
+                                        onclick="location.href='@Url.Action("DeleteResult", "Result" ,new { id = item.IdResult })'">
+                                    Remove
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </table>
+                </div>
+                }
+            </div>
+</body>
+</html>
+

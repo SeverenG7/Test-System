@@ -1,0 +1,43 @@
+﻿@model IEnumerable<TestSystem.Logic.ViewModel.TestViewModel>
+
+
+<div class="row">
+    <div class="card mb-3">
+        <div class="card-header badge-primary">
+            <i class="fa fa-table"></i> Last tests
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Last added 5 test...</div>
+                    <table class="table table-bordered table-hover" height="100">
+                        <thead class="bg-primary text-white">
+                            <tr class="bg-primary text-white">
+                                <td>Test name</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td width="350">
+                                        <a class="nav-link text-dark" href="@Url.Action("GetInfoTest", "Test",new {IdTest = item.IdTest })">
+                                            @Html.DisplayFor(modelItem => item.TestName)
+                                        </a>
+                                    </td>
+ 
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="container">
+                        <form action="@Url.Action("GetInfoTest", "Test")">
+                            <button class="btn btn-primary" type="submit">More about tests...</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

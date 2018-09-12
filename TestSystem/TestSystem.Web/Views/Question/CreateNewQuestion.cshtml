@@ -1,0 +1,142 @@
+﻿@model TestSystem.Logic.ViewModel.QuestionCreateViewModel
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <style>
+        .thumb {
+            height: 150px;
+            border: 1px solid #000;
+            margin: 10px 5px 0 0;
+        }
+    </style>
+    <meta name="viewport" content="width=device-width" />
+    <title>Creating new question</title>
+</head>
+<body>
+    <div class="container">
+        <div class="card-header-tabs">
+            @using (Html.BeginForm("CreateNewQuestion", "Question", FormMethod.Post,
+                new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                <input type="file" id="files" name="image"
+                       style="visibility:hidden" value="Choose" />
+
+                        <h4 class="text-info display-3">Add new question...</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="row float-lg-left col-md-5">
+                    <div class="container">
+                        <div class="row">
+                            <div class=" form-group">
+                                <div class="col-md-12">
+                                    <label class="text-center col-md-12"> Choose theme... </label>
+                                    @Html.DropDownListFor(model => model.selectedTheme , Model.Theme,
+                                                htmlAttributes: new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class=" form-group">
+                                <div class="col-md-12">
+                                    <label class="text-center col-md-12">Choose difficult...</label>
+                                    @Html.DropDownListFor(model => model.selectedDifficult  , Model.Difficult,
+                                            htmlAttributes: new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.QuestionText, htmlAttributes: new { @class = "control-label col-md-12" })
+                            <div class="col-md-12">
+                                @Html.EditorFor(model => model.QuestionText, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.QuestionText, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <label for="files" class="btn btn-primary">Select Image</label>
+                        <div class="form-inline">
+                            <div>
+                            </div>
+                            <div>
+                                <output id="list"></output>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row col-md-5">
+                    <label class=""> Put answers : </label>
+                    <div class="card-group ">
+                        <ol class="list-group">
+                            @for (int i = 0; i < Model.Answers.Count; i++)
+                            {                               
+                            <li class="list-group-item">
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="card">
+                                            @Html.TextAreaFor(model => model.Answers[i].AnswerText,
+                                           htmlAttributes: new { @class= "form-control" , @placeholder = "Put answer text..." ,
+                                               style = "width:300px"})
+                                                    </div>
+                                                <div class="ml-2">
+                                            @Html.CheckBoxFor(model => model.Answers[i].Correct,
+                                     htmlAttributes: new { @class = "control" }) True/False
+                                                    </div>
+                                                </div>
+                                        </div>
+                                    </div>
+                            </li>
+                            }
+                        </ol>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Create" class="btn btn-primary" name="F" />
+                    </div>
+                </div>
+
+            }
+        </div>
+    </div>
+    <script>
+        function handleFileSelect(evt) {
+            var files = evt.target.files; // FileList object
+
+            // Loop through the FileList and render image files as thumbnails.
+            for (var i = 0, f; f = files[i]; i++) {
+
+                // Only process image files.
+                if (!f.type.match('image.*')) {
+                    continue;
+                }
+
+                var reader = new FileReader();
+
+                // Closure to capture the file information.
+                reader.onload = (function (theFile) {
+                    return function (e) {
+                        // Render thumbnail.
+                        var span = document.createElement('span');
+                        span.innerHTML = ['<img class="thumb" src="', e.target.result,
+                            '" title="', escape(theFile.name), '"/>'].join('');
+                        document.getElementById('list').insertBefore(span, null);
+                    };
+                })(f);
+
+                // Read in the image file as a data URL.
+                reader.readAsDataURL(f);
+            }
+        }
+
+        document.getElementById('files').addEventListener('change', handleFileSelect, false);
+    </script>
+
+
+</body>
+</html>

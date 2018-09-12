@@ -1,0 +1,76 @@
+﻿@model TestSystem.Logic.ViewModel.LoginViewModel
+@{ 
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Enter into the system</title>
+    <link href="~/Content/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom fonts for this template-->
+    <link href="~/Content/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this template-->
+    <link href="~/Content/css/sb-admin.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url(../../Content/actionImages/testBack.jpg);
+            background-size: cover
+        }
+    </style>
+</head>
+
+<body class="bg-dark">
+    <div class="container">
+        <div class="card card-login mx-auto mt-5">
+            <div class="card-header">Login</div>
+            <div class="card-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="form-group">
+                        <div class="col-md-auto">
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Enter Email" })
+                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-auto">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Enter Password" })
+                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-auto">
+                            <div class="checkbox">
+                                @Html.CheckBoxFor(m => m.RememberMe)
+                                @Html.LabelFor(m => m.RememberMe)
+                            </div>
+                        </div>
+                    </div>
+                    <input class="btn btn-primary btn-block" type="submit" value="Log in" />
+                }
+                <div class="text-center">
+                    <a class="d-block small mt-3" href="@Url.Action("Register" , "Account")">Register an Account</a>
+                    <a class="d-block small" href="@Url.Action("ForgotPassword" , "Account")">Forgot Password?</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap core JavaScript-->
+    <script src=@Url.Content("Content/vendor/jquery/jquery.min.js")></script>
+    <script src=@Url.Content("Content/vendor/bootstrap/js/bootstrap.bundle.min.js")></script>
+    <!-- Core plugin JavaScript-->
+    <script src=@Url.Content("Content/vendor/jquery-easing/jquery.easing.min.js")></script>
+</body>
+
+</html>
+

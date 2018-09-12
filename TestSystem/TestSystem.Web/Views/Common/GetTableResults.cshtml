@@ -1,0 +1,51 @@
+﻿@model List<TestSystem.Logic.ViewModel.ResultFullViewModel>
+
+
+<div class="row">
+    <div class="card mb-3">
+        <div class="card-header badge-primary">
+            <i class="fa fa-table"></i> Last results
+        </div>
+        <div class="card-body ">
+            <div class="table-responsive">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Last 5 results...</div>
+                    <table class="table table-bordered  table-hover  " >
+                        <thead class="bg-primary text-white">
+                            <tr class="thead-dark">
+                                <td>User</td>
+                                <td>Test</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <a class="nav-link text-dark" href="@Url.Action("ResultInfo" ,
+                                                                           "Result" , new { item.IdResult})">
+                                        @Html.DisplayFor(modelItem => item.UserInfo.UserFirstName )
+                                          </a>
+                                    </td>
+                                    <td>
+                                        <a class="nav-link text-dark" href="@Url.Action("ResultInfo" ,
+                                                                           "Result" , new { item.IdResult})">
+                                            @Html.DisplayFor(modelItem => item.Test.TestName)
+                                            </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="container">
+                        <form action="@Url.Action("GetInfoResult", "Result")">
+                            <button class="btn btn-primary" type="submit">More about results...</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
